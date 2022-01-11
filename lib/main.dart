@@ -1,9 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:yellowpatioapp/home_page.dart';
+import 'package:yellowpatioapp/login_page.dart';
+// import 'firebase_options.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp(
+      //options: DefaultFirebaseOptions.currentPlatform,
+      );
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
