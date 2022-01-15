@@ -1,13 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/login_page.dart';
 // import 'firebase_options.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(
+  await Firebase.initializeApp(
       //options: DefaultFirebaseOptions.currentPlatform,
       );
   runApp(MyApp());
@@ -37,6 +39,7 @@ class RootWidget extends StatefulWidget {
 class _RootWidgetState extends State<RootWidget> {
   static const platform = const MethodChannel('app.channel.shared.data');
   Map<dynamic, dynamic> sharedData = Map();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   var state = {};
 
   @override
@@ -57,28 +60,32 @@ class _RootWidgetState extends State<RootWidget> {
     //****************************************** */
     // Case 1: App is already running in background:
     // Listen to lifecycle changes to subsequently call Java MethodHandler to check for shared data
-    // SystemChannels.lifecycle.setMessageHandler((msg) {
-    //   Future<String?> foo = "puc" as Future<String?>;
-    //   try {
-    //     if (msg!.contains('resumed')) {
-    //       _getSharedData().then((d) async {
-    //         if (d.isEmpty) {
-    //           print(
-    //               "*****************************intent empty***************************************");
-    //         } else {
-    //           print(
-    //               "*****************************intent is not empty***************************************");
-    //         }
-    //         //     // Your logic here
-    //         //     // E.g. at this place you might want to use Navigator to launch a new page and pass the shared data
-    //       });
-    //     }
-    //     return foo;
-    //   } catch (Error) {
-    //     print("throwing shit null");
-    //     rethrow;
-    //   }
-    // });
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      String? foo = "puc u";
+      try {
+        if (msg!.contains('resumed')) {
+          _getSharedData().then((d) async {
+            if (d.isEmpty) {
+              print(
+                  "*****************************intent empty***************************************");
+            } else {
+              print(
+                  "*****************************intent is not empty***************************************");
+            }
+            //     // Your logic here
+            //     // E.g. at this place you might want to use Navigator to launch a new page and pass the shared data
+          });
+        } else {
+          var data = await _getSharedData();
+
+          print('l');
+        }
+        return Future.delayed(const Duration(seconds: 1), () => foo);
+      } catch (Error) {
+        print("throwing shit null");
+        rethrow;
+      }
+    });
 
     // // Case 2: App is started by the intent:
     // // Call Java MethodHandler on application start up to check for shared data
@@ -93,14 +100,13 @@ class _RootWidgetState extends State<RootWidget> {
     //*********************&&&&*****&&&&&********************* */
     //***********************&&&&&&&&&&********************** */
 
-    // setState(() {
     sharedData = data;
 
     data.forEach((key, value) {
       state[key] = value;
     });
 
-    if (data.isNotEmpty) {
+    if (data.isNotEmpty && await _googleSignIn.isSignedIn()) {
       print(
           "6969696969696969699666666666666666666666666666666666666666666666666666666666669696969696969696996666666666666666666666666666666666666666666666666666666666" +
               data.toString());
@@ -108,8 +114,6 @@ class _RootWidgetState extends State<RootWidget> {
       Navigator.pop(context);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomSheetState(data)));
-      // Navigator.push(
-      //     context, MaterialPageRoute(builder: (context) => HomePage()));
     } else {
       print("************************route***********************");
       Navigator.pop(context);
@@ -139,16 +143,6 @@ class _RootWidgetState extends State<RootWidget> {
   }
 }
 
-class entity {
-  String? subject;
-  String? text;
-  var fuc;
-
-  entity({var fuc});
-
-  // entity(this.subject, this.text);
-}
-
 class BottomSheetState extends StatefulWidget {
   var parentState;
 
@@ -162,27 +156,26 @@ class BottomSheetState extends StatefulWidget {
 class BottomSheet extends State<BottomSheetState> {
   var parentState;
   TextEditingController text = TextEditingController();
-
   BottomSheet(this.parentState);
+  var textStyle = TextStyle(color: Colors.red, fontSize: 15);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("---");
+
     if (parentState.isNotEmpty) {
-      text.text = "[subject] " +
-          parentState['subject'] +
-          " [text] " +
-          parentState['text'];
+      if (parentState['subject'] != null) {
+        text.text = "[subject] : " + parentState['subject'].toString();
+      }
+      if (parentState['text'] != null) {
+        text.text += " [text] : " + parentState['text'].toString();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("/\/\/\/\/\/\/\/\/\/\/\/\/\/");
-    print("------" + parentState.toString());
-
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -191,6 +184,14 @@ class BottomSheet extends State<BottomSheetState> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () => _showMyDialog(),
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
                 Container(
                   height: 300,
                   decoration: const BoxDecoration(
@@ -199,7 +200,7 @@ class BottomSheet extends State<BottomSheetState> {
                           topLeft: Radius.circular(20.0),
                           topRight: Radius.circular(20.0))),
                   child: Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     child: Column(
                       children: [
                         SizedBox(
@@ -301,6 +302,38 @@ class BottomSheet extends State<BottomSheetState> {
               ]),
         ),
       ),
+    );
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Discard changes?'),
+          content: const Text("The changes you've made will not be saved."),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                'cancel',
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'discard',
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
+              onPressed: () =>
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

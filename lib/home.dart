@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:yellowpatioapp/login_page.dart';
+import 'package:yellowpatioapp/main.dart';
 import 'Pages/input_page.dart';
 import 'Pages/home_page.dart';
-import 'Pages/InsightsPage.dart';
+import 'Pages/insights_page.dart';
 // import 'db/Person.dart';
 // import 'db/database.dart';
 // import 'db/Note.dart';
@@ -19,7 +21,7 @@ class HomePage extends State<Home> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   int _selectedIndex = 0;
   static const String appName = "Speechry";
-  String? photoUrl;
+  var state = {'photoURL': 'nan'};
   // Stream<Note>? result;
   static final List<Widget> _widgetOptions = <Widget>[
     homePage(),
@@ -42,7 +44,10 @@ class HomePage extends State<Home> {
     //******************************************************* */
     //speechry method
     //getNotes();
-    ////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////5
+    ///
+    ///
+    getUser();
   }
 
   Future<void> signOut() async {
@@ -63,6 +68,19 @@ class HomePage extends State<Home> {
   //       "***************************************************************************");
   // }
 
+  getUser() {
+    setState(() {
+      try {
+        state['photoURL'] =
+            FirebaseAuth.instance.currentUser!.photoURL.toString();
+      } catch (e) {
+        print('************************************' +
+            e.toString() +
+            '**********************************');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,12 +88,12 @@ class HomePage extends State<Home> {
         title: const Text(appName, style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         actions: <Widget>[
+          // if (state['nan'] != 'nan')
           MaterialButton(
             onPressed: signOut,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  FirebaseAuth.instance.currentUser!.photoURL.toString()),
-              backgroundColor: Colors.white,
+              backgroundImage: NetworkImage(state['photoURL'].toString()),
+              backgroundColor: Colors.yellow,
               radius: 16,
             ),
           )

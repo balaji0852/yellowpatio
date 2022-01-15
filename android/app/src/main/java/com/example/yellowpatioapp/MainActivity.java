@@ -83,6 +83,7 @@ public class MainActivity extends FlutterActivity {
             if ("text/plain".equals(type)) {
                 sharedData.put("subject", intent.getStringExtra(Intent.EXTRA_SUBJECT));
                 sharedData.put("text", intent.getStringExtra(Intent.EXTRA_TEXT));
+                        
             }
         }
     }
