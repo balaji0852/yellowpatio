@@ -5,6 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/login_page.dart';
+
+import 'db/database.dart';
+import 'db/entity/item_master.dart';
 // import 'firebase_options.dart';
 
 Future main() async {
@@ -279,7 +282,11 @@ class BottomSheet extends State<BottomSheetState> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (text.text.isNotEmpty) {
+                                      saveNotes();
+                                    }
+                                  },
                                   icon: const Icon(
                                     Icons.send,
                                     size: 35,
@@ -335,5 +342,29 @@ class BottomSheet extends State<BottomSheetState> {
         );
       },
     );
+  }
+
+  Future saveNotes() async {
+    final database =
+        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final itemMasterDao = database.itemMasterDao;
+
+    ItemMaster itemMaster = ItemMaster(
+        itemText: text.text,
+        itemDescription: ' test link share ',
+        createdDateTime: DateTime.now().toString(),
+        userLabel: ' test label ',
+        userTopicID: ' 01 ',
+        synced: false,
+        dueDate: DateTime.now().toString(),
+        ypClassIDs: 1,
+        ypTo: ' test to ');
+
+    await itemMasterDao.insertItem(itemMaster).then((value) {
+      print("inserted successfully");
+      text.clear();
+    }).onError((error, stackTrace) {
+      print(error);
+    });
   }
 }
