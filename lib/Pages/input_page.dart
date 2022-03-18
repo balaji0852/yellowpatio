@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/item_master.dart';
 import 'package:yellowpatioapp/db/entity/label_master.dart';
@@ -72,8 +73,28 @@ class Add extends State<AddPage> {
                 height: 40,
               ),
               Container(
-                child: Text(InputMessage, style: ts),
-              ),
+                  child: Text(
+                InputMessage,
+                style: ts,
+              )
+                  //  TagHighlighting(
+                  //   text: '<strong>fuck</string>' + InputMessage,
+                  //   defaultTextStyle: ts,
+                  //   tags: [
+                  //     TagHighlight(
+                  //       tagName: "strong", // the name of the tag above.
+                  //       textStyle: const TextStyle(
+                  //         // the style of "World"
+                  //         fontWeight: FontWeight.bold,
+                  //         backgroundColor: Colors.yellow,
+                  //         color: Colors.black,
+                  //         fontSize: 16,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+
+                  ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -118,20 +139,30 @@ class Add extends State<AddPage> {
                         children: label!
                             .map(
                               (e) => GestureDetector(
-                                  onTap: () => setLabel = e.labelId!,
-                                  child: Row(children: [
-                                    Text(
-                                      e.labelName,
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                          backgroundColor: Colors.yellow),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    )
-                                  ])),
+                                child: Chip(
+                                  backgroundColor: setLabel != e.labelId!
+                                      ? Colors.yellow
+                                      : Colors.black,
+                                  label: Text(e.labelName),
+                                  labelStyle: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: setLabel == e.labelId!
+                                          ? Colors.yellow
+                                          : Colors.black),
+                                ),
+                                onTap: () {
+                                  //case for removing the selected label
+                                  //case for default label
+                                  setState(() {
+                                    if (setLabel == e.labelId!) {
+                                      setLabel = 1;
+                                    } else {
+                                      setLabel = e.labelId!;
+                                    }
+                                  });
+                                },
+                              ),
                             )
                             .toList(),
                       )
@@ -192,7 +223,7 @@ class Add extends State<AddPage> {
         itemText: tec.text,
         itemDescription: ' test text ',
         createdDateTime: DateTime.now().toString(),
-        userLabel: label!.elementAt(setLabel - 1).labelName,
+        userLabel: ' non - labeled ',
         userTopicID: ' 01 ',
         synced: false,
         dueDate: DateTime.now().toString(),

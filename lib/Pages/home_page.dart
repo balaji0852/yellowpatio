@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/item_master.dart';
+import 'package:yellowpatioapp/db/entity/label_master.dart';
 
 class homePage extends StatefulWidget {
   HomePageActivity createState() => HomePageActivity();
@@ -14,6 +15,7 @@ class HomePageActivity extends State<homePage> {
   static const text = "your tasks";
   // final database = $FloorAppDatabase.databaseBuilder('app_database.db').build();
   List<ItemMaster> notes = [];
+  late List<Label> Labels;
 
   @override
   void initState() {
@@ -33,6 +35,8 @@ class HomePageActivity extends State<homePage> {
 
     List<ItemMaster> data = await database.itemMasterDao.findAllItems();
 
+    List<Label> labelData = await database.labelMasterDao.findAllLabel();
+
     data.forEach((item) {
       print(item.id.toString() +
           ' ' +
@@ -46,6 +50,7 @@ class HomePageActivity extends State<homePage> {
     });
 
     setState(() {
+      Labels = labelData;
       notes = data;
     });
   }
@@ -61,7 +66,13 @@ class HomePageActivity extends State<homePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    event.userLabel,
+                    Labels.where(
+                            (element) => element.labelId == event.ypClassIDs)
+                        .first
+                        .labelName,
+                    // Labels.elementAt(Labels.indexWhere(
+                    //         (element) => element.labelId == event.ypClassIDs))
+                    //     .labelName,
                     style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,

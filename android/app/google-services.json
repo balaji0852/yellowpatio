@@ -66,6 +66,14 @@
           }
         },
         {
+          "client_id": "743250708140-su6besirvn7hm07olumkk7io71ifjf0m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yellowpatioapp",
+            "certificate_hash": "6b7da47e3188af146ad69f92ab455167c75670aa"
+          }
+        },
+        {
           "client_id": "743250708140-a7aeeaavi7eg7tij5qqgsr8cn7ig15dk.apps.googleusercontent.com",
           "client_type": 3
         }
