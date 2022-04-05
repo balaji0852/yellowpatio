@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yellowpatioapp/db/entity/class_master.dart';
 
 import 'package:yellowpatioapp/login_page.dart';
 import 'package:yellowpatioapp/main.dart';
@@ -13,21 +14,45 @@ import 'Pages/insights_page.dart';
 // import 'db/Note.dart';
 // import 'package:floor/floor.dart';
 
+//In Flutter eager initialization makes the object declaration final, thats the concept,
+//
 class Home extends StatefulWidget {
   HomePage createState() => HomePage();
 }
 
 class HomePage extends State<Home> {
+
+
+  HomePage(){
+    print('constructor');
+
+    homePageInstance = homePage(changePage: changePageIndex);
+    _widgetOptions = <Widget>[
+    homePage(changePage: changePageIndex),
+    InsightsPage(
+      editable: false,
+    ),
+    AddPage()
+    ];
+
+  }
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   int _selectedIndex = 0;
   static const String appName = "Speechry";
+  ClassMaster? classMaster;
   var state = {'photoURL': 'nan'};
   // Stream<Note>? result;
-  static final List<Widget> _widgetOptions = <Widget>[
-    homePage(),
-    InsightsPage(),
-    AddPage()
-  ];
+  late Widget homePageInstance;
+  late List<Widget> _widgetOptions;
+
+  void changePageIndex(int index, ClassMaster classMaster){
+    setState(() {
+      _selectedIndex = index;
+      this.classMaster = classMaster;
+      _widgetOptions[_selectedIndex] = InsightsPage(editable: true,classMaster: this.classMaster,);
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,6 +72,7 @@ class HomePage extends State<Home> {
     ////////////////////////////////////////////////////////////5
     ///
     ///
+    print('initState');
     getUser();
   }
 
@@ -117,7 +143,7 @@ class HomePage extends State<Home> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.black,
-        onTap: _onItemTapped,
+        onTap: _onItemTapped, 
       ),
     );
   }

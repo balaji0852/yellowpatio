@@ -65,6 +65,12 @@ class _$AppDatabase extends AppDatabase {
 
   LabelMasterDao? _labelMasterDaoInstance;
 
+  CategoryMasterDao? _categoryMasterDaoInstance;
+
+  ClassMasterDao? _classMasterDaoInstance;
+
+  SubCategoryMasterDao? _subCategoryMasterDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -87,6 +93,12 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `ItemMaster` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `itemText` TEXT NOT NULL, `itemDescription` TEXT NOT NULL, `createdDateTime` TEXT NOT NULL, `userLabel` TEXT NOT NULL, `userTopicID` TEXT NOT NULL, `synced` INTEGER NOT NULL, `dueDate` TEXT NOT NULL, `ypClassIDs` INTEGER, `ypTo` TEXT NOT NULL, FOREIGN KEY (`ypClassIDs`) REFERENCES `Label` (`labelId`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Label` (`labelId` INTEGER PRIMARY KEY AUTOINCREMENT, `labelName` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ClassMaster` (`itemMasterID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemName` TEXT NOT NULL, `categoryID` INTEGER NOT NULL, `subCategoryID` INTEGER NOT NULL, `itemClassColorID` INTEGER NOT NULL, `itemPriority` INTEGER NOT NULL, `isItemCommentable` INTEGER NOT NULL, `description` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `CategoryMaster` (`categoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryName` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `SubCategoryMaster` (`subCategoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `subCategoryName` TEXT NOT NULL, `parentCategoryID` INTEGER NOT NULL, FOREIGN KEY (`parentCategoryID`) REFERENCES `CategoryMaster` (`categoryID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -103,6 +115,24 @@ class _$AppDatabase extends AppDatabase {
   LabelMasterDao get labelMasterDao {
     return _labelMasterDaoInstance ??=
         _$LabelMasterDao(database, changeListener);
+  }
+
+  @override
+  CategoryMasterDao get categoryMasterDao {
+    return _categoryMasterDaoInstance ??=
+        _$CategoryMasterDao(database, changeListener);
+  }
+
+  @override
+  ClassMasterDao get classMasterDao {
+    return _classMasterDaoInstance ??=
+        _$ClassMasterDao(database, changeListener);
+  }
+
+  @override
+  SubCategoryMasterDao get subCategoryMasterDao {
+    return _subCategoryMasterDaoInstance ??=
+        _$SubCategoryMasterDao(database, changeListener);
   }
 }
 
@@ -217,5 +247,211 @@ class _$LabelMasterDao extends LabelMasterDao {
   @override
   Future<void> insertLabel(Label label) async {
     await _labelInsertionAdapter.insert(label, OnConflictStrategy.abort);
+  }
+}
+
+class _$CategoryMasterDao extends CategoryMasterDao {
+  _$CategoryMasterDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _categoryMasterInsertionAdapter = InsertionAdapter(
+            database,
+            'CategoryMaster',
+            (CategoryMaster item) => <String, Object?>{
+                  'categoryID': item.categoryID,
+                  'categoryName': item.categoryName
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<CategoryMaster> _categoryMasterInsertionAdapter;
+
+  @override
+  Future<List<CategoryMaster>> findAllItems() async {
+    return _queryAdapter.queryList('SELECT * FROM CategoryMaster',
+        mapper: (Map<String, Object?> row) => CategoryMaster(
+            categoryID: row['categoryID'] as int?,
+            categoryName: row['categoryName'] as String));
+  }
+
+  @override
+  Stream<CategoryMaster?> findItemById(int id) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM CategoryMaster WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => CategoryMaster(
+            categoryID: row['categoryID'] as int?,
+            categoryName: row['categoryName'] as String),
+        arguments: [id],
+        queryableName: 'CategoryMaster',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertItem(CategoryMaster categoryMaster) async {
+    await _categoryMasterInsertionAdapter.insert(
+        categoryMaster, OnConflictStrategy.abort);
+  }
+}
+
+class _$ClassMasterDao extends ClassMasterDao {
+  _$ClassMasterDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _classMasterInsertionAdapter = InsertionAdapter(
+            database,
+            'ClassMaster',
+            (ClassMaster item) => <String, Object?>{
+                  'itemMasterID': item.itemMasterID,
+                  'itemName': item.itemName,
+                  'categoryID': item.categoryID,
+                  'subCategoryID': item.subCategoryID,
+                  'itemClassColorID': item.itemClassColorID,
+                  'itemPriority': item.itemPriority,
+                  'isItemCommentable': item.isItemCommentable,
+                  'description': item.description
+                },
+            changeListener),
+        _classMasterUpdateAdapter = UpdateAdapter(
+            database,
+            'ClassMaster',
+            ['itemMasterID'],
+            (ClassMaster item) => <String, Object?>{
+                  'itemMasterID': item.itemMasterID,
+                  'itemName': item.itemName,
+                  'categoryID': item.categoryID,
+                  'subCategoryID': item.subCategoryID,
+                  'itemClassColorID': item.itemClassColorID,
+                  'itemPriority': item.itemPriority,
+                  'isItemCommentable': item.isItemCommentable,
+                  'description': item.description
+                },
+            changeListener),
+        _classMasterDeletionAdapter = DeletionAdapter(
+            database,
+            'ClassMaster',
+            ['itemMasterID'],
+            (ClassMaster item) => <String, Object?>{
+                  'itemMasterID': item.itemMasterID,
+                  'itemName': item.itemName,
+                  'categoryID': item.categoryID,
+                  'subCategoryID': item.subCategoryID,
+                  'itemClassColorID': item.itemClassColorID,
+                  'itemPriority': item.itemPriority,
+                  'isItemCommentable': item.isItemCommentable,
+                  'description': item.description
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ClassMaster> _classMasterInsertionAdapter;
+
+  final UpdateAdapter<ClassMaster> _classMasterUpdateAdapter;
+
+  final DeletionAdapter<ClassMaster> _classMasterDeletionAdapter;
+
+  @override
+  Future<List<ClassMaster>> findAllItems() async {
+    return _queryAdapter.queryList('SELECT * FROM ClassMaster',
+        mapper: (Map<String, Object?> row) => ClassMaster(
+            itemMasterID: row['itemMasterID'] as int?,
+            itemName: row['itemName'] as String,
+            categoryID: row['categoryID'] as int,
+            subCategoryID: row['subCategoryID'] as int,
+            itemClassColorID: row['itemClassColorID'] as int,
+            itemPriority: row['itemPriority'] as int,
+            isItemCommentable: row['isItemCommentable'] as int,
+            description: row['description'] as String));
+  }
+
+  @override
+  Stream<ClassMaster?> findItemById(int id) {
+    return _queryAdapter.queryStream('SELECT * FROM ClassMaster WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => ClassMaster(
+            itemMasterID: row['itemMasterID'] as int?,
+            itemName: row['itemName'] as String,
+            categoryID: row['categoryID'] as int,
+            subCategoryID: row['subCategoryID'] as int,
+            itemClassColorID: row['itemClassColorID'] as int,
+            itemPriority: row['itemPriority'] as int,
+            isItemCommentable: row['isItemCommentable'] as int,
+            description: row['description'] as String),
+        arguments: [id],
+        queryableName: 'ClassMaster',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertItem(ClassMaster classMaster) async {
+    await _classMasterInsertionAdapter.insert(
+        classMaster, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateItemByEntity(ClassMaster classMaster) async {
+    await _classMasterUpdateAdapter.update(
+        classMaster, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteItemById(ClassMaster classMaster) async {
+    await _classMasterDeletionAdapter.delete(classMaster);
+  }
+}
+
+class _$SubCategoryMasterDao extends SubCategoryMasterDao {
+  _$SubCategoryMasterDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _subCategoryMasterInsertionAdapter = InsertionAdapter(
+            database,
+            'SubCategoryMaster',
+            (SubCategoryMaster item) => <String, Object?>{
+                  'subCategoryID': item.subCategoryID,
+                  'subCategoryName': item.subCategoryName,
+                  'parentCategoryID': item.parentCategoryID
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<SubCategoryMaster> _subCategoryMasterInsertionAdapter;
+
+  @override
+  Future<List<SubCategoryMaster>> findAllItems() async {
+    return _queryAdapter.queryList('SELECT * FROM SubCategoryMaster',
+        mapper: (Map<String, Object?> row) => SubCategoryMaster(
+            subCategoryID: row['subCategoryID'] as int?,
+            subCategoryName: row['subCategoryName'] as String,
+            parentCategoryID: row['parentCategoryID'] as int));
+  }
+
+  @override
+  Stream<SubCategoryMaster?> findItemById(int id) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM SubCategoryMaster WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => SubCategoryMaster(
+            subCategoryID: row['subCategoryID'] as int?,
+            subCategoryName: row['subCategoryName'] as String,
+            parentCategoryID: row['parentCategoryID'] as int),
+        arguments: [id],
+        queryableName: 'SubCategoryMaster',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertItem(SubCategoryMaster subCategoryMaster) async {
+    await _subCategoryMasterInsertionAdapter.insert(
+        subCategoryMaster, OnConflictStrategy.abort);
   }
 }

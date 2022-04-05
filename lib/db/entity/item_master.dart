@@ -38,7 +38,7 @@ class ItemMaster {
 
   ItemMaster(
       {this.id,
-      required this.itemText,
+      required this.itemText, 
       required this.itemDescription,
       required this.createdDateTime,
       required this.userLabel,
