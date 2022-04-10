@@ -15,14 +15,15 @@ import 'package:yellowpatioapp/db/repository/class_master_dao.dart';
 import 'package:yellowpatioapp/db/repository/labelmaster_dao.dart';
 
 class InsightsPage extends StatefulWidget {
-
   //theres no optional keyword, use nullable variable..
   //primitive(bool) value defaults to null...
   //constructor , if needs to be const then all objects should be final...
   //single quote string and double quote string are making difference...
-  InsightsPage({Key? key, this.classMaster, required this.editable,this.changePage}):super(key: key);
+  InsightsPage(
+      {Key? key, this.classMaster, required this.editable, this.changePage})
+      : super(key: key);
 
-  final void Function(int,ClassMaster)? changePage;
+  final void Function(int, ClassMaster, bool)? changePage;
 
   final ClassMaster? classMaster;
 
@@ -31,7 +32,6 @@ class InsightsPage extends StatefulWidget {
   @override
   Insights createState() => Insights();
 }
-
 
 //use 'widget' to use parent data
 //adding a copy contructor
@@ -44,7 +44,7 @@ class Insights extends State<InsightsPage> {
   bool editables = false;
 
   // Insights(){
-   
+
   //   //classMaster = widget.classMaster!;
   // }
 
@@ -75,7 +75,6 @@ class Insights extends State<InsightsPage> {
     super.initState();
     print('#############');
     print(widget.editable);
-    editables = widget.editable;
     setPageForEditing();
   }
 
@@ -129,8 +128,7 @@ class Insights extends State<InsightsPage> {
                 shape: ele.colorName == selectedColor
                     ? const StadiumBorder(
                         side: BorderSide(width: 3, color: Colors.black))
-                    : const StadiumBorder(
-                        ),
+                    : const StadiumBorder(),
                 backgroundColor: ele.color,
                 selected: false,
               ),
@@ -165,7 +163,7 @@ class Insights extends State<InsightsPage> {
                   controller: classTitleController,
                   onChanged: (value) {
                     setState(() {
-                        classTitle = value;
+                      classTitle = value;
                     });
                   },
                   maxLength: 15,
@@ -184,8 +182,9 @@ class Insights extends State<InsightsPage> {
             androidDropdown(categorystore.getCategoryList, (value) {
               setState(() {
                 selectedCategory = value!;
-                selectedSubCategory = 'default';
                 categorystore.setSubCategoryList = selectedCategory;
+                selectedSubCategory = categorystore.getSubCategoryList.elementAt(0);
+
               });
             }, selectedCategory),
             const SizedBox(
@@ -234,12 +233,12 @@ class Insights extends State<InsightsPage> {
             ),
             MaterialButton(
               onPressed: () {
-                if (classTitleController.text.isNotEmpty && descriptionController.text.isNotEmpty) {
-                  if(editables){
+                if (classTitleController.text.isNotEmpty &&
+                    descriptionController.text.isNotEmpty) {
+                  if (widget.editable) {
                     updateDataToDatabase();
-                  }
-                  else{
-                  addDataToDb();
+                  } else {
+                    addDataToDb();
                   }
                 }
               },
@@ -262,9 +261,9 @@ class Insights extends State<InsightsPage> {
     //need validations
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final classMasterDao = database.classMasterDao;    
+    final classMasterDao = database.classMasterDao;
     ClassMaster classMasterItem = ClassMaster(
-        itemName: classTitle!,
+        itemName: classTitleController.text,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
         subCategoryID:
             categorystore.getSubCategoryList.indexOf(selectedSubCategory),
@@ -272,7 +271,7 @@ class Insights extends State<InsightsPage> {
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
         isItemCommentable: 1,
-        description: descriptionString!);
+        description: descriptionController.text);
 
     // ignore: avoid_print
     await classMasterDao.insertItem(classMasterItem).then((value) {
@@ -288,7 +287,6 @@ class Insights extends State<InsightsPage> {
       print(error);
     });
   }
-
 
   //unused func, for removal...
   // getLabel() async {
@@ -321,26 +319,29 @@ class Insights extends State<InsightsPage> {
   //   });
   // }
 
-  setPageForEditing(){
-    if(editables){
+  setPageForEditing() {
+    if (widget.editable) {
       updateButtonName = "update";
       classTitleController.text = widget.classMaster!.itemName;
       descriptionController.text = widget.classMaster!.description;
-      selectedCategory = categorystore.getCategoryList.elementAt(widget.classMaster!.categoryID);
+      selectedCategory = categorystore.getCategoryList
+          .elementAt(widget.classMaster!.categoryID);
       //need to add another getter, for handing the 2D array...
       //adjustments for now...
       categorystore.setSubCategoryList = selectedCategory;
-      selectedSubCategory = categorystore.getSubCategoryList.elementAt(widget.classMaster!.subCategoryID);
-      selectedColor = colorsList.elementAt(widget.classMaster!.itemClassColorID).colorName;
+      selectedSubCategory = categorystore.getSubCategoryList
+          .elementAt(widget.classMaster!.subCategoryID);
+      selectedColor =
+          colorsList.elementAt(widget.classMaster!.itemClassColorID).colorName;
+      print(selectedCategory + selectedSubCategory);
     }
   }
 
-
-  updateDataToDatabase() async{
+  updateDataToDatabase() async {
     // ignore: avoid_print
     ClassMaster classMasterItem = ClassMaster(
         itemMasterID: widget.classMaster!.itemMasterID,
-        itemName:  classTitleController.text,
+        itemName: classTitleController.text,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
         subCategoryID:
             categorystore.getSubCategoryList.indexOf(selectedSubCategory),
@@ -350,26 +351,35 @@ class Insights extends State<InsightsPage> {
         isItemCommentable: 1,
         description: descriptionController.text);
 
+    print("-" + classMasterItem.categoryID.toString());
+    print("-" +
+        categorystore.getCategoryList.indexOf(selectedCategory).toString());
+    print("-" + classMasterItem.subCategoryID.toString());
+    print("-" +
+        categorystore.getSubCategoryList
+            .indexOf(selectedSubCategory)
+            .toString());
+
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final classMasterDao = database.classMasterDao;
     await classMasterDao.updateItemByEntity(classMasterItem).then((value) {
-      print("inserted successfully");
+      print(classMasterItem.itemMasterID);
+      print("inserted successfully1");
       classTitleController.clear();
       descriptionController.clear();
       setState(() {
         selectedCategory = 'default';
+        categorystore.setSubCategoryList = selectedCategory;
         selectedSubCategory = 'default';
         selectedColor = 'red';
         updateButtonName = 'add';
-        editables = false;
+        widget.changePage!(1, widget.classMaster!, false);
       });
     }).onError((error, stackTrace) {
       print(error);
     });
   }
-
-  
 }
 
 class ColorPicker {

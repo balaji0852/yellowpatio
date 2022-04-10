@@ -71,6 +71,8 @@ class _$AppDatabase extends AppDatabase {
 
   SubCategoryMasterDao? _subCategoryMasterDaoInstance;
 
+  DataInstanceMasterDao? _dataInstanceMasterDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -99,6 +101,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `CategoryMaster` (`categoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryName` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `SubCategoryMaster` (`subCategoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `subCategoryName` TEXT NOT NULL, `parentCategoryID` INTEGER NOT NULL, FOREIGN KEY (`parentCategoryID`) REFERENCES `CategoryMaster` (`categoryID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` TEXT NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -133,6 +137,12 @@ class _$AppDatabase extends AppDatabase {
   SubCategoryMasterDao get subCategoryMasterDao {
     return _subCategoryMasterDaoInstance ??=
         _$SubCategoryMasterDao(database, changeListener);
+  }
+
+  @override
+  DataInstanceMasterDao get dataInstanceMasterDao {
+    return _dataInstanceMasterDaoInstance ??=
+        _$DataInstanceMasterDao(database, changeListener);
   }
 }
 
@@ -453,5 +463,100 @@ class _$SubCategoryMasterDao extends SubCategoryMasterDao {
   Future<void> insertItem(SubCategoryMaster subCategoryMaster) async {
     await _subCategoryMasterInsertionAdapter.insert(
         subCategoryMaster, OnConflictStrategy.abort);
+  }
+}
+
+class _$DataInstanceMasterDao extends DataInstanceMasterDao {
+  _$DataInstanceMasterDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _dataInstancesMasterInsertionAdapter = InsertionAdapter(
+            database,
+            'DataInstancesMaster',
+            (DataInstancesMaster item) => <String, Object?>{
+                  'dataInstanceID': item.dataInstanceID,
+                  'itemMasterID': item.itemMasterID,
+                  'dataInstances': item.dataInstances,
+                  'instancesTime': item.instancesTime
+                },
+            changeListener),
+        _dataInstancesMasterUpdateAdapter = UpdateAdapter(
+            database,
+            'DataInstancesMaster',
+            ['dataInstanceID'],
+            (DataInstancesMaster item) => <String, Object?>{
+                  'dataInstanceID': item.dataInstanceID,
+                  'itemMasterID': item.itemMasterID,
+                  'dataInstances': item.dataInstances,
+                  'instancesTime': item.instancesTime
+                },
+            changeListener),
+        _dataInstancesMasterDeletionAdapter = DeletionAdapter(
+            database,
+            'DataInstancesMaster',
+            ['dataInstanceID'],
+            (DataInstancesMaster item) => <String, Object?>{
+                  'dataInstanceID': item.dataInstanceID,
+                  'itemMasterID': item.itemMasterID,
+                  'dataInstances': item.dataInstances,
+                  'instancesTime': item.instancesTime
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DataInstancesMaster>
+      _dataInstancesMasterInsertionAdapter;
+
+  final UpdateAdapter<DataInstancesMaster> _dataInstancesMasterUpdateAdapter;
+
+  final DeletionAdapter<DataInstancesMaster>
+      _dataInstancesMasterDeletionAdapter;
+
+  @override
+  Future<List<DataInstancesMaster>> findAllDataInstance() async {
+    return _queryAdapter.queryList('SELECT * FROM DataInstancesMaster',
+        mapper: (Map<String, Object?> row) => DataInstancesMaster(
+            dataInstanceID: row['dataInstanceID'] as int?,
+            itemMasterID: row['itemMasterID'] as int,
+            dataInstances: row['dataInstances'] as String,
+            instancesTime: row['instancesTime'] as String));
+  }
+
+  @override
+  Stream<DataInstancesMaster?> findDataInstanceById(int dataInstanceID) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM DataInstancesMaster WHERE dataInstanceID = ?1',
+        mapper: (Map<String, Object?> row) => DataInstancesMaster(
+            dataInstanceID: row['dataInstanceID'] as int?,
+            itemMasterID: row['itemMasterID'] as int,
+            dataInstances: row['dataInstances'] as String,
+            instancesTime: row['instancesTime'] as String),
+        arguments: [dataInstanceID],
+        queryableName: 'DataInstancesMaster',
+        isView: false);
+  }
+
+  @override
+  Future<void> insertDataInstance(
+      DataInstancesMaster dataInstancesMaster) async {
+    await _dataInstancesMasterInsertionAdapter.insert(
+        dataInstancesMaster, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateDataInstanceByEntity(
+      DataInstancesMaster dataInstancesMaster) async {
+    await _dataInstancesMasterUpdateAdapter.update(
+        dataInstancesMaster, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteDataInstanceById(
+      DataInstancesMaster dataInstancesMaster) async {
+    await _dataInstancesMasterDeletionAdapter.delete(dataInstancesMaster);
   }
 }

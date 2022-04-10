@@ -4,25 +4,23 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
+import 'package:yellowpatioapp/Pages/comment_section_page.dart';
 import 'package:yellowpatioapp/Pages/insights_page.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 
 class homePage extends StatefulWidget {
+  const homePage({Key? key, required this.changePage}) : super(key: key);
 
-  const homePage({Key? key,required this.changePage}):super(key: key);
-
-  final void Function(int,ClassMaster) changePage;
+  final void Function(int, ClassMaster, bool) changePage;
 
   HomePageActivity createState() => HomePageActivity();
 }
 
 class HomePageActivity extends State<homePage> {
-
   // HomePageActivity({Key? key,this.changePage});
 
   // final void Function(int,ClassMaster)? changePage;
-  
 
   static const text = "your tasks";
   late List<ClassMaster> data = [];
@@ -31,7 +29,6 @@ class HomePageActivity extends State<homePage> {
   //singleTon
   static late var database;
   static late var classMaster;
-
 
   getInstance() async {
     //singleton wrong implementation
@@ -122,10 +119,9 @@ class HomePageActivity extends State<homePage> {
                                           PopupMenuItem(
                                             child: ListTile(
                                               title: Text('edit'),
-                                              onTap: (){
-                                                  widget.changePage!(1,e);
-                                              }
-                                                ,
+                                              onTap: () {
+                                                widget.changePage(1, e, true);
+                                              },
                                             ),
                                           ),
                                           PopupMenuItem(
@@ -157,19 +153,28 @@ class HomePageActivity extends State<homePage> {
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(2),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      padding: const EdgeInsets.all(3),
-                                      child: Text(
-                                        e.description+e.subCategoryID.toString()+e.subCategoryID.toString(),
-                                        maxLines: 2,
-                                        style: const TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        commentButton(e);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        padding: const EdgeInsets.all(3),
+                                        child: Text(
+                                          e.itemMasterID.toString() +
+                                              " " +
+                                              e.description +
+                                              e.categoryID.toString() +
+                                              e.subCategoryID.toString(),
+                                          maxLines: 2,
+                                          style: const TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -189,6 +194,17 @@ class HomePageActivity extends State<homePage> {
           ],
         ),
       ),
+    );
+  }
+
+  commentButton(ClassMaster classMaster) {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CommentSectionPage(
+                classMaster: classMaster,
+              )),
     );
   }
 

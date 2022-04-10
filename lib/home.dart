@@ -28,7 +28,7 @@ class HomePage extends State<Home> {
 
     homePageInstance = homePage(changePage: changePageIndex);
     _widgetOptions = <Widget>[
-    homePage(changePage: changePageIndex),
+    homePageInstance,
     InsightsPage(
       editable: false,
     ),
@@ -46,13 +46,21 @@ class HomePage extends State<Home> {
   late Widget homePageInstance;
   late List<Widget> _widgetOptions;
 
-  void changePageIndex(int index, ClassMaster classMaster){
+  void changePageIndex(int index, ClassMaster classMaster , bool editable){
+    //editable true, then set index to 1, and set the InsightsPage
+    //editable false, then set index to 0, and set the 
     setState(() {
       _selectedIndex = index;
       this.classMaster = classMaster;
-      _widgetOptions[_selectedIndex] = InsightsPage(editable: true,classMaster: this.classMaster,);
+      _widgetOptions[_selectedIndex] = editable?InsightsPage(editable: editable, classMaster: this.classMaster,changePage: changePageIndex,): InsightsPage(
+      editable: false,
+    );
     });
   }
+
+  
+
+
 
   void _onItemTapped(int index) {
     setState(() {
