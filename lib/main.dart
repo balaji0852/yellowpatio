@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yellowpatioapp/Pages/comment_section_page.dart';
+import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:yellowpatioapp/home.dart';
 import 'package:yellowpatioapp/login_page.dart';
 
 import 'db/database.dart';
@@ -11,7 +14,7 @@ import 'db/entity/item_master.dart';
 // import 'firebase_options.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       //options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           textTheme: const TextTheme(
               bodyText1: TextStyle(color: Colors.black, fontSize: 16))),
-      home: RootWidget(),
+      home: RootWidget()
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:floor/floor.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
+
+
+// @TypeConverters([DateTimeConverter])
 @Entity(
   tableName: 'DataInstancesMaster',
   foreignKeys: [
@@ -18,7 +21,7 @@ class DataInstancesMaster {
 
   final String dataInstances;
 
-  final String instancesTime;
+  final int instancesTime;
 
 
   DataInstancesMaster(

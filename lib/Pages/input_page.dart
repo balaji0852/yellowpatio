@@ -38,7 +38,7 @@ class Add extends State<AddPage> {
       color: Colors.black,
       fontStyle: FontStyle.italic,
       fontWeight: FontWeight.bold);
-  OutlineInputBorder op = OutlineInputBorder(
+  OutlineInputBorder op = const OutlineInputBorder(
       gapPadding: 0,
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
