@@ -35,7 +35,6 @@ class CommentSection extends State<CommentSectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Stack(
         children: [
@@ -150,6 +149,7 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
   postComment() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (commentEditController.text.isNotEmpty) {
       final database =
           await $FloorAppDatabase.databaseBuilder('app_database.db').build();
@@ -172,6 +172,4 @@ class CommentSection extends State<CommentSectionPage> {
       });
     }
   }
-
- 
 }

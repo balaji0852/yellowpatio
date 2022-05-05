@@ -1,16 +1,26 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/graph/time_view_widget.dart';
 
+// didChangeDependencies is called exactly after initstate for the first time
+// didUpdateWidget on parent data change, then post this method build is called
+//when Flex is set direction horizontal, and want the children widget to expand vertically, crossaxis stretch not the main, :)
 class TimeInstanceWidget extends StatefulWidget {
   final ClassMaster classMaster;
   final int today;
-
+  final Function(bool, List<DataInstancesMaster>) openCallback;
+  final int viewType;
   const TimeInstanceWidget(
-      {Key? key, required this.classMaster, required this.today})
+      {Key? key,
+      required this.classMaster,
+      required this.today,
+      required this.openCallback, required this.viewType})
       : super(key: key);
 
   @override
@@ -29,103 +39,139 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('-initState:tiw');
-    print(DateTime.fromMillisecondsSinceEpoch(widget.today));
+    // print('-initState:tiw');
+    // print(DateTime.fromMillisecondsSinceEpoch(widget.today));
+    // getTodayInstance(widget.today);
     getTodayInstance(widget.today);
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
+  @override
+  void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
 
-  //   // print("tiw --- dcp");
-  // }
+    getTodayInstance(widget.today);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 1250,
-      width: (MediaQuery.of(context).size.width - 50) / 3,
+      height: 2400,
+      // width: 30,
+      width: (MediaQuery.of(context).size.width - 50)/widget.viewType ,
       color: Colors.white,
       child: Column(
-          children: todayInstance
-              .map((element) => SizedBox(
-                    height: 50,
-                    child: Flex(
-                        key: UniqueKey(),
-                        direction: Axis.horizontal,
-                        children: element
-                            .map(
-                              (e) => Expanded(
-                                key: UniqueKey(),
-                                child: Container(
-                                    color: colorStore.getColorByID(
-                                        widget.classMaster.itemClassColorID),
-                                    child: Text(e.dataInstances)),
+          children: todayInstance.map((element) {
+        int index = 0;
+        print(element.length > 5);
+        print(element.map((e) => e));
+        //element = element.length>=5?element.sublist(0,3):element;
+        return SizedBox(
+          height: 100,
+          child: GestureDetector(
+            onTap: () {
+              widget.openCallback(true, element);
+            },
+            child: Flex(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                key: UniqueKey(),
+                direction: Axis.horizontal,
+                children: element.map((e) {
+                  index++;
+                  double height = (int.parse(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                      e.instancesTime)
+                                  .toString()
+                                  .substring(14, 16)) /
+                          60) *
+                      40;
+                  print(index);
+                  if (index > 3) {
+                    return SizedBox(
+                      width: 3,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: height,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: colorStore.getColorByID(
+                                  widget.classMaster.itemClassColorID),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  }
+                  return Flexible(
+                      key: UniqueKey(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: height,
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: colorStore.getColorByID(
+                                  widget.classMaster.itemClassColorID),
+                              child: Text(
+                                e.dataInstances,
+                                maxLines: 3,
                               ),
-                            )
-                            .toList()),
-                  ))
-              .toList()),
+                            ),
+                          )
+                        ],
+                      ));
+                }).toList()),
+          ),
+        );
+      }).toList()),
     );
   }
 
   getTodayInstance(int sampletoday) async {
-    print('-getTodayInstance:widget.today');
-    print(DateTime.fromMillisecondsSinceEpoch(widget.today));
-    print('-getTodayInstance:sampletoday');
-    print(DateTime.fromMillisecondsSinceEpoch(sampletoday));
-
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
 
-    int now = DateTime.parse(DateTime.fromMillisecondsSinceEpoch(sampletoday)
-                .toString()
-                .substring(0, 10) +
-            " 00:00:00.000")
-        .millisecondsSinceEpoch;
-
-    int dayStart = DateTime.parse(
-            DateTime.fromMillisecondsSinceEpoch(sampletoday+ 86400000)
+    int initial = DateTime.parse(
+            DateTime.fromMillisecondsSinceEpoch(widget.today)
                     .toString()
                     .substring(0, 10) +
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
 
-    print("query:now"+DateTime.fromMillisecondsSinceEpoch(sampletoday).toString());
-    print("query:nextnow"+
-        DateTime.fromMillisecondsSinceEpoch(sampletoday+ 86400000).toString());
+    int end = DateTime.parse(
+            DateTime.fromMillisecondsSinceEpoch(widget.today + 86400000)
+                    .toString()
+                    .substring(0, 10) +
+                " 00:00:00.000")
+        .millisecondsSinceEpoch;
     commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-        dayStart, now, widget.classMaster.itemMasterID!);
-
-    setState(() {
-      processTodayData();
-    });
+        end, initial, widget.classMaster.itemMasterID!);
+    processTodayData();
   }
 
   processTodayData() {
-    if (commentCopy!.isNotEmpty) {
-      todayInstance = List.generate(24, (index) => []);
-      for (var element in commentCopy!) {
-        print(
-            "critical - ${DateTime.fromMillisecondsSinceEpoch(element.instancesTime)}" +
-                element.dataInstances);
-        var timeInstance =
-            DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
+    setState(() {
+      if (commentCopy!.isNotEmpty) {
+        todayInstance = List.generate(24, (index) => []);
+        for (var element in commentCopy!) {
+          var timeInstance =
+              DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
 
-        todayInstance
-            .elementAt(
-                int.parse(timeInstance.toString().substring(11, 13)) == 00
-                    ? 0
-                    : int.parse(timeInstance.toString().substring(11, 13))-1)
-            .add(element);
-        // print(todayInstance.elementAt(
-        //     int.parse(timeInstance.toString().substring(11, 13)) - 1));
+          todayInstance
+              .elementAt(int.parse(timeInstance.toString().substring(11, 13)) ==
+                      00
+                  ? 0
+                  : int.parse(timeInstance.toString().substring(11, 13)) - 1)
+              .add(element);
+        }
+      } else {
+        todayInstance = List.generate(24, (index) => []);
       }
-    } else {
-      todayInstance = List.generate(24, (index) => []);
-    }
+    });
   }
 }
