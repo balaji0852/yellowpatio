@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yellowpatioapp/config.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:yellowpatioapp/home_drawer.dart';
 
 import 'package:yellowpatioapp/login_page.dart';
 import 'package:yellowpatioapp/main.dart';
@@ -118,9 +120,10 @@ class HomePage extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: HomeDrawer(),
       appBar: AppBar(
         title: const Text(appName, style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey,
         actions: <Widget>[
           // if (state['nan'] != 'nan')
           MaterialButton(

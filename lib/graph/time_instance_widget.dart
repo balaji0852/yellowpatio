@@ -118,7 +118,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                   widget.classMaster.itemClassColorID),
                               child: Text(
                                 e.dataInstances,
-                                maxLines: 3,
+                                maxLines: 8,
                               ),
                             ),
                           )

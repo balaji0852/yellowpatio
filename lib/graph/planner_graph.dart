@@ -5,6 +5,8 @@ import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/graph_dialog.dart';
 import 'package:yellowpatioapp/graph/time_instance_widget.dart';
 
+import '../config.dart';
+
 //having a listview with a fiexed height container is good, but having a
 //column and a listview inside the box
 //container can't have color in outside and a decoration, throws error
@@ -36,12 +38,18 @@ class PlannerGraphPage extends State<PlannerGraph> {
   final itemSize = 2402.0;
   bool openDialog = false;
   List<DataInstancesMaster> hourlyDataInstanceFromChild = [];
-  int viewType =3;
+  int viewType = 1;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //temp
+    var config = Config();
+    setState(() {
+      viewType = Config.dateViewPreference;
+      print(viewType);
+    });
 
     //used to call for 3 view previously
     //dateSetter(true, true);
@@ -88,8 +96,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
     addDateToList();
   }
 
-  addDateToList(){
-     if (viewType == 5) {
+  addDateToList() {
+    if (viewType == 5) {
       dates!.add(DateTime.fromMillisecondsSinceEpoch(day5).toString());
       dates!.add(DateTime.fromMillisecondsSinceEpoch(day4).toString());
       dates!.add(DateTime.fromMillisecondsSinceEpoch(day3).toString());
