@@ -43,8 +43,10 @@ class TimeViewPage extends State<TimeView> {
                 if (index <= 3)
                   Expanded(
                     child: Container(
-                      color: widget.colorStore
-                          .getColorByID(widget.classMaster.itemClassColorID),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                        color: widget.colorStore
+                          .getColorByID(widget.classMaster.itemClassColorID),),
+                   
                       child: Text(
                         e.dataInstances,
                         maxLines: 3,

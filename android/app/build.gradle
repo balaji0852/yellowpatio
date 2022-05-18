@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -39,6 +39,7 @@ android {
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -59,6 +60,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-core'
+    implementation "androidx.multidex:multidex:2.0.1"
 
     //look future issues
     //have broke a exception in line 28 -> C:\src\flutter\.pub-cache\hosted\pub.dartlang.org\firebase_auth-1.4.1\android\build.gradle

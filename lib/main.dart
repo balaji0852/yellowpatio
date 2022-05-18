@@ -8,28 +8,38 @@ import 'package:yellowpatioapp/Pages/comment_section_page.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/home.dart';
 import 'package:yellowpatioapp/login_page.dart';
+import 'package:yellowpatioapp/redux_state_store/appStore.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/app_state_reducer.dart';
 
 import 'db/database.dart';
 import 'db/entity/item_master.dart';
-// import 'firebase_options.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 Future main() async {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       //options: DefaultFirebaseOptions.currentPlatform,
-  );
+      );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final Store<AppStore> store =
+      Store<AppStore>(appReducer, initialState: AppStore.loading());
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return MaterialApp(
-      theme: ThemeData(
+    return StoreProvider<AppStore>(
+      store: store,
+      child: MaterialApp(
+        theme: ThemeData(
           textTheme: const TextTheme(
-              bodyText1: TextStyle(color: Colors.black, fontSize: 16))),
-      home: RootWidget()
+            bodyText1: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
+        home: RootWidget(),
+      ),
     );
   }
 }

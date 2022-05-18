@@ -50,136 +50,164 @@ class Add extends State<AddPage> {
       child: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          child: Column(
+          child: Row(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                micText,
-                style: ts,
-              ),
-              MaterialButton(
-                child: Image.asset("assets/mic.png"),
-                onPressed: () {
-                  // listen
-                },
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(isListening ? "listening..." : "stopped..."),
-              const SizedBox(
-                height: 40,
-              ),
-              Container(
-                  child: Text(
-                InputMessage,
-                style: ts,
-              )
-                  //  TagHighlighting(
-                  //   text: '<strong>fuck</string>' + InputMessage,
-                  //   defaultTextStyle: ts,
-                  //   tags: [
-                  //     TagHighlight(
-                  //       tagName: "strong", // the name of the tag above.
-                  //       textStyle: const TextStyle(
-                  //         // the style of "World"
-                  //         fontWeight: FontWeight.bold,
-                  //         backgroundColor: Colors.yellow,
-                  //         color: Colors.black,
-                  //         fontSize: 16,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // Text(
+              //   micText,
+              //   style: ts,
+              // ),
+              Expanded(
+                  child: MaterialButton(
+                onPressed: () {  },
+                child: Image.asset("assets/singlDayImage1.png"),
+                // onPressed: () {
+                //   // listen
+                // },
+              )),
+              Expanded(
+                  child:MaterialButton(
+                onPressed: () {  },
+                child: Image.asset("assets/twoDayImage.png"),
+                // onPressed: () {
+                //   // listen
+                // },
+              )),
+              Expanded(
+                  child:MaterialButton(
+                onPressed: () {  },
+                child: Image.asset("assets/threeDayImage.png"),
+                // onPressed: () {
+                //   // listen
+                // },
+              )),
+              Expanded(
+                  child: MaterialButton(
+                onPressed: () {  },
+                child: Image.asset("assets/fiveDayImage.png"),
+                // onPressed: () {
+                //   // listen
+                // },
+              ))
 
-                  ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Text((InputMessage.split(" ").length - 1).toString() + "/30")
-                ],
-              ),
-              SizedBox(
-                height: 2,
-                child: Container(
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: tec,
-                maxLines: 5,
-                decoration: InputDecoration(
-                    focusedBorder: op,
-                    enabledBorder: op,
-                    hintText: "type here..."),
-                onChanged: (value) {
-                  if (InputMessage.split(" ").length < 30) {
-                    setState(() {
-                      InputMessage = value;
-                    });
-                  }
-                },
-              ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // //Text(isListening ? "listening..." : "stopped..."),
+              // const SizedBox(
+              //   height: 40,
+              // ),
+              // Container(
+              //     child: Text(
+              //   InputMessage,
+              //   style: ts,
+              // )
+              //     //  TagHighlighting(
+              //     //   text: '<strong>fuck</string>' + InputMessage,
+              //     //   defaultTextStyle: ts,
+              //     //   tags: [
+              //     //     TagHighlight(
+              //     //       tagName: "strong", // the name of the tag above.
+              //     //       textStyle: const TextStyle(
+              //     //         // the style of "World"
+              //     //         fontWeight: FontWeight.bold,
+              //     //         backgroundColor: Colors.yellow,
+              //     //         color: Colors.black,
+              //     //         fontSize: 16,
+              //     //       ),
+              //     //     ),
+              //     //   ],
+              //     // ),
+
+              //     ),
               // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
               //   children: [
-              //     Text('label'),
-              Container(
-                height: 50,
-                child: label != null
-                    ? ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: label!
-                            .map(
-                              (e) => GestureDetector(
-                                child: Chip(
-                                  backgroundColor: setLabel != e.labelId!
-                                      ? Colors.yellow
-                                      : Colors.black,
-                                  label: Text(e.labelName),
-                                  labelStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: setLabel == e.labelId!
-                                          ? Colors.yellow
-                                          : Colors.black),
-                                ),
-                                onTap: () {
-                                  //case for removing the selected label
-                                  //case for default label
-                                  setState(() {
-                                    if (setLabel == e.labelId!) {
-                                      setLabel = 1;
-                                    } else {
-                                      setLabel = e.labelId!;
-                                    }
-                                  });
-                                },
-                              ),
-                            )
-                            .toList(),
-                      )
-                    : Text(" "),
-              ),
+              //     const SizedBox(
+              //       height: 30,
+              //     ),
+              //     Text((InputMessage.split(" ").length - 1).toString() + "/30")
               //   ],
               // ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (tec.text.isNotEmpty) {
-                      saveNotes();
-                    }
-                  },
-                  child: const Text("add"))
+              // SizedBox(
+              //   height: 2,
+              //   child: Container(
+              //     color: Colors.black,
+              //   ),
+              // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // TextField(
+              //   controller: tec,
+              //   maxLines: 5,
+              //   decoration: InputDecoration(
+              //       focusedBorder: op,
+              //       enabledBorder: op,
+              //       hintText: "type here..."),
+              //   onChanged: (value) {
+              //     if (InputMessage.split(" ").length < 30) {
+              //       setState(() {
+              //         InputMessage = value;
+              //       });
+              //     }
+              //   },
+              // ),
+              // // Row(
+              // //   children: [
+              // //     Text('label'),
+              // Container(
+              //   height: 50,
+              //   child: label != null
+              //       ? ListView(
+              //           scrollDirection: Axis.horizontal,
+              //           children: label!
+              //               .map(
+              //                 (e) => GestureDetector(
+              //                   child: Chip(
+              //                     backgroundColor: setLabel != e.labelId!
+              //                         ? Colors.yellow
+              //                         : Colors.black,
+              //                     label: Text(e.labelName),
+              //                     labelStyle: TextStyle(
+              //                         fontSize: 15,
+              //                         fontWeight: FontWeight.bold,
+              //                         color: setLabel == e.labelId!
+              //                             ? Colors.yellow
+              //                             : Colors.black),
+              //                   ),
+              //                   onTap: () {
+              //                     //case for removing the selected label
+              //                     //case for default label
+              //                     setState(() {
+              //                       if (setLabel == e.labelId!) {
+              //                         setLabel = 1;
+              //                       } else {
+              //                         setLabel = e.labelId!;
+              //                       }
+              //                     });
+              //                   },
+              //                 ),
+              //               )
+              //               .toList(),
+              //         )
+              //       : Text(" "),
+              // ),
+              // //   ],
+              // // ),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       if (tec.text.isNotEmpty) {
+              //         saveNotes();
+              //       }
+              //     },
+              //     child: const Text("add"))
             ],
           ),
         ),

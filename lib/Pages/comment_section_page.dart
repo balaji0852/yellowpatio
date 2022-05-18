@@ -71,6 +71,7 @@ class CommentSection extends State<CommentSectionPage> {
                       PlannerGraph(
                         key: _key,
                         classMaster: widget.classMaster!,
+                        graphType: 1,
                       ),
                       const SizedBox(
                         height: 5,

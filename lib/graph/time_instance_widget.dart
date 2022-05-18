@@ -16,11 +16,12 @@ class TimeInstanceWidget extends StatefulWidget {
   final int today;
   final Function(bool, List<DataInstancesMaster>) openCallback;
   final int viewType;
+  final int graphType;
   const TimeInstanceWidget(
       {Key? key,
       required this.classMaster,
       required this.today,
-      required this.openCallback, required this.viewType})
+      required this.openCallback, required this.viewType, required this.graphType,})
       : super(key: key);
 
   @override
@@ -84,7 +85,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                   .toString()
                                   .substring(14, 16)) /
                           60) *
-                      40;
+                      90;
                   print(index);
                   if (index > 3) {
                     return SizedBox(
@@ -114,8 +115,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           ),
                           Expanded(
                             child: Container(
-                              color: colorStore.getColorByID(
-                                  widget.classMaster.itemClassColorID),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                         color: colorStore.getColorByID(
+                                  widget.classMaster.itemClassColorID),),
+                             
                               child: Text(
                                 e.dataInstances,
                                 maxLines: 8,
@@ -149,8 +152,13 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                     .substring(0, 10) +
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
+
+        if(widget.graphType==1){
     commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-        end, initial, widget.classMaster.itemMasterID!);
+         initial,end, widget.classMaster.itemMasterID!);
+        }else{
+            commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
+        }
     processTodayData();
   }
 

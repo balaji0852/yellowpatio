@@ -18,6 +18,9 @@ abstract class DataInstanceMasterDao{
   @Query('SELECT * FROM DataInstancesMaster WHERE instancesTime <= :dateTimeEpoch AND instancesTime >= :zeroDateTimeEpoch AND itemMasterID = :itemMasterID')
   Future<List<DataInstancesMaster>?> findDataInstanceByOneInterval(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID);
 
+  @Query('SELECT * FROM DataInstancesMaster WHERE instancesTime <= :dateTimeEpoch AND instancesTime >= :zeroDateTimeEpoch')
+  Future<List<DataInstancesMaster>?> findDataInstanceByInterval(int dateTimeEpoch,int zeroDateTimeEpoch);
+
   @insert
   Future<void> insertDataInstance(DataInstancesMaster dataInstancesMaster);
 

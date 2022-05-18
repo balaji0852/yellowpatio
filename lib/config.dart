@@ -1,5 +1,9 @@
+import 'package:floor/floor.dart';
+
 class Config{
   static int dateViewPreference = 1;
+
+    
 
   get getdateViewPreference{
     return dateViewPreference;

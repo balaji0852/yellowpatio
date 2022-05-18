@@ -122,14 +122,15 @@ class HomePage extends State<Home> {
     return Scaffold(
       drawer: HomeDrawer(),
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(appName, style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white,
         actions: <Widget>[
           // if (state['nan'] != 'nan')
           MaterialButton(
             onPressed: signOut,
             child: CircleAvatar(
-              backgroundImage: NetworkImage(state['photoURL'].toString()),
+              //backgroundImage: NetworkImage(state['photoURL'].toString()),
               backgroundColor: Colors.yellow,
               radius: 16,
             ),

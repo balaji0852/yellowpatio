@@ -100,9 +100,9 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CategoryMaster` (`categoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `categoryName` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `SubCategoryMaster` (`subCategoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `subCategoryName` TEXT NOT NULL, `parentCategoryID` INTEGER NOT NULL, FOREIGN KEY (`parentCategoryID`) REFERENCES `CategoryMaster` (`categoryID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `SubCategoryMaster` (`subCategoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `subCategoryName` TEXT NOT NULL, `parentCategoryID` INTEGER NOT NULL, FOREIGN KEY (`parentCategoryID`) REFERENCES `CategoryMaster` (`categoryID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -542,11 +542,11 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
 
   @override
   Future<List<DataInstancesMaster>?> findDataInstanceByOneInterval(
-      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID) async {
+      int begin, int end, int itemMasterID) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM DataInstancesMaster WHERE instancesTime <= ?1 AND instancesTime >= ?2 AND itemMasterID = ?3',
+        'SELECT * FROM DataInstancesMaster WHERE instancesTime >= ?1 AND instancesTime <= ?2 AND itemMasterID = ?3',
         mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID]);
+        arguments: [begin, end, itemMasterID]);
   }
 
   @override
@@ -567,5 +567,13 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   Future<void> deleteDataInstanceById(
       DataInstancesMaster dataInstancesMaster) async {
     await _dataInstancesMasterDeletionAdapter.delete(dataInstancesMaster);
+  }
+
+  @override
+  Future<List<DataInstancesMaster>?> findDataInstanceByInterval(int begin, int end) {
+    return _queryAdapter.queryList(
+        'SELECT * FROM DataInstancesMaster WHERE instancesTime >= ?1 AND instancesTime <= ?2',
+        mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()) ),
+        arguments: [begin, end]);
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:yellowpatioapp/redux_state_store/appStore.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer.dart';
 
 import 'config.dart';
 
@@ -11,22 +15,30 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class HomeDraweWidget extends State<HomeDrawer> {
-  //var config = Config();
   int viewTypeState = 1;
-
+  var state;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
     setState(() {
       viewTypeState = Config.dateViewPreference;
     });
   }
 
   @override
+  void didUpdateWidget(covariant HomeDrawer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    //changing DB, through post ui change.
+  }
+
+  @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    print(state.state.dateViewPreference);
+
     return Drawer(
+      key: UniqueKey(),
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: ListView(
@@ -34,7 +46,15 @@ class HomeDraweWidget extends State<HomeDrawer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Sight - db"),
+                const Text("Sight"),
+                 StoreConnector<AppStore, int>(
+                  converter: (store) => store.state.dateViewPreference,
+                  builder: (context, userDateViewPreference) {
+                    return Text(
+                      'The  $userDateViewPreference',
+                    );
+                  },
+                ),
                 CloseButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -56,83 +76,57 @@ class HomeDraweWidget extends State<HomeDrawer> {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                gestureDetectorWithState([datePreferenceWidget(5)], 1),
-               gestureDetectorWithState( [
-                      datePreferenceWidget(2),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      datePreferenceWidget(2),
-                    ], 2),
-                gestureDetectorWithState([
-                      datePreferenceWidget(1.5),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      datePreferenceWidget(1.5),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      datePreferenceWidget(1.5),
-                    ], 3),
-                gestureDetectorWithState( [
-                        datePreferenceWidget(0.7),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        datePreferenceWidget(0.7),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        datePreferenceWidget(0.7),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        datePreferenceWidget(0.7),
-                        const SizedBox(
-                          width: 3,
-                        ),
-                        datePreferenceWidget(0.7),
-                      ], 5)
+                datePreferenceWidget(1, 'One day'),
+                const SizedBox(
+                  height: 2,
+                ),
+                datePreferenceWidget(2, 'Two day'),
+                const SizedBox(
+                  height: 2,
+                ),
+                datePreferenceWidget(3, 'Three day'),
+                const SizedBox(
+                  height: 2,
+                ),
+                datePreferenceWidget(5, 'Five day')
               ],
-            )
+            ),
+            const SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Container datePreferenceWidget(double density) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.black, borderRadius: BorderRadius.circular(3)),
-      width: density * 10,
-      height: 60,
-    );
+  setDateView(int viewType) {
+    Config.dateViewPreference = viewType;
+    setState(() {
+      viewTypeState = viewType;
+    });
   }
 
-  GestureDetector gestureDetectorWithState(List<Widget> children,int viewType){
-    return GestureDetector(
-      key: UniqueKey(),
-        onTap: (){
-              Config.dateViewPreference = viewType;
-              setState(() {
-                viewTypeState = viewType;
-              });
-            },
-      //  decoration: BoxDecoration(
-      //     color: Colors.black, borderRadius: BorderRadius.circular(3)),
-          child:Material(
-            color: viewTypeState==viewType?Colors.grey:Colors.transparent,
-          
-            child: Row(
-              mainAxisAlignment:MainAxisAlignment.spaceBetween,
-              children:children,
-            ),
-          ),
-    );
+  Widget datePreferenceWidget(int viewType, String text) {
+    return StoreConnector<AppStore, VoidCallback>(converter: (store) {
+      return () => store.dispatch(ChangeDateViewPreference(viewType));
+    }, builder: (context, callback) {
+      return MaterialButton(
+        key: UniqueKey(),
+        height: 50,
+        focusColor: Colors.red,
+        color:state.state.dateViewPreference == viewType ? Colors.grey : Colors.white,
+        onPressed: callback 
+        // () {
+        //   callback;
+        //   setDateView(viewType);
+        // }
+        ,
+        child: Text(text),
+      );
+    });
   }
 }

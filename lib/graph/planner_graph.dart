@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/graph_dialog.dart';
 import 'package:yellowpatioapp/graph/time_instance_widget.dart';
 
 import '../config.dart';
+import '../redux_state_store/appStore.dart';
 
 //having a listview with a fiexed height container is good, but having a
 //column and a listview inside the box
@@ -13,7 +15,8 @@ import '../config.dart';
 //typedefs are always outside
 class PlannerGraph extends StatefulWidget {
   final ClassMaster classMaster;
-  const PlannerGraph({Key? key, required this.classMaster}) : super(key: key);
+  final int graphType;
+  const PlannerGraph({Key? key, required this.classMaster, required this.graphType}) : super(key: key);
 
   @override
   PlannerGraphPage createState() {
@@ -26,6 +29,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   final GlobalKey<TimeInstancePage> _key2 = GlobalKey();
   final GlobalKey<TimeInstancePage> _key3 = GlobalKey();
   ScrollController widgetScrollCOntroller = ScrollController();
+  var state;
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
 
@@ -58,13 +62,17 @@ class PlannerGraphPage extends State<PlannerGraph> {
     widgetScrollCOntroller.addListener(() {
       print(widgetScrollCOntroller.offset);
     });
+    setListviewWidget();
+  }
+
+  setListviewWidget() {
     Future.delayed(const Duration(milliseconds: 500), () {
       widgetScrollCOntroller.animateTo(
-          30 * double.parse(DateTime.now().toString().substring(11, 13)),
+          75 * double.parse(DateTime.now().hour.toString()),
           curve: Curves.linear,
           duration: const Duration(milliseconds: 300));
 
-      print(50 * double.parse(DateTime.now().toString().substring(11, 13)));
+      print(75 * double.parse(DateTime.now().toString().substring(11, 13)));
     });
   }
 
@@ -97,6 +105,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   }
 
   addDateToList() {
+    dates!.clear();
     if (viewType == 5) {
       dates!.add(DateTime.fromMillisecondsSinceEpoch(day5).toString());
       dates!.add(DateTime.fromMillisecondsSinceEpoch(day4).toString());
@@ -119,12 +128,15 @@ class PlannerGraphPage extends State<PlannerGraph> {
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-
+    setListviewWidget();
     print("didUpdateWidget");
   }
 
   @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    viewType = state.state.dateViewPreference;
+    addDateToList();
     print("build");
     return Stack(
       children: [
@@ -174,6 +186,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
+                                graphType: widget.graphType,
                               ),
                             if (viewType >= 5)
                               TimeInstanceWidget(
@@ -183,6 +196,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
+
+                                graphType: widget.graphType,
                               ),
 
                             if (viewType >= 3)
@@ -194,6 +209,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
+                                graphType:widget.graphType,
                               ),
 
                             if (viewType >= 2)
@@ -205,6 +221,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
+                                graphType:widget.graphType,
                               ),
 
                             if (viewType >= 1)
@@ -214,6 +231,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
+                                graphType: widget.graphType,
                               ),
 
                             // Container(
