@@ -18,6 +18,7 @@ import 'package:yellowpatioapp/db/repository/labelmaster_dao.dart';
 import 'package:yellowpatioapp/db/repository/sub_category_dao.dart';
 import 'package:yellowpatioapp/db/repository/user_store_dao.dart';
 
+import 'entity/class_data_instanceMaster.dart';
 import 'entity/item_master.dart';
 import 'entity/label_master.dart';
 import 'repository/itemmaster_dao.dart';

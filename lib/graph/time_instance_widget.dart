@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
+import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/time_view_widget.dart';
@@ -14,15 +15,17 @@ import 'package:yellowpatioapp/graph/time_view_widget.dart';
 class TimeInstanceWidget extends StatefulWidget {
   final ClassMaster classMaster;
   final int today;
-  final Function(bool, List<DataInstancesMaster>) openCallback;
+  final Function(bool, List<ClassDataInstanceMaterDuplicate>) openCallback;
   final int viewType;
   final int graphType;
-  const TimeInstanceWidget(
-      {Key? key,
-      required this.classMaster,
-      required this.today,
-      required this.openCallback, required this.viewType, required this.graphType,})
-      : super(key: key);
+  const TimeInstanceWidget({
+    Key? key,
+    required this.classMaster,
+    required this.today,
+    required this.openCallback,
+    required this.viewType,
+    required this.graphType,
+  }) : super(key: key);
 
   @override
   TimeInstancePage createState() {
@@ -32,9 +35,11 @@ class TimeInstanceWidget extends StatefulWidget {
 
 class TimeInstancePage extends State<TimeInstanceWidget> {
   ColorStore colorStore = ColorStore();
-  List<DataInstancesMaster>? commentCopy = [];
-  List<List<DataInstancesMaster>> todayInstance =
+  List<ClassDataInstanceMaterDuplicate>? commentCopy = [];
+  List<List<ClassDataInstanceMaterDuplicate>> todayInstance =
       List.generate(24, (index) => []);
+  var classMasterDummy;
+  List<ClassDataInstanceMaterDuplicate>? temp;
 
   @override
   void initState() {
@@ -59,7 +64,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     return Container(
       height: 2400,
       // width: 30,
-      width: (MediaQuery.of(context).size.width - 50)/widget.viewType ,
+      width: (MediaQuery.of(context).size.width - 50) / widget.viewType,
       color: Colors.white,
       child: Column(
           children: todayInstance.map((element) {
@@ -97,8 +102,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           ),
                           Expanded(
                             child: Container(
-                              color: colorStore.getColorByID(
-                                  widget.classMaster.itemClassColorID),
+                              color: e.itemClassColorID == 999
+                                  ? colorStore.getColorByID(
+                                      widget.classMaster.itemClassColorID)
+                                  : colorStore.getColorByID(e.itemClassColorID),
                             ),
                           )
                         ],
@@ -115,10 +122,14 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           ),
                           Expanded(
                             child: Container(
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
-                         color: colorStore.getColorByID(
-                                  widget.classMaster.itemClassColorID),),
-                             
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: e.itemClassColorID == 999
+                                    ? colorStore.getColorByID(
+                                        widget.classMaster.itemClassColorID)
+                                    : colorStore
+                                        .getColorByID(e.itemClassColorID),
+                              ),
                               child: Text(
                                 e.dataInstances,
                                 maxLines: 8,
@@ -138,6 +149,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
+    final ClassMasterDao = database.classMasterDao;
 
     int initial = DateTime.parse(
             DateTime.fromMillisecondsSinceEpoch(widget.today)
@@ -153,12 +165,18 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
 
-        if(widget.graphType==1){
-    commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-         initial,end, widget.classMaster.itemMasterID!);
-        }else{
-            commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
-        }
+    if (widget.graphType == 1) {
+      commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
+          initial, end, widget.classMaster.itemMasterID!);
+    } else {
+      //commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
+
+      //join is a wrong methodology for this action, use single query for this, using itemMasterID
+      commentCopy = await dataInstanceMasterDao
+          .findDataInstanceByIntervalWithClassMaster(initial, end);
+
+      print(temp);
+    }
     processTodayData();
   }
 

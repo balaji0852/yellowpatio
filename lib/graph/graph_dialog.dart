@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
+import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 
@@ -11,8 +12,8 @@ class GraphDialog extends StatefulWidget {
       : super(key: key);
 
   final ClassMaster classMaster;
-  final Function(bool, List<DataInstancesMaster>) openCallback;
-  final List<DataInstancesMaster> hourlyDataInstance;
+  final Function(bool, List<ClassDataInstanceMaterDuplicate>) openCallback;
+  final List<ClassDataInstanceMaterDuplicate> hourlyDataInstance;
 
   @override
   graphDialogPage createState() {

@@ -541,12 +541,42 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   }
 
   @override
-  Future<List<DataInstancesMaster>?> findDataInstanceByOneInterval(
-      int begin, int end, int itemMasterID) async {
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(
+      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM DataInstancesMaster WHERE instancesTime >= ?1 AND instancesTime <= ?2 AND itemMasterID = ?3',
-        mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString())),
-        arguments: [begin, end, itemMasterID]);
+        'SELECT * FROM DataInstancesMaster WHERE instancesTime <= ?2 AND instancesTime >= ?1 AND itemMasterID = ?3',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: 999),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID]);
+  }
+
+  @override
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByInterval(
+      int dateTimeEpoch, int zeroDateTimeEpoch) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM DataInstancesMaster WHERE instancesTime <= ?2 AND instancesTime >= ?1',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: 999),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch]);
+  }
+//WHERE instancesTime >= ?1 AND instancesTime <= ?2
+//int dateTimeEpoch, int zeroDateTimeEpoch
+// arguments: [dateTimeEpoch, zeroDateTimeEpoch]
+//INNER JOIN ClassMaster ON DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID 
+//ClassMaster.itemClassColorID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime 
+  @override
+  Future<List<ClassDataInstanceMaterDuplicate>?>
+      findDataInstanceByIntervalWithClassMaster(
+        int dateTimeEpoch, int zeroDateTimeEpoch
+          ) async {
+    return _queryAdapter.queryList(
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(),
+        itemMasterID: int.parse(row['itemMasterID'].toString()),
+        dataInstanceID: int.parse(row['dataInstanceID'].toString()),
+        instancesTime:  int.parse(row['instancesTime'].toString()),
+        itemClassColorID: int.parse(row['itemClassColorID'].toString())
+         ),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch]
+       );
   }
 
   @override
@@ -567,13 +597,5 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   Future<void> deleteDataInstanceById(
       DataInstancesMaster dataInstancesMaster) async {
     await _dataInstancesMasterDeletionAdapter.delete(dataInstancesMaster);
-  }
-
-  @override
-  Future<List<DataInstancesMaster>?> findDataInstanceByInterval(int begin, int end) {
-    return _queryAdapter.queryList(
-        'SELECT * FROM DataInstancesMaster WHERE instancesTime >= ?1 AND instancesTime <= ?2',
-        mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()) ),
-        arguments: [begin, end]);
   }
 }

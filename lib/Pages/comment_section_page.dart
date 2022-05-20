@@ -164,6 +164,7 @@ class CommentSection extends State<CommentSectionPage> {
       await dataInstanceMasterDao
           .insertDataInstance(dataInstancesMaster)
           .then((value) {
+            print("inser");
         heightManagement = 100;
         maxLinesManagement = 1;
         commentEditController.clear();

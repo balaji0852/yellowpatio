@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/graph_dialog.dart';
@@ -41,7 +42,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   late List<String>? dates = [];
   final itemSize = 2402.0;
   bool openDialog = false;
-  List<DataInstancesMaster> hourlyDataInstanceFromChild = [];
+  List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild = [];
   int viewType = 1;
 
   @override
@@ -77,7 +78,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   }
 
   openDialogCallback(
-      bool openDialog, List<DataInstancesMaster> hourlyDataInstanceFromChild) {
+      bool openDialog, List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
     //adding List to callback for now, this is to populate the List<HourlyDataInstance>
     //to graph_dialog, finding central state management...
     setState(() {
