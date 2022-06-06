@@ -5,3 +5,10 @@ class ChangeDateViewPreference{
 
   ChangeDateViewPreference(this.userDateViewPreference);
 }
+
+
+class ChangeBottomNavigationView{
+  final int selectedIndex;
+
+  ChangeBottomNavigationView(this.selectedIndex);
+}

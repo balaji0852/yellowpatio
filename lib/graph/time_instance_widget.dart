@@ -41,13 +41,17 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   var classMasterDummy;
   List<ClassDataInstanceMaterDuplicate>? temp;
 
+  var valueStore = {
+    1:4,
+    2:3,
+    3:2,
+    5:1
+  };
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // print('-initState:tiw');
-    // print(DateTime.fromMillisecondsSinceEpoch(widget.today));
-    // getTodayInstance(widget.today);
     getTodayInstance(widget.today);
   }
 
@@ -63,7 +67,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   Widget build(BuildContext context) {
     return Container(
       height: 2400,
-      // width: 30,
       width: (MediaQuery.of(context).size.width - 50) / widget.viewType,
       color: Colors.white,
       child: Column(
@@ -83,16 +86,20 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 key: UniqueKey(),
                 direction: Axis.horizontal,
                 children: element.map((e) {
+                  int viewSetterValues =  ViewChangesHelper().viewSetterForType(widget.viewType);
+                  double fontSize = viewSetterValues==1?11:viewSetterValues==2?12:13;
                   index++;
-                  double height = (int.parse(
+                  print( DateTime.fromMillisecondsSinceEpoch(
+                                      e.instancesTime)
+                                  .minute );
+                  double height = (
                               DateTime.fromMillisecondsSinceEpoch(
                                       e.instancesTime)
-                                  .toString()
-                                  .substring(14, 16)) /
-                          60) *
+                                  .minute /
+                          60 )*
                       90;
                   print(index);
-                  if (index > 3) {
+                  if (index>ViewChangesHelper().viewSetterForType(widget.viewType)) {
                     return SizedBox(
                       width: 3,
                       child: Column(
@@ -124,6 +131,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
+                                //TODO - FOR REMOVAL
                                 color: e.itemClassColorID == 999
                                     ? colorStore.getColorByID(
                                         widget.classMaster.itemClassColorID)
@@ -133,6 +141,9 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                               child: Text(
                                 e.dataInstances,
                                 maxLines: 8,
+                                style: TextStyle(
+                                  fontSize: fontSize
+                                ),
                               ),
                             ),
                           )
@@ -175,7 +186,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       commentCopy = await dataInstanceMasterDao
           .findDataInstanceByIntervalWithClassMaster(initial, end);
 
-      print(temp);
     }
     processTodayData();
   }
@@ -201,3 +211,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     });
   }
 }
+
+
+

@@ -15,8 +15,14 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class HomeDraweWidget extends State<HomeDrawer> {
+
+  //TODO - FOR REMOVAL ---- LINE 102 <-REASON
   int viewTypeState = 1;
+  // ignore: prefer_typing_uninitialized_variables 
+  
   var state;
+
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +41,6 @@ class HomeDraweWidget extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
-    print(state.state.dateViewPreference);
 
     return Drawer(
       key: UniqueKey(),
@@ -47,14 +52,6 @@ class HomeDraweWidget extends State<HomeDrawer> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Text("Sight"),
-                 StoreConnector<AppStore, int>(
-                  converter: (store) => store.state.dateViewPreference,
-                  builder: (context, userDateViewPreference) {
-                    return Text(
-                      'The  $userDateViewPreference',
-                    );
-                  },
-                ),
                 CloseButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -103,6 +100,9 @@ class HomeDraweWidget extends State<HomeDrawer> {
     );
   }
 
+  //TODO - for removal , since config object no more used for
+  //        storing preference, and viewTypeState is not used anymore
+  //        since the redux migration
   setDateView(int viewType) {
     Config.dateViewPreference = viewType;
     setState(() {
@@ -118,13 +118,10 @@ class HomeDraweWidget extends State<HomeDrawer> {
         key: UniqueKey(),
         height: 50,
         focusColor: Colors.red,
-        color:state.state.dateViewPreference == viewType ? Colors.grey : Colors.white,
-        onPressed: callback 
-        // () {
-        //   callback;
-        //   setDateView(viewType);
-        // }
-        ,
+        color: state.state.dateViewPreference == viewType
+            ? Colors.grey
+            : Colors.white,
+        onPressed: callback,
         child: Text(text),
       );
     });

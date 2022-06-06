@@ -83,6 +83,8 @@ class _$AppDatabase extends AppDatabase {
       },
       onOpen: (database) async {
         await callback?.onOpen?.call(database);
+
+
       },
       onUpgrade: (database, startVersion, endVersion) async {
         await MigrationAdapter.runMigrations(
@@ -91,6 +93,8 @@ class _$AppDatabase extends AppDatabase {
         await callback?.onUpgrade?.call(database, startVersion, endVersion);
       },
       onCreate: (database, version) async {
+        
+
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ItemMaster` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `itemText` TEXT NOT NULL, `itemDescription` TEXT NOT NULL, `createdDateTime` TEXT NOT NULL, `userLabel` TEXT NOT NULL, `userTopicID` TEXT NOT NULL, `synced` INTEGER NOT NULL, `dueDate` TEXT NOT NULL, `ypClassIDs` INTEGER, `ypTo` TEXT NOT NULL, FOREIGN KEY (`ypClassIDs`) REFERENCES `Label` (`labelId`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
@@ -102,7 +106,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `SubCategoryMaster` (`subCategoryID` INTEGER PRIMARY KEY AUTOINCREMENT, `subCategoryName` TEXT NOT NULL, `parentCategoryID` INTEGER NOT NULL, FOREIGN KEY (`parentCategoryID`) REFERENCES `CategoryMaster` (`categoryID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`)  ON UPDATE CASCADE ON DELETE CASCADE )');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -523,7 +527,7 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
             dataInstanceID: row['dataInstanceID'] as int?,
             itemMasterID: row['itemMasterID'] as int,
             dataInstances: row['dataInstances'] as String,
-            instancesTime: row['instancesTime'] as int));
+            instancesTime: int.parse(row['instancesTime'].toString())));
   }
 
   @override
@@ -557,6 +561,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
         mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: 999),
         arguments: [dateTimeEpoch, zeroDateTimeEpoch]);
   }
+
+
 //WHERE instancesTime >= ?1 AND instancesTime <= ?2
 //int dateTimeEpoch, int zeroDateTimeEpoch
 // arguments: [dateTimeEpoch, zeroDateTimeEpoch]
@@ -578,6 +584,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
         arguments: [dateTimeEpoch, zeroDateTimeEpoch]
        );
   }
+
+  
 
   @override
   Future<void> insertDataInstance(

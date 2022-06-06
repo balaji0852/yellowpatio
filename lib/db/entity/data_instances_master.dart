@@ -1,6 +1,6 @@
 import 'package:floor/floor.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
-
+import 'dart:convert';
 
 // @TypeConverters([DateTimeConverter])
 @Entity(
@@ -23,11 +23,17 @@ class DataInstancesMaster {
 
   final int instancesTime;
 
-
   DataInstancesMaster(
       {this.dataInstanceID,
-      required this.itemMasterID, 
+      required this.itemMasterID,
       required this.dataInstances,
-      required this.instancesTime
-     });
+      required this.instancesTime});
+
+  String toJsonString() {
+    return jsonEncode(<String, dynamic>{
+      'dataInstances': dataInstances,
+      'instanceTime':instancesTime,
+      'classMaster': {'itemMasterID': 63},
+    });
+  }
 }

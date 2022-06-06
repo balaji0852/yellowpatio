@@ -43,6 +43,8 @@ dependencies:
   google_sign_in: ^5.2.1
   cool_dropdown: ^1.4.1
   flutter_redux: ^0.10.0
+  http: ^0.13.4
+  
   # flutter_guid: ^0.2.0
 
 dev_dependencies:

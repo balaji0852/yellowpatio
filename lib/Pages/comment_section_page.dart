@@ -5,6 +5,7 @@ import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
+import 'package:yellowpatioapp/migation/migrations.dart';
 
 import '../home.dart';
 
@@ -160,10 +161,10 @@ class CommentSection extends State<CommentSectionPage> {
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesTime: DateTime.now().millisecondsSinceEpoch);
-
+      //postDataInstanceMaster(dataInstancesMaster);
       await dataInstanceMasterDao
           .insertDataInstance(dataInstancesMaster)
-          .then((value) {
+          .then((value) {                                            
             print("inser");
         heightManagement = 100;
         maxLinesManagement = 1;

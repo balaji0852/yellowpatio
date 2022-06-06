@@ -43,3 +43,11 @@ class ColorPicker{
 
 }
 
+
+class ViewChangesHelper{
+
+
+  int viewSetterForType(int type){
+    return type==2?2:type==1?4:1;
+  }
+}

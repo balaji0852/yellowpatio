@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/config.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
@@ -8,6 +10,9 @@ import 'package:yellowpatioapp/home_drawer.dart';
 
 import 'package:yellowpatioapp/login_page.dart';
 import 'package:yellowpatioapp/main.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:yellowpatioapp/redux_state_store/appStore.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/selected_index_reducer.dart';
 import 'Pages/input_page.dart';
 import 'Pages/home_page.dart';
 import 'Pages/insights_page.dart';
@@ -17,26 +22,23 @@ import 'Pages/insights_page.dart';
 // import 'package:floor/floor.dart';
 
 //In Flutter eager initialization makes the object declaration final, thats the concept,
-//
+//20/05/2022 - moving _selectedIndex to central redux store...
 class Home extends StatefulWidget {
   HomePage createState() => HomePage();
 }
 
 class HomePage extends State<Home> {
-
-
-  HomePage(){
+  HomePage() {
     print('constructor');
 
     homePageInstance = homePage(changePage: changePageIndex);
     _widgetOptions = <Widget>[
-    homePageInstance,
-    InsightsPage(
-      editable: false,
-    ),
-    AddPage()
+      homePageInstance,
+      InsightsPage(
+        editable: false,
+      ),
+      AddPage()
     ];
-
   }
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -48,21 +50,23 @@ class HomePage extends State<Home> {
   late Widget homePageInstance;
   late List<Widget> _widgetOptions;
 
-  void changePageIndex(int index, ClassMaster classMaster , bool editable){
+  void changePageIndex(int index, ClassMaster classMaster, bool editable) {
     //editable true, then set index to 1, and set the InsightsPage
-    //editable false, then set index to 0, and set the 
+    //editable false, then set index to 0, and set the
     setState(() {
       _selectedIndex = index;
       this.classMaster = classMaster;
-      _widgetOptions[_selectedIndex] = editable?InsightsPage(editable: editable, classMaster: this.classMaster,changePage: changePageIndex,): InsightsPage(
-      editable: false,
-    );
+      _widgetOptions[_selectedIndex] = editable
+          ? InsightsPage(
+              editable: editable,
+              classMaster: this.classMaster,
+              changePage: changePageIndex,
+            )
+          : InsightsPage(
+              editable: false,
+            );
     });
   }
-
-  
-
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -119,44 +123,55 @@ class HomePage extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: HomeDrawer(),
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text(appName, style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          // if (state['nan'] != 'nan')
-          MaterialButton(
-            onPressed: signOut,
-            child: CircleAvatar(
-              //backgroundImage: NetworkImage(state['photoURL'].toString()),
-              backgroundColor: Colors.yellow,
-              radius: 16,
-            ),
-          )
-        ],
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return StoreConnector<AppStore, int>(
+      converter: (store) => store.state.selectedIndex,
+      builder: (context, bottomNavigationCurrentIndex) {
+
+        //checking index for bottomNavigation
+        print(bottomNavigationCurrentIndex);
+
+        return Scaffold(
+          drawer: HomeDrawer(),
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.black),
+            title: const Text(appName, style: TextStyle(color: Colors.black)),
+            backgroundColor: Colors.white,
+            actions: <Widget>[
+              // if (state['nan'] != 'nan')
+              MaterialButton(
+                onPressed: signOut,
+                child: const CircleAvatar(
+                  //backgroundImage: NetworkImage(state['photoURL'].toString()),
+                  backgroundColor: Colors.yellow,
+                  radius: 16,
+                ),
+              )
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insights),
-            label: 'insights',
+          body: _widgetOptions.elementAt(_selectedIndex),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.insights),
+                label: 'insights',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.add),
+                label: 'new',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.black,
+            onTap: (index) {
+              _onItemTapped(index);
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'new',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.black,
-        onTap: _onItemTapped, 
-      ),
+        );
+      },
     );
   }
 }

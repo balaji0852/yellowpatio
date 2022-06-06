@@ -17,7 +17,9 @@ import '../redux_state_store/appStore.dart';
 class PlannerGraph extends StatefulWidget {
   final ClassMaster classMaster;
   final int graphType;
-  const PlannerGraph({Key? key, required this.classMaster, required this.graphType}) : super(key: key);
+  const PlannerGraph(
+      {Key? key, required this.classMaster, required this.graphType})
+      : super(key: key);
 
   @override
   PlannerGraphPage createState() {
@@ -57,19 +59,19 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
 
     //used to call for 3 view previously
-    //dateSetter(true, true);
     initializeDate();
+    dateSetter(false, true);
 
     widgetScrollCOntroller.addListener(() {
       print(widgetScrollCOntroller.offset);
     });
-    setListviewWidget();
   }
 
   setListviewWidget() {
+    //TODO -done : fixed animation, by change value to '90' *
     Future.delayed(const Duration(milliseconds: 500), () {
       widgetScrollCOntroller.animateTo(
-          75 * double.parse(DateTime.now().hour.toString()),
+          90 * double.parse(DateTime.now().hour.toString()),
           curve: Curves.linear,
           duration: const Duration(milliseconds: 300));
 
@@ -77,8 +79,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
   }
 
-  openDialogCallback(
-      bool openDialog, List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
+  openDialogCallback(bool openDialog,
+      List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
     //adding List to callback for now, this is to populate the List<HourlyDataInstance>
     //to graph_dialog, finding central state management...
     setState(() {
@@ -102,7 +104,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
     day3 = day - 2 * 86400000;
     day2 = day - 86400000;
     day1 = day;
-    addDateToList();
   }
 
   addDateToList() {
@@ -127,18 +128,18 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   @override
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     setListviewWidget();
+    state = StoreProvider.of<AppStore>(context);
+    viewType = state.state.dateViewPreference;
+    //TODO -done: FIX 1 ----- 4/6/2021 - date was mismatching due to not calling dateSetter after
+    // state change... wrapped isIntl in dateSetter for initialization.
+    dateSetter(false, true);
     print("didUpdateWidget");
   }
 
   @override
   Widget build(BuildContext context) {
-    state = StoreProvider.of<AppStore>(context);
-    viewType = state.state.dateViewPreference;
-    addDateToList();
-    print("build");
     return Stack(
       children: [
         Column(
@@ -210,7 +211,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
-                                graphType:widget.graphType,
+                                graphType: widget.graphType,
                               ),
 
                             if (viewType >= 2)
@@ -222,7 +223,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
                                 viewType: viewType,
-                                graphType:widget.graphType,
+                                graphType: widget.graphType,
                               ),
 
                             if (viewType >= 1)
@@ -368,84 +369,45 @@ class PlannerGraphPage extends State<PlannerGraph> {
     );
   }
 
-  // incrementDate() {
-  //   //on back button: increament the epoch to 3days, goes the planner page
-  //   //is set to pasted last 3 set of days, from present.
-  //   //1 day view
-  //   //day1 = day1 + 86400000;
-
-  //   day1 = day1 + 3 * 86400000;
-  //   day2 = day1 + 86400000;
-  //   day3 = day1 + 2 * 86400000;
-  //   // print('00000000000000000000000000000000');
-  //   // dateTest(day1);
-  //   // dateTest(day2);
-  //   // dateTest(day3);
-  //   // print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-  //   //dateSetter(true);
-  //   // calls();
-  // }
-
-  // decrementDate() {
-  //   //1 day view
-  //   //day1 = day1 - 86400000;
-
-  //   day1 = day1 - 3 * 86400000;
-  //   day2 = day1 + 86400000;
-  //   day3 = day1 + 2 * 86400000;
-  //   // day2 = day1 + 86400000;
-  //   // day3 = day2 + 86400000;
-  //   // print("---------------------------------");
-  //   // dateTest(day1);
-  //   // dateTest(day2);
-  //   // dateTest(day3);
-  //   // print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-  //   //dateSetter(false);
-  //   // calls();
-  // }
+  
 
   dateSetter(bool isIncrement, bool isIntl) {
     setState(() {
-      dates!.clear();
       if (viewType == 1) {
-        //for viewType 1:)
-        day1 = isIncrement ? day1 + 86400000 : day1 - 86400000;
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day1).toString());
+        day1 = isIntl
+            ? day1
+            : isIncrement
+                ? day1 + 86400000
+                : day1 - 86400000;
       } else if (viewType == 2) {
-        day2 = isIncrement ? day1 + 86400000 : day2 - 2 * 86400000;
+        day2 = isIntl
+            ? day2
+            : isIncrement
+                ? day1 + 86400000
+                : day2 - 2 * 86400000;
         day1 = day2 + 86400000;
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day2).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day1).toString());
       } else if (viewType == 3) {
-        day3 = isIncrement ? day1 + 86400000 : day3 - 3 * 86400000;
+        day3 = isIntl
+            ? day3
+            : isIncrement
+                ? day1 + 86400000
+                : day3 - 3 * 86400000;
         day2 = day3 + 86400000;
         day1 = day3 + 2 * 86400000;
-        widgetScrollCOntroller.animateTo(
-            30 * double.parse(DateTime.now().toString().substring(11, 13)),
-            curve: Curves.linear,
-            duration: const Duration(milliseconds: 500));
-
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day3).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day2).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day1).toString());
       } else if (viewType == 5) {
-        day5 = isIncrement ? day1 + 86400000 : day5 - 5 * 86400000;
+        day5 = isIntl
+            ? day5
+            : isIncrement
+                ? day1 + 86400000
+                : day5 - 5 * 86400000;
         day4 = day5 + 86400000;
         day3 = day5 + 2 * 86400000;
         day2 = day5 + 3 * 86400000;
         day1 = day5 + 4 * 86400000;
-        widgetScrollCOntroller.animateTo(
-            30 * double.parse(DateTime.now().toString().substring(11, 13)),
-            curve: Curves.linear,
-            duration: const Duration(milliseconds: 500));
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day5).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day4).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day3).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day2).toString());
-        // dates!.add(DateTime.fromMillisecondsSinceEpoch(day1).toString());
       }
     });
     addDateToList();
+    setListviewWidget();
   }
 
   calls() {

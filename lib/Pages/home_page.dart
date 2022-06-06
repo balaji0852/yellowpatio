@@ -9,7 +9,10 @@ import 'package:yellowpatioapp/Pages/comment_section_page.dart';
 import 'package:yellowpatioapp/Pages/insights_page.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/db/repository/data_instance_master_dao.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
+import 'package:yellowpatioapp/migation/migrations.dart';
 
 import '../redux_state_store/appStore.dart';
 
@@ -56,6 +59,14 @@ class HomePageActivity extends State<homePage> {
     print(
         "***************************************************************************");
     List<ClassMaster> dataCopy = await database.classMasterDao.findAllItems();
+
+    // TODO done- FOR MIGRATION
+    //List<DataInstancesMaster> datas = await database.dataInstanceMasterDao.findAllDataInstance();
+    //datas.forEach((DataInstancesMaster) async{
+    //postDataInstanceMaster(DataInstancesMaster);
+    //});
+    //for migration
+
     setState(() {
       data = dataCopy;
     });
@@ -75,13 +86,13 @@ class HomePageActivity extends State<homePage> {
                 SliverToBoxAdapter(
                     child: PlannerGraph(
                         classMaster: ClassMaster(
-                          itemName: "j",
+                          itemName: "dummy",
                           categoryID: 1,
                           subCategoryID: 2,
                           itemClassColorID: 1,
                           itemPriority: 1,
                           isItemCommentable: 1,
-                          description: "kkk",
+                          description: "dummy",
                         ),
                         graphType: 2)
                     // Container(
@@ -245,11 +256,10 @@ class HomePageActivity extends State<homePage> {
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final classMaster = database.classMasterDao;
 
-    setState(() {
-      data.remove(classMasterItem);
-    });
-
     await classMaster.deleteItemById(classMasterItem).then((value) {
+      setState(() {
+        data.remove(classMasterItem);
+      });
       print("delete successfully");
     }).onError((error, stackTrace) {
       print(error);
