@@ -72,7 +72,7 @@ class graphDialogPage extends State<GraphDialog> {
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: colorStore.getColorByID(widget.classMaster.itemClassColorID),
+                                      color: colorStore.getColorByID(e.itemClassColorID),
                                       borderRadius: BorderRadius.circular(10)
                                     ),
                                     child: Text(e.dataInstances),

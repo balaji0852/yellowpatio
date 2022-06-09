@@ -27,6 +27,7 @@ class CommentSection extends State<CommentSectionPage> {
   String? comment;
   TextEditingController commentEditController = TextEditingController();
   final GlobalKey<PlannerGraphPage> _key = GlobalKey();
+  int commentsLengthManager = 0;
 
   @override
   void initState() {
@@ -143,11 +144,12 @@ class CommentSection extends State<CommentSectionPage> {
 
   textFieldheighManager(String value) {
     setState(() {
-      if (value.length % 40 == 1 && value.length / 40 < 10) {
+      if (commentsLengthManager<value.length && value.length % 30 == 1 && value.length / 40 < 10) {
         heightManagement = heightManagement + 10;
         maxLinesManagement++;
       }
     });
+    commentsLengthManager = value.length;
   }
 
   postComment() async {

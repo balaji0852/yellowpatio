@@ -41,12 +41,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   var classMasterDummy;
   List<ClassDataInstanceMaterDuplicate>? temp;
 
-  var valueStore = {
-    1:4,
-    2:3,
-    3:2,
-    5:1
-  };
+ 
 
   @override
   void initState() {

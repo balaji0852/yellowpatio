@@ -35,6 +35,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   var state;
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
+  double planner_graph_height = 625;
 
   static List<String> time = List.generate(
       24,
@@ -49,18 +50,19 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     //temp
+    //TODO - for removal, check 155 line, was a temp walkaround.
     var config = Config();
     setState(() {
       viewType = Config.dateViewPreference;
       print(viewType);
     });
 
-    //used to call for 3 view previously
+    //TODO removal - used to call for 3 view previously
     initializeDate();
-    dateSetter(false, true);
+    //moving dateSetter to didChangeDependencies
 
     widgetScrollCOntroller.addListener(() {
       print(widgetScrollCOntroller.offset);
@@ -130,12 +132,29 @@ class PlannerGraphPage extends State<PlannerGraph> {
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
     setListviewWidget();
-    state = StoreProvider.of<AppStore>(context);
-    viewType = state.state.dateViewPreference;
+    updateStoreValue();
     //TODO -done: FIX 1 ----- 4/6/2021 - date was mismatching due to not calling dateSetter after
     // state change... wrapped isIntl in dateSetter for initialization.
     dateSetter(false, true);
     print("didUpdateWidget");
+  }
+
+  // TODO - done : added this function for loading redux value, by default
+  // the datePreference val is 1, so setting the viewType to 1...or
+  // if its planner graph viewType type 2, it shows the prefered  view...
+  void updateStoreValue() {
+    state = StoreProvider.of<AppStore>(context);
+    viewType = state.state.dateViewPreference;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // TODO, adding this call to load the preference from store.
+    //fix for issue raised. because we moved the call to didupdatewidget
+    updateStoreValue();
+    dateSetter(false, true);
   }
 
   @override
@@ -145,7 +164,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
         Column(
           children: [
             Container(
-              height: 425,
+              height: 550,
               color: Colors.white,
               child: ListView(
                 itemExtent: itemSize,
@@ -329,6 +348,21 @@ class PlannerGraphPage extends State<PlannerGraph> {
             ),
           ],
         ),
+        Positioned(
+            top: 0,
+            bottom: 620,
+            left: 5,
+            right: 530,
+            child: Material(
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      planner_graph_height =
+                          planner_graph_height == 625 ? 425 : 625;
+                    });
+                  },
+                  icon: const Icon(Icons.arrow_circle_down)),
+            )),
         if (openDialog)
           GraphDialog(
             openCallback: openDialogCallback,
@@ -369,8 +403,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
     );
   }
 
-  
-
   dateSetter(bool isIncrement, bool isIntl) {
     setState(() {
       if (viewType == 1) {
@@ -406,8 +438,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
         day1 = day5 + 4 * 86400000;
       }
     });
-    addDateToList();
     setListviewWidget();
+    addDateToList();
   }
 
   calls() {

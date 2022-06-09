@@ -548,8 +548,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(
       int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM DataInstancesMaster WHERE instancesTime <= ?2 AND instancesTime >= ?1 AND itemMasterID = ?3',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: 999),
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID:int.parse(row['itemClassColorID'].toString())),
         arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID]);
   }
 
