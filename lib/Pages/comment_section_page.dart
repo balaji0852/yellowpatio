@@ -26,6 +26,7 @@ class CommentSection extends State<CommentSectionPage> {
   int maxLinesManagement = 1;
   String? comment;
   TextEditingController commentEditController = TextEditingController();
+  ScrollController mainWidgetScrollController = ScrollController();
   final GlobalKey<PlannerGraphPage> _key = GlobalKey();
   int commentsLengthManager = 0;
 
@@ -48,6 +49,7 @@ class CommentSection extends State<CommentSectionPage> {
                   height: MediaQuery.of(context).size.height - heightManagement,
                   color: Colors.white,
                   child: ListView(
+                    controller: mainWidgetScrollController,
                     children: [
                       const SizedBox(
                         height: 20,
@@ -71,6 +73,7 @@ class CommentSection extends State<CommentSectionPage> {
                         ),
                       ),
                       PlannerGraph(
+                        MainWidgetScrollView: mainWidgetScrollController,
                         key: _key,
                         classMaster: widget.classMaster!,
                         graphType: 1,

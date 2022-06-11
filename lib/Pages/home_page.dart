@@ -28,7 +28,9 @@ class HomePageActivity extends State<homePage> {
   // HomePageActivity({Key? key,this.changePage});
 
   // final void Function(int,ClassMaster)? changePage;
-
+  final GlobalKey<PlannerGraphPage> plannerGraphKey = GlobalKey();
+  ScrollController mainWidgetScrollController = ScrollController();
+  
   static const text = "your tasks";
   late List<ClassMaster> data = [];
   ColorStore colorStore = ColorStore();
@@ -47,10 +49,19 @@ class HomePageActivity extends State<homePage> {
     }
   }
 
+   
+
   @override
   void initState() {
     super.initState();
     getNotes();
+  }
+
+  @override
+  void didUpdateWidget(covariant homePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+
   }
 
   Future getNotes() async {
@@ -81,10 +92,13 @@ class HomePageActivity extends State<homePage> {
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           child: Scaffold(
             body: CustomScrollView(
+              controller: mainWidgetScrollController,
               slivers: [
                 //container is not sLiver, so use sliverToBoxAdapter..
                 SliverToBoxAdapter(
                     child: PlannerGraph(
+                      MainWidgetScrollView: mainWidgetScrollController,
+                      key: plannerGraphKey,
                         classMaster: ClassMaster(
                           itemName: "dummy",
                           categoryID: 1,
@@ -140,8 +154,8 @@ class HomePageActivity extends State<homePage> {
                                               style: const TextStyle(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  fontSize: 35,
-                                                  fontWeight: FontWeight.bold),
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w400),
                                             ),
                                           ),
                                           SizedBox(
@@ -179,7 +193,7 @@ class HomePageActivity extends State<homePage> {
                                       ),
                                       Text(e.description,
                                           style: const TextStyle(
-                                              fontSize: 13,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.bold),
                                           softWrap: false,
                                           maxLines: 3,
@@ -203,17 +217,16 @@ class HomePageActivity extends State<homePage> {
                                               padding: const EdgeInsets.all(3),
                                               child: Text(
                                                 e.itemMasterID.toString() +
-                                                    " " +
-                                                    e.description +
-                                                    e.categoryID.toString() +
-                                                    e.subCategoryID.toString(),
+                                                    
+                                                    e.description 
+                                                    ,
                                                 maxLines: 2,
                                                 style: const TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    fontSize: 12,
+                                                    fontSize: 10,
                                                     fontWeight:
-                                                        FontWeight.bold),
+                                                        FontWeight.w600),
                                               ),
                                             ),
                                           ),

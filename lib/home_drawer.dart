@@ -51,7 +51,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("Sight"),
+                const Text("planB"),
                 CloseButton(
                   onPressed: () {
                     Navigator.pop(context);

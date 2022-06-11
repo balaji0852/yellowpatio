@@ -43,7 +43,7 @@ class HomePage extends State<Home> {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   int _selectedIndex = 0;
-  static const String appName = "Speechry";
+  static const String appName = "planB";
   ClassMaster? classMaster;
   var state = {'photoURL': 'nan'};
   // Stream<Note>? result;

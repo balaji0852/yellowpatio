@@ -12,3 +12,10 @@ class ChangeBottomNavigationView{
 
   ChangeBottomNavigationView(this.selectedIndex);
 }
+
+
+class ChangeMainWidgetScrollViewIndex{
+  final bool mainWidgetScrollViewIndex;
+
+  ChangeMainWidgetScrollViewIndex(this.mainWidgetScrollViewIndex);
+}

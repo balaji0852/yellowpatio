@@ -17,8 +17,9 @@ import '../redux_state_store/appStore.dart';
 class PlannerGraph extends StatefulWidget {
   final ClassMaster classMaster;
   final int graphType;
+  final ScrollController MainWidgetScrollView;
   const PlannerGraph(
-      {Key? key, required this.classMaster, required this.graphType})
+      {Key? key, required this.classMaster, required this.graphType,required this.MainWidgetScrollView})
       : super(key: key);
 
   @override
@@ -36,6 +37,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
   double planner_graph_height = 625;
+
 
   static List<String> time = List.generate(
       24,
@@ -80,6 +82,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
       print(75 * double.parse(DateTime.now().toString().substring(11, 13)));
     });
   }
+
+ 
 
   openDialogCallback(bool openDialog,
       List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
@@ -157,6 +161,11 @@ class PlannerGraphPage extends State<PlannerGraph> {
     dateSetter(false, true);
   }
 
+  pageDownScroller(ScrollController mainWidgetScrollController) {
+      mainWidgetScrollController.animateTo(850,
+          curve: Curves.linear, duration: const Duration(milliseconds: 100));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -164,7 +173,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
         Column(
           children: [
             Container(
-              height: 550,
+              height: 575,
               color: Colors.white,
               child: ListView(
                 itemExtent: itemSize,
@@ -349,20 +358,17 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ],
         ),
         Positioned(
-            top: 0,
-            bottom: 620,
-            left: 5,
-            right: 530,
-            child: Material(
-              child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      planner_graph_height =
-                          planner_graph_height == 625 ? 425 : 625;
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_circle_down)),
-            )),
+          bottom: 550,
+          child: IconButton(
+            onPressed: () {
+              pageDownScroller(widget.MainWidgetScrollView);
+            },
+            icon: const Icon(
+              Icons.arrow_circle_down,
+              size: 35,
+            ),
+          ),
+        ),
         if (openDialog)
           GraphDialog(
             openCallback: openDialogCallback,

@@ -11,12 +11,14 @@ class AppStore {
   final int dateViewPreference;
   //20/05/2022 - for managing the bottomnavigation bar state centrally, add below state item
   final int selectedIndex;
+  final bool mainWidgetScrollControllerIndex;
 
   AppStore({
     this.isLoading = false,
     this.state = const {'state':'initialized/by constructor'},
     this.dateViewPreference = 2,
-    this.selectedIndex = 0
+    this.selectedIndex = 0,
+    this.mainWidgetScrollControllerIndex  = false
   });
 
   factory AppStore.loading() => AppStore(isLoading: true);

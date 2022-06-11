@@ -125,7 +125,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(5),topRight: Radius.circular(5)),
                                 //TODO - FOR REMOVAL
                                 color: e.itemClassColorID == 999
                                     ? colorStore.getColorByID(
