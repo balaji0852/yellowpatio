@@ -358,26 +358,26 @@ class BottomSheet extends State<BottomSheetState> {
   }
 
   Future saveNotes() async {
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final itemMasterDao = database.itemMasterDao;
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final itemMasterDao = database.itemMasterDao;
 
-    ItemMaster itemMaster = ItemMaster(
-        itemText: text.text,
-        itemDescription: ' test link share ',
-        createdDateTime: DateTime.now().toString(),
-        userLabel: ' test label ',
-        userTopicID: ' 01 ',
-        synced: false,
-        dueDate: DateTime.now().toString(),
-        ypClassIDs: 1,
-        ypTo: ' test to ');
+    // ItemMaster itemMaster = ItemMaster(
+    //     itemText: text.text,
+    //     itemDescription: ' test link share ',
+    //     createdDateTime: DateTime.now().toString(),
+    //     userLabel: ' test label ',
+    //     userTopicID: ' 01 ',
+    //     synced: false,
+    //     dueDate: DateTime.now().toString(),
+    //     ypClassIDs: 1,
+    //     ypTo: ' test to ');
 
-    await itemMasterDao.insertItem(itemMaster).then((value) {
-      print("inserted successfully");
-      text.clear();
-    }).onError((error, stackTrace) {
-      print(error);
-    });
+    // await itemMasterDao.insertItem(itemMaster).then((value) {
+    //   print("inserted successfully");
+    //   text.clear();
+    // }).onError((error, stackTrace) {
+    //   print(error);
+    // });
   }
 }

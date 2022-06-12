@@ -28,7 +28,7 @@ class Add extends State<AddPage> {
   void initState() {
     super.initState();
     //databaseSetup();
-    getLabel();
+    // getLabel();
   }
 
   databaseSetup() async {}
@@ -243,44 +243,44 @@ class Add extends State<AddPage> {
   // }
 
   Future saveNotes() async {
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final itemMasterDao = database.itemMasterDao;
+  //   final database =
+  //       await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  //   final itemMasterDao = database.itemMasterDao;
 
-    ItemMaster itemMaster = ItemMaster(
-        itemText: tec.text,
-        itemDescription: ' test text ',
-        createdDateTime: DateTime.now().toString(),
-        userLabel: ' non - labeled ',
-        userTopicID: ' 01 ',
-        synced: false,
-        dueDate: DateTime.now().toString(),
-        ypClassIDs: setLabel,
-        ypTo: ' test to ');
+  //   ItemMaster itemMaster = ItemMaster(
+  //       itemText: tec.text,
+  //       itemDescription: ' test text ',
+  //       createdDateTime: DateTime.now().toString(),
+  //       userLabel: ' non - labeled ',
+  //       userTopicID: ' 01 ',
+  //       synced: false,
+  //       dueDate: DateTime.now().toString(),
+  //       ypClassIDs: setLabel,
+  //       ypTo: ' test to ');
 
-    await itemMasterDao.insertItem(itemMaster).then((value) {
-      print("inserted successfully");
-      tec.clear();
-    }).onError((error, stackTrace) {
-      print(error);
-    });
-  }
+  //   await itemMasterDao.insertItem(itemMaster).then((value) {
+  //     print("inserted successfully");
+  //     tec.clear();
+  //   }).onError((error, stackTrace) {
+  //     print(error);
+  //   });
+  // }
 
-  getLabel() async {
-    database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  // getLabel() async {
+  //   database =
+  //       await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 
-    labelMasterDao = database.labelMasterDao;
+  //   labelMasterDao = database.labelMasterDao;
 
-    // print(database.personDao.findAllPersons());
+  //   // print(database.personDao.findAllPersons());
 
-    print(
-        "***************************************************************************");
+  //   print(
+  //       "***************************************************************************");
 
-    List<Label> data = await database.labelMasterDao.findAllLabel();
+  //   List<Label> data = await database.labelMasterDao.findAllLabel();
 
-    setState(() {
-      label = data;
-    });
+  //   setState(() {
+  //     label = data;
+  //   });
   }
 }

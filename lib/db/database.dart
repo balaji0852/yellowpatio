@@ -27,15 +27,15 @@ part 'database.g.dart';
 
 @Database(version: 1, entities: [ItemMaster, Label,ClassMaster,CategoryMaster,SubCategoryMaster,DataInstancesMaster,UserStoreDao])
 abstract class AppDatabase extends FloorDatabase {
-  ItemMasterDao get itemMasterDao;
+  // ItemMasterDao get itemMasterDao;
 
-  LabelMasterDao get labelMasterDao;
+  // LabelMasterDao get labelMasterDao;
 
-  CategoryMasterDao get categoryMasterDao;
+  // CategoryMasterDao get categoryMasterDao;
 
   ClassMasterDao get classMasterDao;
 
-  SubCategoryMasterDao get subCategoryMasterDao;
+  // SubCategoryMasterDao get subCategoryMasterDao;
 
   DataInstanceMasterDao get dataInstanceMasterDao;
 

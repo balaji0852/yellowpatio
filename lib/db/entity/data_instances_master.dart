@@ -23,11 +23,14 @@ class DataInstancesMaster {
 
   final int instancesTime;
 
+  final int instancesStatus;
+
   DataInstancesMaster(
       {this.dataInstanceID,
       required this.itemMasterID,
       required this.dataInstances,
-      required this.instancesTime});
+      required this.instancesTime,
+      required this.instancesStatus});
 
   String toJsonString() {
     return jsonEncode(<String, dynamic>{
