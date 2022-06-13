@@ -18,7 +18,7 @@ abstract class ClassMasterDao {
 
   //delete by id
   @delete
-  // @Query('DELETE FROM ClassMaster WHERE id = :id')
+  //@Query('DELETE FROM ClassMaster WHERE id = :id')
   Future<void> deleteItemById(ClassMaster classMaster);
 
 }

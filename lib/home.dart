@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:floor/floor.dart';
@@ -7,13 +9,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/config.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/home_drawer.dart';
-
 import 'package:yellowpatioapp/login_page.dart';
-import 'package:yellowpatioapp/main.dart';
-import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/selected_index_reducer.dart';
-import 'Pages/input_page.dart';
 import 'Pages/home_page.dart';
 import 'Pages/insights_page.dart';
 // import 'db/Person.dart';
@@ -37,7 +35,6 @@ class HomePage extends State<Home> {
       InsightsPage(
         editable: false,
       ),
-      AddPage()
     ];
   }
 
@@ -153,15 +150,11 @@ class HomePage extends State<Home> {
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: 'Home',
+                label: 'home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.insights),
-                label: 'insights',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.add),
-                label: 'new',
+                label: 'add',
               ),
             ],
             currentIndex: _selectedIndex,

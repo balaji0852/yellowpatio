@@ -1,7 +1,7 @@
+// ignore_for_file: unused_import
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/Pages/comment_section_page.dart';
@@ -12,7 +12,6 @@ import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/app_state_reducer.dart';
 
 import 'db/database.dart';
-import 'db/entity/item_master.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 

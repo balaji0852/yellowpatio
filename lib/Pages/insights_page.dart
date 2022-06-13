@@ -1,5 +1,6 @@
-import 'dart:ui';
+// ignore_for_file: unnecessary_import
 
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:yellowpatioapp/Pages/category_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
-import 'package:yellowpatioapp/db/entity/category_master.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
-import 'package:yellowpatioapp/db/entity/label_master.dart';
-import 'package:yellowpatioapp/db/repository/class_master_dao.dart';
-import 'package:yellowpatioapp/db/repository/labelmaster_dao.dart';
 
 class InsightsPage extends StatefulWidget {
   //theres no optional keyword, use nullable variable..
@@ -37,7 +34,6 @@ class InsightsPage extends StatefulWidget {
 //adding a copy contructor
 class Insights extends State<InsightsPage> {
   static const text = "insight";
-  List<Label>? label;
   TextEditingController labelName = TextEditingController();
   late ClassMaster classMaster;
   GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');

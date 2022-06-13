@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/graph/dropwdown.dart';
 import 'package:yellowpatioapp/graph/graph_dialog.dart';
 import 'package:yellowpatioapp/graph/time_instance_widget.dart';
 
@@ -19,7 +20,10 @@ class PlannerGraph extends StatefulWidget {
   final int graphType;
   final ScrollController MainWidgetScrollView;
   const PlannerGraph(
-      {Key? key, required this.classMaster, required this.graphType,required this.MainWidgetScrollView})
+      {Key? key,
+      required this.classMaster,
+      required this.graphType,
+      required this.MainWidgetScrollView})
       : super(key: key);
 
   @override
@@ -37,7 +41,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
   double planner_graph_height = 625;
-
+  List<String> viewCategory = ["all", "done", "to-do", "working"];
+  int selectedViewCategoryID = 0;
 
   static List<String> time = List.generate(
       24,
@@ -82,8 +87,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
       print(75 * double.parse(DateTime.now().toString().substring(11, 13)));
     });
   }
-
- 
 
   openDialogCallback(bool openDialog,
       List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
@@ -162,8 +165,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   }
 
   pageDownScroller(ScrollController mainWidgetScrollController) {
-      mainWidgetScrollController.animateTo(850,
-          curve: Curves.linear, duration: const Duration(milliseconds: 100));
+    mainWidgetScrollController.animateTo(850,
+        curve: Curves.linear, duration: const Duration(milliseconds: 100));
   }
 
   @override
@@ -215,8 +218,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 today: day5,
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
-                                viewType: viewType,
+                                viewType: selectedViewCategoryID,
                                 graphType: widget.graphType,
+                                filter: viewType,
                               ),
                             if (viewType >= 5)
                               TimeInstanceWidget(
@@ -225,9 +229,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 today: day4,
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
-                                viewType: viewType,
+                                viewType: selectedViewCategoryID,
 
                                 graphType: widget.graphType,
+                                filter: viewType,
                               ),
 
                             if (viewType >= 3)
@@ -238,8 +243,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 key: _key1,
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
-                                viewType: viewType,
+                                viewType: selectedViewCategoryID,
                                 graphType: widget.graphType,
+                                filter: viewType,
                               ),
 
                             if (viewType >= 2)
@@ -248,10 +254,12 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 //today:day1
                                 today: day2,
                                 key: _key2,
+
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
-                                viewType: viewType,
+                                viewType: selectedViewCategoryID,
                                 graphType: widget.graphType,
+                                filter: viewType,
                               ),
 
                             if (viewType >= 1)
@@ -260,8 +268,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                 key: _key3,
                                 classMaster: widget.classMaster,
                                 openCallback: openDialogCallback,
-                                viewType: viewType,
+                                viewType: selectedViewCategoryID,
                                 graphType: widget.graphType,
+                                filter: viewType,
                               ),
 
                             // Container(
@@ -328,14 +337,22 @@ class PlannerGraphPage extends State<PlannerGraph> {
                 const Text('View',
                     style:
                         TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                androidDropdown(['day', 'month', 'year'], (p0) => {}, 'month'),
+                DropDown(
+                    callBack: (selected) {
+                      setState(() {
+                        selectedViewCategoryID =
+                            viewCategory.indexOf(selected!);
+                      });
+                    },
+                    dropdownTitle:
+                        viewCategory.elementAt(selectedViewCategoryID)),
                 const Spacer(
                   flex: 1,
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.arrow_left,
-                    size: 35,
+                    Icons.arrow_back_ios_new,
+                    size: 25,
                   ),
                   onPressed: () {
                     dateSetter(false, false);
@@ -343,8 +360,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.arrow_right,
-                    size: 35,
+                    Icons.arrow_forward_ios,
+                    size: 25,
                   ),
                   onPressed: () {
                     dateSetter(true, false);
@@ -376,36 +393,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
             classMaster: widget.classMaster,
           ),
       ],
-    );
-  }
-
-  Container androidDropdown(
-      List<String> items, Function(String?)? callBack, String dropdownTitle) {
-    List<DropdownMenuItem<String>> dropdownItems = [];
-    for (String item in items) {
-      var newItem = DropdownMenuItem(
-        key: UniqueKey(),
-        child: Text(item, style: const TextStyle(fontSize: 13)),
-        value: item,
-      );
-      dropdownItems.add(newItem);
-    }
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-      child: DropdownButton<String>(
-        hint: Text(
-          dropdownTitle,
-          style: const TextStyle(
-              color: Colors.black, fontSize: 13, fontWeight: FontWeight.w500),
-        ),
-        items: dropdownItems,
-        borderRadius: BorderRadius.circular(25),
-        onChanged: callBack,
-      ),
     );
   }
 

@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
 
 @dao
 abstract class UserStoreDao {

@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/time_view_widget.dart';
+
+import '../redux_state_store/appStore.dart';
 
 // didChangeDependencies is called exactly after initstate for the first time
 // didUpdateWidget on parent data change, then post this method build is called
@@ -18,6 +21,7 @@ class TimeInstanceWidget extends StatefulWidget {
   final Function(bool, List<ClassDataInstanceMaterDuplicate>) openCallback;
   final int viewType;
   final int graphType;
+  final int filter;
   const TimeInstanceWidget({
     Key? key,
     required this.classMaster,
@@ -25,6 +29,7 @@ class TimeInstanceWidget extends StatefulWidget {
     required this.openCallback,
     required this.viewType,
     required this.graphType,
+    required this.filter
   }) : super(key: key);
 
   @override
@@ -40,29 +45,40 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       List.generate(24, (index) => []);
   var classMasterDummy;
   List<ClassDataInstanceMaterDuplicate>? temp;
-
- 
+  int viewType = 2;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getTodayInstance(widget.today);
+  }
+
+  void updateStoreValue() {
+    var state = StoreProvider.of<AppStore>(context);
+    viewType = state.state.dateViewPreference;
   }
 
   @override
   void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-
+    updateStoreValue();
     getTodayInstance(widget.today);
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    // updateStoreValue();
+    // getTodayInstance(widget.today);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 2400,
-      width: (MediaQuery.of(context).size.width - 50) / widget.viewType,
+      width: (MediaQuery.of(context).size.width - 50) / widget.filter,
       color: Colors.white,
       child: Column(
           children: todayInstance.map((element) {
@@ -81,22 +97,25 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 key: UniqueKey(),
                 direction: Axis.horizontal,
                 children: element.map((e) {
-                  int viewSetterValues =  ViewChangesHelper().viewSetterForType(widget.viewType);
-                  double fontSize = viewSetterValues==1?11:viewSetterValues==2?12:13;
+                  int viewSetterValues =
+                      ViewChangesHelper().viewSetterForType(viewType);
+                  double fontSize = viewSetterValues == 1
+                      ? 11
+                      : viewSetterValues == 2
+                          ? 12
+                          : 13;
                   index++;
-                  print( DateTime.fromMillisecondsSinceEpoch(
-                                      e.instancesTime)
-                                  .minute );
-                  double height = (
-                              DateTime.fromMillisecondsSinceEpoch(
-                                      e.instancesTime)
+                  print(DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
+                      .minute);
+                  double height =
+                      (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
                                   .minute /
-                          60 )*
-                      90;
+                              60) *
+                          90;
                   print(index);
-                  if (index>ViewChangesHelper().viewSetterForType(widget.viewType)) {
+                  if (index > ViewChangesHelper().viewSetterForType(viewType)) {
                     return SizedBox(
-                      width: 3,
+                      width: 1,
                       child: Column(
                         children: [
                           SizedBox(
@@ -125,7 +144,9 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(5),topRight: Radius.circular(5)),
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(5)),
                                 //TODO - FOR REMOVAL
                                 color: e.itemClassColorID == 999
                                     ? colorStore.getColorByID(
@@ -136,9 +157,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                               child: Text(
                                 e.dataInstances,
                                 maxLines: 8,
-                                style: TextStyle(
-                                  fontSize: fontSize
-                                ),
+                                style: TextStyle(fontSize: fontSize),
                               ),
                             ),
                           )
@@ -172,15 +191,26 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
         .millisecondsSinceEpoch;
 
     if (widget.graphType == 1) {
-      commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-          initial, end, widget.classMaster.itemMasterID!);
+      if (widget.viewType == 0) {
+        commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
+            initial, end, widget.classMaster.itemMasterID!);
+      } else {
+        commentCopy =
+            await dataInstanceMasterDao.findDataInstanceByOneIntervalV1(initial,
+                end, widget.classMaster.itemMasterID!, widget.viewType);
+      }
     } else {
       //commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
 
       //join is a wrong methodology for this action, use single query for this, using itemMasterID
-      commentCopy = await dataInstanceMasterDao
-          .findDataInstanceByIntervalWithClassMaster(initial, end);
-
+      if (widget.viewType == 0) {
+        commentCopy = await dataInstanceMasterDao
+            .findDataInstanceByIntervalWithClassMaster(initial, end);
+      } else {
+        commentCopy = await dataInstanceMasterDao
+            .findDataInstanceByIntervalWithClassMasterV1(
+                initial, end, widget.viewType);
+      }
     }
     processTodayData();
   }
@@ -194,10 +224,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
               DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
 
           todayInstance
-              .elementAt(int.parse(timeInstance.toString().substring(11, 13)) ==
-                      00
-                  ? 0
-                  : int.parse(timeInstance.toString().substring(11, 13)) - 1)
+              .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
               .add(element);
         }
       } else {
@@ -206,6 +233,3 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     });
   }
 }
-
-
-
