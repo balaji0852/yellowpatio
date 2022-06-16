@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DropDown extends StatelessWidget {
-  final List<String> viewCategory = ["all","done","to-do","working"];
+  final List<String> viewCategory ;
   final Function(String?)? callBack;
   final String dropdownTitle;
   List<DropdownMenuItem<String>> dropdownItems = [];
@@ -10,6 +10,7 @@ class DropDown extends StatelessWidget {
       {Key? key,
       required this.callBack,
       required this.dropdownTitle,
+      required this.viewCategory
       })
       : super(key: key) {
     for (String item in viewCategory) {

@@ -345,7 +345,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
                       });
                     },
                     dropdownTitle:
-                        viewCategory.elementAt(selectedViewCategoryID)),
+                        viewCategory.elementAt(selectedViewCategoryID),
+                        viewCategory: viewCategory,),
                 const Spacer(
                   flex: 1,
                 ),

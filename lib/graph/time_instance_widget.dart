@@ -115,7 +115,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                   print(index);
                   if (index > ViewChangesHelper().viewSetterForType(viewType)) {
                     return SizedBox(
-                      width: 1,
+                      width: 3,
                       child: Column(
                         children: [
                           SizedBox(

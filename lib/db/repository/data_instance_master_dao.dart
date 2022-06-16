@@ -12,9 +12,11 @@ abstract class DataInstanceMasterDao{
    @Query('SELECT * FROM DataInstancesMaster')
   Future<List<DataInstancesMaster>> findAllDataInstance();
 
-  // @Query('SELECT * FROM DataInstancesMaster WHERE dataInstanceID = :dataInstanceID')
-  // Stream<DataInstancesMaster?> findDataInstanceById(int dataInstanceID);
+  @Query('SELECT * FROM DataInstancesMaster WHERE dataInstanceID = :dataInstanceID')
+  Stream<DataInstancesMaster?> findDataInstanceById(int dataInstanceID);
 
+
+ Future<List<DataInstancesMaster>?> findDataInstanceByLastComment(int itemMasterID);
   // @Query('SELECT * FROM DataInstancesMaster WHERE  instancesTime >= ?1 AND instancesTime <= ?2 ')
   // Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByInterval(int dateTimeEpoch,int zeroDateTimeEpoch);
 
@@ -30,6 +32,10 @@ abstract class DataInstanceMasterDao{
   // @Query('SELECT * FROM DataInstancesMaster INNER JOIN ClassMaster ON DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID ')
   // Future<List<ClassDataInstanceMater>?> findDataInstanceByIntervalWithClassMaster();
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByIntervalWithClassMasterV1(int dateTimeEpoch,int zeroDateTimeEpoch,int statusType);
+
+
+  @Query('SELECT * FROM DataInstancesMaster WHERE itemMasterID=:itemMasterID ORDER BY instancesTime DESC LIMIT')
+  Stream<ClassDataInstanceMaterDuplicate?> findLastDataInstanceByClassMasterID(int itemMasterID);
 
 
   @insert

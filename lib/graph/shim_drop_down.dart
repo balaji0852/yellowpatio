@@ -1,0 +1,70 @@
+import 'package:flutter/cupertino.dart';
+import 'package:yellowpatioapp/graph/dropwdown.dart';
+
+import '../db/database.dart';
+import '../db/entity/class_data_instanceMaster.dart';
+import '../db/entity/data_instances_master.dart';
+
+class ShimDropDown extends StatefulWidget {
+  final List<String> viewCategory;
+  final Function(String?)? callBack;
+  final String dropdownTitle;
+  final ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicate;
+
+  const ShimDropDown(
+      {Key? key,
+      required this.viewCategory,
+      this.callBack,
+      required this.dropdownTitle,
+      required this.classDataInstanceMaterDuplicate})
+      : super(key: key);
+
+  @override
+  ShimDropDownWidget createState() => ShimDropDownWidget();
+}
+
+class ShimDropDownWidget extends State<ShimDropDown> {
+  String shimDropDownTitle = "loading";
+  List<String> viewCategory = ["done", "to-do", "working"];
+
+  @override
+  void initState() {
+    super.initState();
+    shimDropDownTitle = widget.dropdownTitle;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DropDown(
+        callBack: updateCommentStatus,
+        dropdownTitle: shimDropDownTitle,
+        viewCategory: widget.viewCategory);
+  }
+
+  updateCommentStatus(String? selectedCategory) async {
+    final database =
+        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final dataInstanceMasterDao = database.dataInstanceMasterDao;
+
+    print(selectedCategory);
+    DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
+        dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
+        itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
+        dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
+        instancesStatus: viewCategory.indexOf(selectedCategory!) +1,
+        instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime);
+
+    await dataInstanceMasterDao
+        .updateDataInstanceByEntity(dataInstancesMaster)
+        .then((value) {
+      setState(() {
+        shimDropDownTitle = selectedCategory;
+      });
+      print("inserted");
+    }).onError((error, stackTrace) {
+      setState(() {
+        shimDropDownTitle = widget.dropdownTitle;
+      });
+    });
+  }
+}
