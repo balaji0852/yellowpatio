@@ -51,6 +51,9 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    //updateStoreValue();
+    getTodayInstance(widget.today);
+
   }
 
   void updateStoreValue() {

@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return StoreProvider<AppStore>(
       store: store,
       child: MaterialApp(

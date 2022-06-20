@@ -86,7 +86,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ClassMaster` (`itemMasterID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemName` TEXT NOT NULL, `categoryID` INTEGER NOT NULL, `subCategoryID` INTEGER NOT NULL, `itemClassColorID` INTEGER NOT NULL, `itemPriority` INTEGER NOT NULL, `isItemCommentable` INTEGER NOT NULL, `description` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, `instancesStatus` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, `instancesStatus` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE CASCADE ON DELETE CASCADE)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -324,9 +324,9 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   }
 
    @override
-  Future<List<DataInstancesMaster>?> findDataInstanceByLastComment(
+  Future<DataInstancesMaster?> findDataInstanceByLastComment(
        int itemMasterID) async {
-    return _queryAdapter.queryList(
+    return _queryAdapter.query(
         'SELECT * FROM DataInstancesMaster WHERE  itemMasterID= ?1 ORDER BY instancesTime DESC LIMIT 1',
         mapper: (Map<String, Object?> row) => DataInstancesMaster(
             dataInstanceID: row['dataInstanceID'] as int?,

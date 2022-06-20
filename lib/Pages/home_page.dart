@@ -31,6 +31,7 @@ class HomePageActivity extends State<homePage> {
   // final void Function(int,ClassMaster)? changePage;
   final GlobalKey<PlannerGraphPage> plannerGraphKey = GlobalKey();
   ScrollController mainWidgetScrollController = ScrollController();
+  var lastCommentsMap = {};
 
   static const text = "your tasks";
   late List<ClassMaster> data = [];
@@ -68,7 +69,13 @@ class HomePageActivity extends State<homePage> {
         "***************************************************************************");
     List<ClassMaster> dataCopy = await database.classMasterDao.findAllItems();
     dataInstanceMaster = database.dataInstanceMasterDao;
-
+    dataCopy.forEach((classMaster) async {
+      lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
+      // Future.delayed(Duration(microseconds: 100000),
+      //     (() async =>
+      await findLastComment(classMaster.itemMasterID!);
+      //));
+    });
     // TODO done- FOR MIGRATION
     //List<DataInstancesMaster> datas = await database.dataInstanceMasterDao.findAllDataInstance();
     //datas.forEach((DataInstancesMaster) async{
@@ -81,13 +88,31 @@ class HomePageActivity extends State<homePage> {
     });
   }
 
+  Future<void> findLastComment(int itemMasterID) async {
+    lastCommentsMap.putIfAbsent(itemMasterID, () => 'loading...');
+    DataInstancesMaster? lastComment =
+        await dataInstanceMaster.findDataInstanceByLastComment(itemMasterID);
+    //var lastCommentForTheClass = lastComment.elementAt(0);
+    if (null != lastComment) {
+      lastCommentsMap.update(
+          itemMasterID, (value) => lastComment.dataInstances);
+    }
+    print("t" +
+        data.last.itemMasterID.toString() +
+        " " +
+        itemMasterID.toString());
+    if (data.last.itemMasterID == itemMasterID) {
+      print("t" +
+          data.last.itemMasterID.toString() +
+          " " +
+          itemMasterID.toString());
 
-  // DataInstancesMaster findLastComment(int itemMasterID) async{
-  //   Future<List<DataInstancesMaster>> lastComment =  await dataInstanceMaster.findDataInstanceByLastComment(itemMasterID);
-  //   var lastCommentForTheClass = lastComment.elementAt(0);
-
-  //   return lastCommentForTheClass;
-  // }
+      setState(() {
+        //lastCommentsMap = lastCommentsMap;
+      });
+    }
+    //return lastCommentForTheClass;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +122,7 @@ class HomePageActivity extends State<homePage> {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           child: Scaffold(
+            backgroundColor: Colors.white,
             body: CustomScrollView(
               controller: mainWidgetScrollController,
               slivers: [
@@ -135,6 +161,7 @@ class HomePageActivity extends State<homePage> {
                           childAspectRatio: 1,
                           children: data.map(
                             (e) {
+                              // findLastComment(e.itemMasterID!);
                               // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
                               return Container(
                                 padding: const EdgeInsets.symmetric(
@@ -222,8 +249,7 @@ class HomePageActivity extends State<homePage> {
                                                     BorderRadius.circular(5)),
                                             padding: const EdgeInsets.all(3),
                                             child: Text(
-                                              e.itemMasterID.toString() +
-                                                  e.description,
+                                              lastCommentsMap[e.itemMasterID],
                                               maxLines: 2,
                                               style: const TextStyle(
                                                   overflow:
@@ -244,7 +270,27 @@ class HomePageActivity extends State<homePage> {
                     : SliverToBoxAdapter(
                         child: Container(
                           alignment: Alignment.center,
-                          child: const Text('loading'),
+                          child: Column(children: [
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Image.asset(
+                              "assets/women_working_on_task.jpg",
+                              scale: 0.9,
+                              width: 300,
+                              height: 250,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text(
+                              "post you're task and work efficiently...",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            )
+                          ]),
                         ),
                       ),
               ],

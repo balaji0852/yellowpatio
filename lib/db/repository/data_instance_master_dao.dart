@@ -16,7 +16,7 @@ abstract class DataInstanceMasterDao{
   Stream<DataInstancesMaster?> findDataInstanceById(int dataInstanceID);
 
 
- Future<List<DataInstancesMaster>?> findDataInstanceByLastComment(int itemMasterID);
+ Future<DataInstancesMaster?> findDataInstanceByLastComment(int itemMasterID);
   // @Query('SELECT * FROM DataInstancesMaster WHERE  instancesTime >= ?1 AND instancesTime <= ?2 ')
   // Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByInterval(int dateTimeEpoch,int zeroDateTimeEpoch);
 
