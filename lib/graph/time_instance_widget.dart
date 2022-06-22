@@ -86,8 +86,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       child: Column(
           children: todayInstance.map((element) {
         int index = 0;
-        print(element.length > 5);
-        print(element.map((e) => e));
+        // print(element.length > 5);
+        // print(element.map((e) => e));
         //element = element.length>=5?element.sublist(0,3):element;
         return SizedBox(
           height: 100,
@@ -108,14 +108,14 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                           ? 12
                           : 13;
                   index++;
-                  print(DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
-                      .minute);
+                  // print(DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
+                  //     .minute);
                   double height =
                       (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
                                   .minute /
                               60) *
                           90;
-                  print(index);
+                  // print(index);
                   if (index > ViewChangesHelper().viewSetterForType(viewType)) {
                     return SizedBox(
                       width: 3,

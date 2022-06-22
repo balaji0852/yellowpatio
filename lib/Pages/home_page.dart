@@ -60,7 +60,11 @@ class HomePageActivity extends State<homePage> {
   @override
   void didUpdateWidget(covariant homePage oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    print("oop");
   }
+
+
 
   Future getNotes() async {
     database =
@@ -71,10 +75,10 @@ class HomePageActivity extends State<homePage> {
     dataInstanceMaster = database.dataInstanceMasterDao;
     dataCopy.forEach((classMaster) async {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
-      // Future.delayed(Duration(microseconds: 100000),
+      // Future.delayed(Duration(microseconds: 10000000),
       //     (() async =>
       await findLastComment(classMaster.itemMasterID!);
-      //));
+     // ));
     });
     // TODO done- FOR MIGRATION
     //List<DataInstancesMaster> datas = await database.dataInstanceMasterDao.findAllDataInstance();
@@ -93,25 +97,16 @@ class HomePageActivity extends State<homePage> {
     DataInstancesMaster? lastComment =
         await dataInstanceMaster.findDataInstanceByLastComment(itemMasterID);
     //var lastCommentForTheClass = lastComment.elementAt(0);
-    if (null != lastComment) {
+    setState(() {
+      if (null != lastComment) {
       lastCommentsMap.update(
           itemMasterID, (value) => lastComment.dataInstances);
+    }else{
+      lastCommentsMap.update(
+          itemMasterID, (value) => 'no comments, yet...');
     }
-    print("t" +
-        data.last.itemMasterID.toString() +
-        " " +
-        itemMasterID.toString());
-    if (data.last.itemMasterID == itemMasterID) {
-      print("t" +
-          data.last.itemMasterID.toString() +
-          " " +
-          itemMasterID.toString());
-
-      setState(() {
-        //lastCommentsMap = lastCommentsMap;
-      });
-    }
-    //return lastCommentForTheClass;
+    });
+    
   }
 
   @override
@@ -163,7 +158,8 @@ class HomePageActivity extends State<homePage> {
                             (e) {
                               // findLastComment(e.itemMasterID!);
                               // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
-                              return Container(
+                              return SizedBox(
+                                child:Container(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 7),
                                 decoration: BoxDecoration(
@@ -250,7 +246,7 @@ class HomePageActivity extends State<homePage> {
                                             padding: const EdgeInsets.all(3),
                                             child: Text(
                                               lastCommentsMap[e.itemMasterID],
-                                              maxLines: 2,
+                                              maxLines: 6,
                                               style: const TextStyle(
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -263,6 +259,7 @@ class HomePageActivity extends State<homePage> {
                                     ),
                                   ],
                                 ),
+                              ),
                               );
                             },
                           ).toList(),
@@ -321,6 +318,7 @@ class HomePageActivity extends State<homePage> {
     await classMaster.deleteItemById(classMasterItem).then((value) {
       setState(() {
         data.remove(classMasterItem);
+        data = data;
       });
       print("delete successfully");
     }).onError((error, stackTrace) {
