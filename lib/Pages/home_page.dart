@@ -77,7 +77,7 @@ class HomePageActivity extends State<homePage> {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
       // Future.delayed(Duration(microseconds: 10000000),
       //     (() async =>
-      await findLastComment(classMaster.itemMasterID!);
+      await findLastComment(classMaster.itemMasterID!); 
      // ));
     });
     // TODO done- FOR MIGRATION
@@ -299,7 +299,7 @@ class HomePageActivity extends State<homePage> {
   }
 
   commentButton(ClassMaster classMaster) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(

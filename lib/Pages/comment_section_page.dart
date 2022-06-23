@@ -138,7 +138,7 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
   backButton() {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Home()),
