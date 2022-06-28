@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
@@ -8,6 +9,7 @@ import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
 
 import '../home.dart';
+import '../redux_state_store/appStore.dart';
 
 //textfield can't be placed inside a row, need to use flexible,sizedbox or contianer
 //stack or column inside stack doesn't stretch
@@ -29,6 +31,7 @@ class CommentSection extends State<CommentSectionPage> {
   ScrollController mainWidgetScrollController = ScrollController();
   final GlobalKey<PlannerGraphPage> _key = GlobalKey();
   int commentsLengthManager = 0;
+  late int userStoreID;
 
   @override
   void initState() {
@@ -161,12 +164,14 @@ class CommentSection extends State<CommentSectionPage> {
       final database =
           await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       final dataInstanceMasterDao = database.dataInstanceMasterDao;
-
+    var state = StoreProvider.of<AppStore>(context);
+    userStoreID = state.state.dateViewPreference;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
-          instancesTime: DateTime.now().millisecondsSinceEpoch);
+          instancesTime: DateTime.now().millisecondsSinceEpoch,
+          userStoreID: userStoreID);
       //postDataInstanceMaster(dataInstancesMaster);
       await dataInstanceMasterDao
           .insertDataInstance(dataInstancesMaster)

@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/graph/dropwdown.dart';
 
 import '../db/database.dart';
 import '../db/entity/class_data_instanceMaster.dart';
 import '../db/entity/data_instances_master.dart';
+import '../redux_state_store/appStore.dart';
 
 class ShimDropDown extends StatefulWidget {
   final List<String> viewCategory;
@@ -26,6 +28,7 @@ class ShimDropDown extends StatefulWidget {
 class ShimDropDownWidget extends State<ShimDropDown> {
   String shimDropDownTitle = "loading";
   List<String> viewCategory = ["done", "to-do", "working"];
+  late int userStoreID;
 
   @override
   void initState() {
@@ -45,19 +48,22 @@ class ShimDropDownWidget extends State<ShimDropDown> {
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
-
+    var state = StoreProvider.of<AppStore>(context);
+    userStoreID = state.state.dateViewPreference;
     print(selectedCategory);
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
         dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
         itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
         dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
         instancesStatus: viewCategory.indexOf(selectedCategory!) +1,
-        instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime);
+        instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime,
+        userStoreID: userStoreID);
 
     await dataInstanceMasterDao
         .updateDataInstanceByEntity(dataInstancesMaster)
         .then((value) {
       setState(() {
+ 
         shimDropDownTitle = selectedCategory;
       });
       print("inserted");

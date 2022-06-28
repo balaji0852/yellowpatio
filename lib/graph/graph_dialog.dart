@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
@@ -8,6 +9,7 @@ import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/shim_drop_down.dart';
 
+import '../redux_state_store/appStore.dart';
 import 'dropwdown.dart';
 
 class GraphDialog extends StatefulWidget {
@@ -31,6 +33,7 @@ class graphDialogPage extends State<GraphDialog> {
   List<String> viewCategory = ["done", "to-do", "working"];
   int selectedViewCategoryID = 0;
   late ClassDataInstanceMaterDuplicate selectedDataInstance;
+  late int userStoreID;
 
   ColorStore colorStore = ColorStore();
   @override
@@ -146,12 +149,16 @@ class graphDialogPage extends State<GraphDialog> {
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
 
+    var state = StoreProvider.of<AppStore>(context);
+    userStoreID = state.state.dateViewPreference;
+
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
         dataInstanceID: selectedDataInstance.dataInstanceID,
         itemMasterID: selectedDataInstance.itemMasterID,
         dataInstances: selectedDataInstance.dataInstances,
         instancesStatus: selectedViewCategoryID,
-        instancesTime: selectedDataInstance.instancesTime);
+        instancesTime: selectedDataInstance.instancesTime,
+        userStoreID: userStoreID);
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
@@ -160,7 +167,8 @@ class graphDialogPage extends State<GraphDialog> {
             dataInstances: selectedDataInstance.dataInstances,
             instancesStatus: selectedViewCategoryID,
             instancesTime: selectedDataInstance.instancesTime,
-            itemClassColorID: classDataInstanceMaterDuplicate.itemClassColorID);
+            itemClassColorID: classDataInstanceMaterDuplicate.itemClassColorID,
+            userStoreID: userStoreID);
     //postDataInstanceMaster(dataInstancesMaster);
     await dataInstanceMasterDao
         .updateDataInstanceByEntity(dataInstancesMaster)
@@ -179,7 +187,8 @@ class graphDialogPage extends State<GraphDialog> {
               instancesStatus: selectedDataInstance.instancesStatus,
               instancesTime: selectedDataInstance.instancesTime,
               itemClassColorID:
-                  classDataInstanceMaterDuplicate.itemClassColorID);
+                  classDataInstanceMaterDuplicate.itemClassColorID,
+                  userStoreID: userStoreID);
       return classDataInstanceMaterDuplicateClone;
     });
 

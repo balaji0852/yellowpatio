@@ -134,7 +134,8 @@ class HomePageActivity extends State<homePage> {
                           itemPriority: 1,
                           isItemCommentable: 1,
                           description: "dummy",
-                        ),
+                          userStoreID: 1
+                        ), 
                         graphType: 2)
                     // Container(
                     //   height: 500,

@@ -1,10 +1,12 @@
 // ignore_for_file: unused_import
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/Pages/comment_section_page.dart';
+import 'package:yellowpatioapp/SupportSystem/user_management.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/home.dart';
 import 'package:yellowpatioapp/login_page.dart';
@@ -130,11 +132,17 @@ class _RootWidgetState extends State<RootWidget> {
       Navigator.pop(context);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomSheetState(data)));
-    } else {
+    } else if(await _googleSignIn.isSignedIn()){
       print("************************route***********************");
+      var user = FirebaseAuth.instance.currentUser;
+      print(user);    
+       Navigator.pop(context);
+      Navigator.push(
+      context, MaterialPageRoute(builder: (context) => MyHomePage()));
+    }else{
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+      context, MaterialPageRoute(builder: (context) => MyHomePage()));
     }
     // });
 

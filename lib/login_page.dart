@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yellowpatioapp/SupportSystem/user_management.dart';
+import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
 
 import 'home.dart';
 
@@ -34,11 +36,12 @@ class _MyHomePageState extends State<MyHomePage> {
       //account!=null take user into the app
       //Now the state is 1, app has a user;
 
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      // Navigator.pop(context);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Home()),
+      // );
+    
       print(
           "!@#~%^&*(------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     });
@@ -75,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             const Text(
-              'Speechry',
+              'planB',
               style: TextStyle(
                   fontSize: 25,
                   color: Colors.yellow,
@@ -91,40 +94,43 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future signInWithGoogle() async {
-    try {
-      //now the state is 2, A user is trying to sign in
-      setState(() {
-        state = 2;
-      });
+      var userManagement = UserManagement();
+      UserStore userStore = UserStore(linkedEmail: "demo@planB.com", userName: "admin");
+      userManagement.registerUser(userStore);
+    // try {
+    //   //now the state is 2, A user is trying to sign in
+    //   setState(() {
+    //     state = 2;
+    //   });
 
-      final googleSignInAccount = await _googleSignIn.signIn();
+    //   final googleSignInAccount = await _googleSignIn.signIn();
 
-      if (googleSignInAccount == null) return;
+    //   if (googleSignInAccount == null) return;
 
-      final googleAuth = await googleSignInAccount.authentication;
+    //   final googleAuth = await googleSignInAccount.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    //   final credential = GoogleAuthProvider.credential(
+    //       accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    } catch (Exception) {
-      //set the state to 0;
-      setState(() {
-        state = 0;
-      });
+    //   await FirebaseAuth.instance.signInWithCredential(credential);
+    // } catch (Exception) {
+    //   //set the state to 0;
+    //   setState(() {
+    //     state = 0;
+    //   });
 
-      print(Exception);
-    }
+    //   print(Exception);
+    // }
   }
 
   Future<void> checkUser() async {
     //write logic to check presence of user;
     if (await _googleSignIn.isSignedIn()) {
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      // Navigator.pop(context);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Home()),
+      // );
       print("!@#~%^&*(");
     }
   }

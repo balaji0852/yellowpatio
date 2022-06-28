@@ -1,4 +1,5 @@
 import 'package:floor/floor.dart';
+import 'package:flutter/cupertino.dart';
 
 @Entity(tableName: "UserStore")
 class UserStore {
@@ -7,19 +8,25 @@ class UserStore {
 
   final String linkedEmail;
 
-  final int dateViewPreference;
+  final String? linkedPhone;
 
-  final int timeViewPreference;
+  final int? projectStoreID;
 
-  final int themeID;
+  final int? dateViewPreference;
+
+  final int? timeViewPreference;
+
+  final int? themeID;
 
   final String userName;
 
-  UserStore(
-      {this.userStoreID,
-      required this.linkedEmail,
-      required this.dateViewPreference,
-      required this.timeViewPreference,
-      required this.themeID,
-      required this.userName});
+  UserStore({
+        required this.linkedEmail,
+        required this.userName,
+        this.userStoreID,
+        this.linkedPhone,
+        this.projectStoreID,
+        this.dateViewPreference,
+        this.timeViewPreference,
+        this.themeID});
 }

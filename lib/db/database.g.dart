@@ -65,10 +65,12 @@ class _$AppDatabase extends AppDatabase {
 
   DataInstanceMasterDao? _dataInstanceMasterDaoInstance;
 
+  UserStoreDao? _userStoreDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -84,9 +86,11 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ClassMaster` (`itemMasterID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemName` TEXT NOT NULL, `categoryID` INTEGER NOT NULL, `subCategoryID` INTEGER NOT NULL, `itemClassColorID` INTEGER NOT NULL, `itemPriority` INTEGER NOT NULL, `isItemCommentable` INTEGER NOT NULL, `description` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `ClassMaster` (`itemMasterID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemName` TEXT NOT NULL, `categoryID` INTEGER NOT NULL, `subCategoryID` INTEGER NOT NULL, `itemClassColorID` INTEGER NOT NULL, `itemPriority` INTEGER NOT NULL, `isItemCommentable` INTEGER NOT NULL, `description` TEXT NOT NULL, `userStoreID` INTEGER NOT NULL, FOREIGN KEY (`userStoreID`) REFERENCES `UserStore` (`userStoreID`) ON UPDATE CASCADE ON DELETE CASCADE)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, `instancesStatus` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+            'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, `instancesStatus` INTEGER NOT NULL, `userStoreID` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `UserStore` (`userStoreID` INTEGER PRIMARY KEY AUTOINCREMENT, `linkedEmail` TEXT NOT NULL, `linkedPhone` TEXT, `projectStoreID` INTEGER, `dateViewPreference` INTEGER, `timeViewPreference` INTEGER, `themeID` INTEGER, `userName` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -105,6 +109,11 @@ class _$AppDatabase extends AppDatabase {
     return _dataInstanceMasterDaoInstance ??=
         _$DataInstanceMasterDao(database, changeListener);
   }
+
+  @override
+  UserStoreDao get userStoreDao {
+    return _userStoreDaoInstance ??= _$UserStoreDao(database, changeListener);
+  }
 }
 
 class _$ClassMasterDao extends ClassMasterDao {
@@ -121,7 +130,8 @@ class _$ClassMasterDao extends ClassMasterDao {
                   'itemClassColorID': item.itemClassColorID,
                   'itemPriority': item.itemPriority,
                   'isItemCommentable': item.isItemCommentable,
-                  'description': item.description
+                  'description': item.description,
+                  'userStoreID': item.userStoreID
                 },
             changeListener),
         _classMasterUpdateAdapter = UpdateAdapter(
@@ -136,7 +146,8 @@ class _$ClassMasterDao extends ClassMasterDao {
                   'itemClassColorID': item.itemClassColorID,
                   'itemPriority': item.itemPriority,
                   'isItemCommentable': item.isItemCommentable,
-                  'description': item.description
+                  'description': item.description,
+                  'userStoreID': item.userStoreID
                 },
             changeListener),
         _classMasterDeletionAdapter = DeletionAdapter(
@@ -151,7 +162,8 @@ class _$ClassMasterDao extends ClassMasterDao {
                   'itemClassColorID': item.itemClassColorID,
                   'itemPriority': item.itemPriority,
                   'isItemCommentable': item.isItemCommentable,
-                  'description': item.description
+                  'description': item.description,
+                  'userStoreID': item.userStoreID
                 },
             changeListener);
 
@@ -178,7 +190,8 @@ class _$ClassMasterDao extends ClassMasterDao {
             itemClassColorID: row['itemClassColorID'] as int,
             itemPriority: row['itemPriority'] as int,
             isItemCommentable: row['isItemCommentable'] as int,
-            description: row['description'] as String));
+            description: row['description'] as String,
+            userStoreID: row['userStoreID'] as int));
   }
 
   @override
@@ -192,7 +205,8 @@ class _$ClassMasterDao extends ClassMasterDao {
             itemClassColorID: row['itemClassColorID'] as int,
             itemPriority: row['itemPriority'] as int,
             isItemCommentable: row['isItemCommentable'] as int,
-            description: row['description'] as String),
+            description: row['description'] as String,
+            userStoreID: row['userStoreID'] as int),
         arguments: [id],
         queryableName: 'ClassMaster',
         isView: false);
@@ -213,6 +227,148 @@ class _$ClassMasterDao extends ClassMasterDao {
   @override
   Future<void> deleteItemById(ClassMaster classMaster) async {
     await _classMasterDeletionAdapter.delete(classMaster);
+  }
+}
+
+
+class _$UserStoreDao extends UserStoreDao {
+  _$UserStoreDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _userStoreInsertionAdapter = InsertionAdapter(
+            database,
+            'UserStore',
+            (UserStore item) => <String, Object?>{
+                  'userStoreID': item.userStoreID,
+                  'linkedEmail': item.linkedEmail,
+                  'linkedPhone': item.linkedPhone,
+                  'projectStoreID': item.projectStoreID,
+                  'dateViewPreference': item.dateViewPreference,
+                  'timeViewPreference': item.timeViewPreference,
+                  'themeID': item.themeID,
+                  'userName': item.userName
+                },
+            changeListener),
+        _userStoreUpdateAdapter = UpdateAdapter(
+            database,
+            'UserStore',
+            ['userStoreID'],
+            (UserStore item) => <String, Object?>{
+                  'userStoreID': item.userStoreID,
+                  'linkedEmail': item.linkedEmail,
+                  'linkedPhone': item.linkedPhone,
+                  'projectStoreID': item.projectStoreID,
+                  'dateViewPreference': item.dateViewPreference,
+                  'timeViewPreference': item.timeViewPreference,
+                  'themeID': item.themeID,
+                  'userName': item.userName
+                },
+            changeListener),
+        _userStoreDeletionAdapter = DeletionAdapter(
+            database,
+            'UserStore',
+            ['userStoreID'],
+            (UserStore item) => <String, Object?>{
+                  'userStoreID': item.userStoreID,
+                  'linkedEmail': item.linkedEmail,
+                  'linkedPhone': item.linkedPhone,
+                  'projectStoreID': item.projectStoreID,
+                  'dateViewPreference': item.dateViewPreference,
+                  'timeViewPreference': item.timeViewPreference,
+                  'themeID': item.themeID,
+                  'userName': item.userName
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<UserStore> _userStoreInsertionAdapter;
+
+  final UpdateAdapter<UserStore> _userStoreUpdateAdapter;
+
+  final DeletionAdapter<UserStore> _userStoreDeletionAdapter;
+
+  @override
+  Future<List<UserStore>> findAllUser() async {
+    return _queryAdapter.queryList('SELECT * FROM UserStore',
+        mapper: (Map<String, Object?> row) => UserStore(
+            linkedEmail: row['linkedEmail'] as String,
+            userName: row['userName'] as String,
+            userStoreID: row['userStoreID'] as int?,
+            linkedPhone: row['linkedPhone'] as String?,
+            projectStoreID: row['projectStoreID'] as int?,
+            dateViewPreference: row['dateViewPreference'] as int?,
+            timeViewPreference: row['timeViewPreference'] as int?,
+            themeID: row['themeID'] as int?));
+  }
+
+  @override
+  Stream<UserStore?> findUserById(int userStoreID) {
+    return _queryAdapter.queryStream(
+        'SELECT * FROM UserStore WHERE userStoreID = ?1',
+        mapper: (Map<String, Object?> row) => UserStore(
+            linkedEmail: row['linkedEmail'] as String,
+            userName: row['userName'] as String,
+            userStoreID: row['userStoreID'] as int?,
+            linkedPhone: row['linkedPhone'] as String?,
+            projectStoreID: row['projectStoreID'] as int?,
+            dateViewPreference: row['dateViewPreference'] as int?,
+            timeViewPreference: row['timeViewPreference'] as int?,
+            themeID: row['themeID'] as int?),
+        arguments: [userStoreID],
+        queryableName: 'UserStore',
+        isView: false);
+  }
+
+  @override
+  Future<List<UserStore>?> findUserByEmail(String email) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM UserStore WHERE linkedEmail = ?1',
+        mapper: (Map<String, Object?> row) => UserStore(
+            linkedEmail: row['linkedEmail'] as String,
+            userName: row['userName'] as String,
+            userStoreID: row['userStoreID'] as int?,
+            linkedPhone: row['linkedPhone'] as String?,
+            projectStoreID: row['projectStoreID'] as int?,
+            dateViewPreference: row['dateViewPreference'] as int?,
+            timeViewPreference: row['timeViewPreference'] as int?,
+            themeID: row['themeID'] as int?),
+        arguments: [email]);
+  }
+
+  @override
+  Future<List<UserStore>?> findUserByPhone(String phone) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM UserStore WHERE linkedPhone = ?1',
+        mapper: (Map<String, Object?> row) => UserStore(
+            linkedEmail: row['linkedEmail'] as String,
+            userName: row['userName'] as String,
+            userStoreID: row['userStoreID'] as int?,
+            linkedPhone: row['linkedPhone'] as String?,
+            projectStoreID: row['projectStoreID'] as int?,
+            dateViewPreference: row['dateViewPreference'] as int?,
+            timeViewPreference: row['timeViewPreference'] as int?,
+            themeID: row['themeID'] as int?),
+        arguments: [phone]);
+  }
+
+  @override
+  Future<void> insertUser(UserStore userStore) async {
+    await _userStoreInsertionAdapter.insert(
+        userStore, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateUserByEntity(UserStore userStore) async {
+    await _userStoreUpdateAdapter.update(userStore, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteUser(UserStore userStore) async {
+    await _userStoreDeletionAdapter.delete(userStore);
   }
 }
 
@@ -277,7 +433,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
             itemMasterID: row['itemMasterID'] as int,
             dataInstances: row['dataInstances'] as String,
             instancesTime: row['instancesTime'] as int,
-            instancesStatus: row['instancesStatus'] as int));
+            instancesStatus: row['instancesStatus'] as int,
+            userStoreID: row['userStoreID'] as int));
   }
 
   @override
@@ -289,7 +446,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
             itemMasterID: row['itemMasterID'] as int,
             dataInstances: row['dataInstances'] as String,
             instancesTime: row['instancesTime'] as int,
-            instancesStatus: row['instancesStatus'] as int),
+            instancesStatus: row['instancesStatus'] as int,
+            userStoreID: row['userStoreID'] as int),
         arguments: [dataInstanceID],
         queryableName: 'DataInstancesMaster',
         isView: false);
@@ -333,17 +491,19 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
             itemMasterID: row['itemMasterID'] as int,
             dataInstances: row['dataInstances'] as String,
             instancesTime: row['instancesTime'] as int,
-            instancesStatus: row['instancesStatus'] as int),
+            instancesStatus: row['instancesStatus'] as int,
+            userStoreID: row['userStoreID'] as int),
         arguments: [ itemMasterID]);
   }
 
    @override
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(
-      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID) async {
+      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID,int userStoreID) async {
     return _queryAdapter.queryList(
-        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID]);
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus,DataInstancesMaster.userStoreID  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3 AND userStoreID=?4',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString()),
+            userStoreID: row['userStoreID'] as int),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID,userStoreID]);
   }
 
 //WHERE instancesTime >= ?1 AND instancesTime <= ?2
@@ -354,20 +514,20 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   @override
   Future<List<ClassDataInstanceMaterDuplicate>?>
       findDataInstanceByIntervalWithClassMaster(
-          int dateTimeEpoch, int zeroDateTimeEpoch) async {
+          int dateTimeEpoch, int zeroDateTimeEpoch,int userStoreID) async {
     return _queryAdapter.queryList(
-        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch]);
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus,DataInstancesMaster.userStoreID  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND userStoreID=?3',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString()),  userStoreID: row['userStoreID'] as int),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch,userStoreID]);
   }
 
 @override
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneIntervalV1(
-      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID,int statusType) async {
+      int dateTimeEpoch, int zeroDateTimeEpoch, int itemMasterID,int statusType,int userStoreID) async {
     return _queryAdapter.queryList(
-        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3 AND DataInstancesMaster.instancesStatus = ?4',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID,statusType]);
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus,DataInstancesMaster.userStoreID  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3 AND DataInstancesMaster.instancesStatus = ?4 AND userStoreID=?5',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString()),  userStoreID: row['userStoreID'] as int),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch, itemMasterID,statusType,userStoreID]);
   }
 
 //WHERE instancesTime >= ?1 AND instancesTime <= ?2
@@ -378,11 +538,11 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   @override
   Future<List<ClassDataInstanceMaterDuplicate>?>
       findDataInstanceByIntervalWithClassMasterV1(
-          int dateTimeEpoch, int zeroDateTimeEpoch,int statusType) async {
+          int dateTimeEpoch, int zeroDateTimeEpoch,int statusType,int userStoreID) async {
     return _queryAdapter.queryList(
-        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND DataInstancesMaster.instancesStatus = ?3',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch,statusType]);
+        'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus,DataInstancesMaster.userStoreID   FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND DataInstancesMaster.instancesStatus = ?3 AND userStoreID=?4',
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString()),  userStoreID: row['userStoreID'] as int),
+        arguments: [dateTimeEpoch, zeroDateTimeEpoch,statusType,userStoreID]);
   }
 
   
@@ -391,7 +551,7 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
   Stream<ClassDataInstanceMaterDuplicate?>
        findLastDataInstanceByClassMasterID(int itemMasterID) {
      return  _queryAdapter.queryStream('SELECT * FROM DataInstancesMaster WHERE itemMasterID= ?1',
-        mapper: (Map<String, Object?> row) =>ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID:1) ,
+        mapper: (Map<String, Object?> row) =>ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID:1,  userStoreID: row['userStoreID'] as int) ,
          arguments: [ itemMasterID],
         queryableName: 'DataInstancesMaster',
         isView: false);

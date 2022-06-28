@@ -267,7 +267,8 @@ class Insights extends State<InsightsPage> {
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
         isItemCommentable: 1,
-        description: descriptionController.text);
+        description: descriptionController.text,
+        userStoreID: 1);
 
     // ignore: avoid_print
     await classMasterDao.insertItem(classMasterItem).then((value) {
@@ -345,7 +346,8 @@ class Insights extends State<InsightsPage> {
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
         isItemCommentable: 1,
-        description: descriptionController.text);
+        description: descriptionController.text,
+        userStoreID: 1);
 
     print("-" + classMasterItem.categoryID.toString());
     print("-" +
