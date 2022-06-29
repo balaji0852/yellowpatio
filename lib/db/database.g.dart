@@ -70,7 +70,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 1,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -196,7 +196,8 @@ class _$ClassMasterDao extends ClassMasterDao {
 
   @override
   Future<List<ClassMaster>?> findItemById(int id) {
-    return _queryAdapter.queryList('SELECT * FROM ClassMaster WHERE userStoreID = ?1',
+    return _queryAdapter.queryList(
+        'SELECT * FROM ClassMaster WHERE userStoreID = ?1',
         mapper: (Map<String, Object?> row) => ClassMaster(
             itemMasterID: row['itemMasterID'] as int?,
             itemName: row['itemName'] as String,

@@ -46,8 +46,7 @@ class UserManagement {
   Future<bool> checkIfUserExist() async {
     accounts = await userStoreDao.findUserByEmail(userStore.linkedEmail);
     List<UserStore> allUser = await userStoreDao.findAllUser();
-    print(allUser.first.linkedEmail);
-    print(allUser.last.linkedEmail);
+    
 
     // if (accounts.isNotEmpty) {
     //   StoreConnector<AppStore, VoidCallback>(

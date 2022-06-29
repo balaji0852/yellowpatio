@@ -14,8 +14,8 @@ import 'entity/class_data_instanceMaster.dart';
 
 part 'database.g.dart';
 
-@Database(version: 2, entities: [ ClassMaster,DataInstancesMaster,UserStore])
-abstract class AppDatabase extends FloorDatabase {
+@Database(version: 1, entities: [ ClassMaster,DataInstancesMaster,UserStore])
+abstract class AppDatabase extends FloorDatabase {                                    
 
   ClassMasterDao get classMasterDao;
 
