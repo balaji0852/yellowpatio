@@ -1,4 +1,4 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -15,51 +15,74 @@ class UserManagement {
   //adding user, check if user account exist and add
   late var database;
   late var userStoreDao;
-  UserStore userStore = UserStore(linkedEmail: 'e', userName: 
-  'e');
+  late UserStore userStore;
   bool initialized = false;
   late List<UserStore> accounts;
 
-  
-  Future<bool> registerUser(UserStore UserStore) async {
+  Future<int> registerUser(UserStore _userStore) async {
     // if (!initialized) {
-      database =
-          await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-      userStoreDao = database.userStoreDao;
-      userStore = userStore;
-      initialized = true;
+    database =
+        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    userStoreDao = database.userStoreDao;
+    userStore = _userStore;
+    initialized = true;
     // }
-    await checkIfUserExist();
-    if(accounts.isNotEmpty){
+    if (await checkIfUserExist()) {
       //register the user in db
-      userStoreDao.insertUser(UserStore);
-      return true;
-    }else{
+      userStoreDao.insertUser(_userStore).then((value) async {
+        if (await checkIfUserExist()) {
+          return accounts.first.userStoreID;
+        } else {
+          return -1;
+        }
+      });
+    } else {
       //just take the user ahead
-      return false;
+      return accounts.first.userStoreID!;
     }
+    return -1;
   }
 
-  Future<void> checkIfUserExist() async {
-   accounts =
-        await userStoreDao.findUserByEmail("demo@planB.com");
-    if (accounts.isNotEmpty) {
-      StoreConnector<AppStore, VoidCallback>(
-        converter: (store) {
-          return () => store.dispatch(
-              ChangeBottomNavigationView(accounts.first.userStoreID!));
-        },
-        builder: (context, callback) {
-          callback();
-          return Text("waste");
-        },
-      );
-    }
+  Future<bool> checkIfUserExist() async {
+    accounts = await userStoreDao.findUserByEmail(userStore.linkedEmail);
+    List<UserStore> allUser = await userStoreDao.findAllUser();
+    print(allUser.first.linkedEmail);
+    print(allUser.last.linkedEmail);
 
-    // return false;
+    // if (accounts.isNotEmpty) {
+    //   StoreConnector<AppStore, VoidCallback>(
+    //     converter: (store) {
+    //       return () => store.dispatch(
+    //           ChangeBottomNavigationView(accounts.first.userStoreID!));
+    //     },
+    //     builder: (context, callback) {
+    //       callback();
+    //       return Text("waste");
+    //     },
+    //   );
+    // }
+
+    return accounts.isEmpty;
   }
 
-  createUserFromFirebaseObject(UserStore userStore){
-    var user = FirebaseAuth.instance.currentUser;
+  Future<int> userRegisterationShim(BuildContext context) async {
+    var _currentUser =  FirebaseAuth.instance.currentUser;
+    UserStore userStore = UserStore(
+        linkedEmail: _currentUser!.email!,
+        userName: _currentUser.displayName!,
+        dateViewPreference: 1,
+        timeViewPreference: 1,
+        themeID: 1,
+        linkedPhone: _currentUser.phoneNumber,
+        projectStoreID: 999);
+    int _userStoreID = await registerUser(userStore);
+
+    return _userStoreID;
+    // var state = StoreProvider.of<AppStore>(context);
+    // state.dispatch(ChangeBottomNavigationView(_userStoreID));
   }
+
+  // createUserFromFirebaseObject(var userStore) {
+  //   var user = FirebaseAuth.instance.currentUser;
+  // }
 }

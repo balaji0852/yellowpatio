@@ -181,7 +181,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     final ClassMasterDao = database.classMasterDao;
 
     var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.dateViewPreference;
+    userStoreID = state.state.selectedIndex;
 
     int initial = DateTime.parse(
             DateTime.fromMillisecondsSinceEpoch(widget.today)

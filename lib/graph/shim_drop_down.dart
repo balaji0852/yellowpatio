@@ -49,7 +49,7 @@ class ShimDropDownWidget extends State<ShimDropDown> {
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
     var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.dateViewPreference;
+    userStoreID = state.state.selectedIndex;
     print(selectedCategory);
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
         dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,

@@ -71,7 +71,9 @@ class HomePageActivity extends State<homePage> {
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     print(
         "***************************************************************************");
-    List<ClassMaster> dataCopy = await database.classMasterDao.findAllItems();
+    var state = StoreProvider.of<AppStore>(context);
+    int userStoreID = state.state.selectedIndex;
+    List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(userStoreID);
     dataInstanceMaster = database.dataInstanceMasterDao;
     dataCopy.forEach((classMaster) async {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');

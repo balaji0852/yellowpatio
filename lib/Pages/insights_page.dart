@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/category_store.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
+
+import '../redux_state_store/appStore.dart';
 
 class InsightsPage extends StatefulWidget {
   //theres no optional keyword, use nullable variable..
@@ -179,8 +182,8 @@ class Insights extends State<InsightsPage> {
               setState(() {
                 selectedCategory = value!;
                 categorystore.setSubCategoryList = selectedCategory;
-                selectedSubCategory = categorystore.getSubCategoryList.elementAt(0);
-
+                selectedSubCategory =
+                    categorystore.getSubCategoryList.elementAt(0);
               });
             }, selectedCategory),
             const SizedBox(
@@ -258,6 +261,9 @@ class Insights extends State<InsightsPage> {
     final database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final classMasterDao = database.classMasterDao;
+    var state = StoreProvider.of<AppStore>(context);
+    int userStoreID = state.state.selectedIndex;
+
     ClassMaster classMasterItem = ClassMaster(
         itemName: classTitleController.text,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
@@ -268,7 +274,7 @@ class Insights extends State<InsightsPage> {
         itemPriority: 1,
         isItemCommentable: 1,
         description: descriptionController.text,
-        userStoreID: 1);
+        userStoreID: userStoreID);
 
     // ignore: avoid_print
     await classMasterDao.insertItem(classMasterItem).then((value) {
@@ -336,6 +342,8 @@ class Insights extends State<InsightsPage> {
 
   updateDataToDatabase() async {
     // ignore: avoid_print
+    var state = StoreProvider.of<AppStore>(context);
+    int userStoreID = state.state.selectedIndex;
     ClassMaster classMasterItem = ClassMaster(
         itemMasterID: widget.classMaster!.itemMasterID,
         itemName: classTitleController.text,
@@ -347,7 +355,7 @@ class Insights extends State<InsightsPage> {
         itemPriority: 1,
         isItemCommentable: 1,
         description: descriptionController.text,
-        userStoreID: 1);
+        userStoreID: userStoreID);
 
     print("-" + classMasterItem.categoryID.toString());
     print("-" +

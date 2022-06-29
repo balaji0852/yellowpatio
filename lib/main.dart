@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return StoreProvider<AppStore>(
       store: store,
       child: MaterialApp(
@@ -132,20 +131,12 @@ class _RootWidgetState extends State<RootWidget> {
       Navigator.pop(context);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => BottomSheetState(data)));
-    } else if(await _googleSignIn.isSignedIn()){
-      print("************************route***********************");
-      var user = FirebaseAuth.instance.currentUser;
-      print(user);    
-       Navigator.pop(context);
-      Navigator.push(
-      context, MaterialPageRoute(builder: (context) => MyHomePage()));
-    }else{
+    } else {
       Navigator.pop(context);
       Navigator.push(
-      context, MaterialPageRoute(builder: (context) => MyHomePage()));
+          context, MaterialPageRoute(builder: (context) => MyHomePage()));
     }
     // });
-
     // You can use sharedData in your build() method now
   }
 

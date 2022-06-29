@@ -165,7 +165,7 @@ class CommentSection extends State<CommentSectionPage> {
           await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       final dataInstanceMasterDao = database.dataInstanceMasterDao;
     var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.dateViewPreference;
+    userStoreID = state.state.selectedIndex;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,

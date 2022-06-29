@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/SupportSystem/user_management.dart';
 import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 
 import 'home.dart';
 
@@ -35,17 +38,30 @@ class _MyHomePageState extends State<MyHomePage> {
         .listen((GoogleSignInAccount? account) async {
       //account!=null take user into the app
       //Now the state is 1, app has a user;
-
+      // if (await _googleSignIn.isSignedIn()) {
+      //   var userManagement = UserManagement();
+      //   userManagement.userRegisterationShim(context);
+      // }
       // Navigator.pop(context);
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(builder: (context) => Home()),
       // );
-    
+      Future.delayed(const Duration(milliseconds: 2000),(){
+        checkUser();
+      });
+      
+
       print(
           "!@#~%^&*(------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     });
     //_googleSignIn.signInSilently();
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('state chnage');
   }
 
   @override
@@ -94,44 +110,64 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future signInWithGoogle() async {
-      var userManagement = UserManagement();
-      UserStore userStore = UserStore(linkedEmail: "demo@planB.com", userName: "admin");
-      userManagement.registerUser(userStore);
-    // try {
-    //   //now the state is 2, A user is trying to sign in
-    //   setState(() {
-    //     state = 2;
-    //   });
+    try {
+      //now the state is 2, A user is trying to sign in
+      setState(() {
+        state = 2;
+      });
 
-    //   final googleSignInAccount = await _googleSignIn.signIn();
+      final googleSignInAccount = await _googleSignIn.signIn();
 
-    //   if (googleSignInAccount == null) return;
+      if (googleSignInAccount == null) return;
 
-    //   final googleAuth = await googleSignInAccount.authentication;
+      final googleAuth = await googleSignInAccount.authentication;
 
-    //   final credential = GoogleAuthProvider.credential(
-    //       accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-    //   await FirebaseAuth.instance.signInWithCredential(credential);
-    // } catch (Exception) {
-    //   //set the state to 0;
-    //   setState(() {
-    //     state = 0;
-    //   });
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (Exception) {
+      //set the state to 0;
+      setState(() {
+        state = 0;
+      });
 
-    //   print(Exception);
-    // }
+      print(Exception);
+    }
   }
 
   Future<void> checkUser() async {
     //write logic to check presence of user;
     if (await _googleSignIn.isSignedIn()) {
-      // Navigator.pop(context);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Home()),
-      // );
+      var userManagement = UserManagement();
+      int _userStoreID = await userManagement.userRegisterationShim(context);
+      var state = StoreProvider.of<AppStore>(context);
+      state.dispatch(ChangeBottomNavigationView(_userStoreID));
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
       print("!@#~%^&*(");
     }
   }
+
+  // userRegisterationShim() async {
+  //   var userManagement = UserManagement();
+  //   var _currentUser = FirebaseAuth.instance.currentUser;
+  //   UserStore userStore = UserStore(
+  //       linkedEmail: _currentUser!.email!,
+  //       userName: _currentUser.displayName!,
+  //       dateViewPreference: 1,
+  //       timeViewPreference: 1,
+  //       themeID: 1,
+  //       linkedPhone: _currentUser.phoneNumber,
+  //       projectStoreID: 999);
+  //   int _userStoreID = await userManagement.registerUser(userStore);
+  //   var state = StoreProvider.of<AppStore>(context);
+  //   if (_userStoreID == -1) {
+  //   } else {
+  //     state.dispatch(ChangeBottomNavigationView(_userStoreID));
+  //   }
+  // }
 }

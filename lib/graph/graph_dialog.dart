@@ -150,7 +150,7 @@ class graphDialogPage extends State<GraphDialog> {
     final dataInstanceMasterDao = database.dataInstanceMasterDao;
 
     var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.dateViewPreference;
+    userStoreID = state.state.selectedIndex;
 
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
         dataInstanceID: selectedDataInstance.dataInstanceID,
