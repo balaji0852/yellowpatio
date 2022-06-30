@@ -380,7 +380,7 @@ class Insights extends State<InsightsPage> {
         selectedSubCategory = 'default';
         selectedColor = 'red';
         updateButtonName = 'add';
-        widget.changePage!(1, widget.classMaster!, false);
+        widget.changePage!(0, widget.classMaster!, false);
       });
     }).onError((error, stackTrace) {
       print(error);

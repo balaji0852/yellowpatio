@@ -21,7 +21,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
   // ignore: prefer_typing_uninitialized_variables 
   
   var state;
-
+  int uid = 0;
 
   @override
   void initState() {
@@ -36,6 +36,16 @@ class HomeDraweWidget extends State<HomeDrawer> {
     super.didUpdateWidget(oldWidget);
 
     //changing DB, through post ui change.
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    state = StoreProvider.of<AppStore>(context);
+    setState(() {
+          uid = state.state.selectedIndex;
+    });
   }
 
   @override
@@ -94,6 +104,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
             const SizedBox(
               height: 10,
             ),
+            Text(" uid "+uid.toString())    
           ],
         ),
       ),

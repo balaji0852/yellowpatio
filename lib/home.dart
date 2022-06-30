@@ -53,6 +53,7 @@ class HomePage extends State<Home> {
     setState(() {
       _selectedIndex = index;
       this.classMaster = classMaster;
+      if(_selectedIndex==1){
       _widgetOptions[_selectedIndex] = editable
           ? InsightsPage(
               editable: editable,
@@ -62,6 +63,7 @@ class HomePage extends State<Home> {
           : InsightsPage(
               editable: false,
             );
+      }
     });
   }
 
@@ -134,14 +136,17 @@ class HomePage extends State<Home> {
             title: const Text(appName, style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.white,
             actions: <Widget>[
-              // if (state['nan'] != 'nan')
               MaterialButton(
                 onPressed: signOut,
-                child: const CircleAvatar(
-                  //backgroundImage: NetworkImage(state['photoURL'].toString()),
+                child: state['nan'] != 'nan'? 
+                  CircleAvatar(
+                  backgroundImage: NetworkImage(state['photoURL']!),
                   backgroundColor: Colors.yellow,
-                  radius: 16,
-                ),
+                  radius: 16):const CircleAvatar(
+                  backgroundColor: Colors.lightBlue,
+                  radius: 16
+                )
+                ,
               )
             ],
           ),

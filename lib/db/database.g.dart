@@ -76,6 +76,16 @@ class _$AppDatabase extends AppDatabase {
         await callback?.onConfigure?.call(database);
       },
       onOpen: (database) async {
+        // await database.execute('DROP TABLE `ClassMaster`');
+        // await database.execute('DROP TABLE `DataInstancesMaster`');
+
+        // await database.execute(
+        //     'CREATE TABLE IF NOT EXISTS `ClassMaster` (`itemMasterID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemName` TEXT NOT NULL, `categoryID` INTEGER NOT NULL, `subCategoryID` INTEGER NOT NULL, `itemClassColorID` INTEGER NOT NULL, `itemPriority` INTEGER NOT NULL, `isItemCommentable` INTEGER NOT NULL, `description` TEXT NOT NULL, `userStoreID` INTEGER NOT NULL, FOREIGN KEY (`userStoreID`) REFERENCES `UserStore` (`userStoreID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+        // await database.execute(
+        //     'CREATE TABLE IF NOT EXISTS `DataInstancesMaster` (`dataInstanceID` INTEGER PRIMARY KEY AUTOINCREMENT, `itemMasterID` INTEGER NOT NULL, `dataInstances` TEXT NOT NULL, `instancesTime` INTEGER NOT NULL, `instancesStatus` INTEGER NOT NULL, `userStoreID` INTEGER NOT NULL, FOREIGN KEY (`itemMasterID`) REFERENCES `ClassMaster` (`itemMasterID`) ON UPDATE CASCADE ON DELETE CASCADE)');
+        // await database.execute(
+        //     'CREATE TABLE IF NOT EXISTS `UserStore` (`userStoreID` INTEGER PRIMARY KEY AUTOINCREMENT, `linkedEmail` TEXT NOT NULL, `linkedPhone` TEXT, `projectStoreID` INTEGER, `dateViewPreference` INTEGER, `timeViewPreference` INTEGER, `themeID` INTEGER, `userName` TEXT NOT NULL)');
+
         await callback?.onOpen?.call(database);
       },
       onUpgrade: (database, startVersion, endVersion) async {

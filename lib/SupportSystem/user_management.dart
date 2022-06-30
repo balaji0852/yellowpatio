@@ -30,7 +30,7 @@ class UserManagement {
     if (await checkIfUserExist()) {
       //register the user in db
       userStoreDao.insertUser(_userStore).then((value) async {
-        if (await checkIfUserExist()) {
+        if (!await checkIfUserExist()) {
           return accounts.first.userStoreID;
         } else {
           return -1;
