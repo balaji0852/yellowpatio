@@ -262,8 +262,9 @@ class Insights extends State<InsightsPage> {
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     final classMasterDao = database.classMasterDao;
     var state = StoreProvider.of<AppStore>(context);
-    int userStoreID = state.state.selectedIndex;
-
+    int projectStoreID = state.state.projectStoreID;
+    
+    //TODO : 696969696969696969696 adding dummy prjid
     ClassMaster classMasterItem = ClassMaster(
         itemName: classTitleController.text,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
@@ -274,7 +275,7 @@ class Insights extends State<InsightsPage> {
         itemPriority: 1,
         isItemCommentable: 1,
         description: descriptionController.text,
-        userStoreID: userStoreID);
+        projectStoreID: projectStoreID);
 
     // ignore: avoid_print
     await classMasterDao.insertItem(classMasterItem).then((value) {
@@ -342,8 +343,9 @@ class Insights extends State<InsightsPage> {
 
   updateDataToDatabase() async {
     // ignore: avoid_print
+    //TODO : 696969696969696969696 adding dummy prjid
     var state = StoreProvider.of<AppStore>(context);
-    int userStoreID = state.state.selectedIndex;
+    int projectStoreID = state.state.projectStoreID;
     ClassMaster classMasterItem = ClassMaster(
         itemMasterID: widget.classMaster!.itemMasterID,
         itemName: classTitleController.text,
@@ -355,7 +357,7 @@ class Insights extends State<InsightsPage> {
         itemPriority: 1,
         isItemCommentable: 1,
         description: descriptionController.text,
-        userStoreID: userStoreID);
+        projectStoreID: projectStoreID);
 
     print("-" + classMasterItem.categoryID.toString());
     print("-" +

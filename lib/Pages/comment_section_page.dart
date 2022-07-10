@@ -170,8 +170,7 @@ class CommentSection extends State<CommentSectionPage> {
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
-          instancesTime: DateTime.now().millisecondsSinceEpoch,
-          userStoreID: userStoreID);
+          instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
       await dataInstanceMasterDao
           .insertDataInstance(dataInstancesMaster)

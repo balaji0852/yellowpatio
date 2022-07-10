@@ -11,3 +11,4 @@ int _ChangeBottomNavigationView(int selectedIndexTo,ChangeBottomNavigationView a
    selectedIndexTo = action.selectedIndex;
   return selectedIndexTo;
 }
+

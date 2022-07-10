@@ -20,16 +20,16 @@ abstract class DataInstanceMasterDao{
   
 
   @Query('SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3')
-  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int userStoreID);
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int projectStoreID);
   
-  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneIntervalV1(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int statusType,int userStoreID);
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneIntervalV1(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int statusType,int projectStoreID);
 
 
   @Query('SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1')
-  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByIntervalWithClassMaster(int dateTimeEpoch,int zeroDateTimeEpoch,int userStoreID);
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByIntervalWithClassMaster(int dateTimeEpoch,int zeroDateTimeEpoch,int projectStoreID);
 
  
-  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByIntervalWithClassMasterV1(int dateTimeEpoch,int zeroDateTimeEpoch,int statusType,int userStoreID);
+  Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByIntervalWithClassMasterV1(int dateTimeEpoch,int zeroDateTimeEpoch,int statusType,int projectStoreID);
 
   @insert
   Future<void> insertDataInstance(DataInstancesMaster dataInstancesMaster);

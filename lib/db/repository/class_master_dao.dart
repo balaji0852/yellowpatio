@@ -7,7 +7,7 @@ abstract class ClassMasterDao {
   Future<List<ClassMaster>> findAllItems();
 
   @Query('SELECT * FROM ClassMaster WHERE id = :id')
-  Future<List<ClassMaster>?> findItemById(int id);
+  Future<List<ClassMaster>?> findItemById(int projectStoreID);
 
   @insert
   Future<void> insertItem(ClassMaster classMaster);

@@ -1,14 +1,14 @@
 import 'package:floor/floor.dart';
 import 'dart:convert';
 
-import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
+import 'package:yellowpatioapp/db/entity/project_store.dart';
 
 @Entity(tableName: "ClassMaster",
 foreignKeys: [
     ForeignKey(
-      childColumns: ['userStoreID'],
-      parentColumns: ['userStoreID'],
-      entity: UserStore,
+      childColumns: ['projectStoreID'],
+      parentColumns: ['projectStoreID'],
+      entity: projectStore,
     )
   ])
 class ClassMaster {
@@ -29,7 +29,7 @@ class ClassMaster {
 
   final String description;
 
-  final int userStoreID;
+  final int projectStoreID;
 
   ClassMaster(
       {this.itemMasterID,
@@ -40,7 +40,7 @@ class ClassMaster {
       required this.itemPriority,
       required this.isItemCommentable,
       required this.description,
-      required this.userStoreID});
+      required this.projectStoreID});
 
   String toJsonString() {
     return jsonEncode(<String, dynamic>{

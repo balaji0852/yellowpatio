@@ -157,8 +157,7 @@ class graphDialogPage extends State<GraphDialog> {
         itemMasterID: selectedDataInstance.itemMasterID,
         dataInstances: selectedDataInstance.dataInstances,
         instancesStatus: selectedViewCategoryID,
-        instancesTime: selectedDataInstance.instancesTime,
-        userStoreID: userStoreID);
+        instancesTime: selectedDataInstance.instancesTime);
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
@@ -168,7 +167,7 @@ class graphDialogPage extends State<GraphDialog> {
             instancesStatus: selectedViewCategoryID,
             instancesTime: selectedDataInstance.instancesTime,
             itemClassColorID: classDataInstanceMaterDuplicate.itemClassColorID,
-            userStoreID: userStoreID);
+            );
     //postDataInstanceMaster(dataInstancesMaster);
     await dataInstanceMasterDao
         .updateDataInstanceByEntity(dataInstancesMaster)
@@ -187,8 +186,7 @@ class graphDialogPage extends State<GraphDialog> {
               instancesStatus: selectedDataInstance.instancesStatus,
               instancesTime: selectedDataInstance.instancesTime,
               itemClassColorID:
-                  classDataInstanceMaterDuplicate.itemClassColorID,
-                  userStoreID: userStoreID);
+                  classDataInstanceMaterDuplicate.itemClassColorID);
       return classDataInstanceMaterDuplicateClone;
     });
 

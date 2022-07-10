@@ -12,13 +12,17 @@ class AppStore {
   //20/05/2022 - for managing the bottomnavigation bar state centrally, add below state item
   final int selectedIndex;
   final bool mainWidgetScrollControllerIndex;
+  final int projectStoreID;
+  final int userStoreID;
 
   AppStore({
     this.isLoading = false,
     this.state = const {'state':'initialized/by constructor'},
     this.dateViewPreference = 2,
     this.selectedIndex = 0,
-    this.mainWidgetScrollControllerIndex  = false
+    this.mainWidgetScrollControllerIndex  = false,
+    this.projectStoreID = 999,
+    this.userStoreID = 999
   });
 
   factory AppStore.loading() => AppStore(isLoading: true);

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yellowpatioapp/Pages/projectPage.dart';
 import 'package:yellowpatioapp/SupportSystem/user_management.dart';
 import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/userStoreReducer.dart';
 
 import 'home.dart';
 
@@ -36,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount? account) async {
+      
+      print(account);
       //account!=null take user into the app
       //Now the state is 1, app has a user;
       // if (await _googleSignIn.isSignedIn()) {
@@ -47,10 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
       //   context,
       //   MaterialPageRoute(builder: (context) => Home()),
       // );
-      Future.delayed(const Duration(milliseconds: 2000),(){
+      Future.delayed(const Duration(milliseconds: 2000), () {
         checkUser();
       });
-      
 
       print(
           "!@#~%^&*(------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -141,12 +144,15 @@ class _MyHomePageState extends State<MyHomePage> {
     if (await _googleSignIn.isSignedIn()) {
       var userManagement = UserManagement();
       int _userStoreID = await userManagement.userRegisterationShim(context);
+      while (_userStoreID==-1){
+        _userStoreID = await userManagement.userRegisterationShim(context);
+      } 
       var state = StoreProvider.of<AppStore>(context);
-      state.dispatch(ChangeBottomNavigationView(_userStoreID));
+      state.dispatch(ChangeUserStoreID(_userStoreID));
       Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Home()),
+        MaterialPageRoute(builder: (context) => ProjectPage()),
       );
       print("!@#~%^&*(");
     }

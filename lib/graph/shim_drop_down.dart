@@ -57,7 +57,7 @@ class ShimDropDownWidget extends State<ShimDropDown> {
         dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
         instancesStatus: viewCategory.indexOf(selectedCategory!) +1,
         instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime,
-        userStoreID: userStoreID);
+        );
 
     await dataInstanceMasterDao
         .updateDataInstanceByEntity(dataInstancesMaster)

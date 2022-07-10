@@ -46,7 +46,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   var classMasterDummy;
   List<ClassDataInstanceMaterDuplicate>? temp;
   int viewType = 2;
-  late int userStoreID;
+  late int projectStoreID;
 
   @override
   void initState() {
@@ -181,7 +181,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     final ClassMasterDao = database.classMasterDao;
 
     var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.selectedIndex;
+    projectStoreID = state.state.projectStoreID;
 
     int initial = DateTime.parse(
             DateTime.fromMillisecondsSinceEpoch(widget.today)
@@ -200,11 +200,11 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     if (widget.graphType == 1) {
       if (widget.viewType == 0) {
         commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-            initial, end, widget.classMaster.itemMasterID!,userStoreID);
+            initial, end, widget.classMaster.itemMasterID!,projectStoreID);
       } else {
         commentCopy =
             await dataInstanceMasterDao.findDataInstanceByOneIntervalV1(initial,
-                end, widget.classMaster.itemMasterID!, widget.viewType,userStoreID);
+                end, widget.classMaster.itemMasterID!, widget.viewType,projectStoreID);
       }
     } else {
       //commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
@@ -212,11 +212,11 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       //join is a wrong methodology for this action, use single query for this, using itemMasterID
       if (widget.viewType == 0) {
         commentCopy = await dataInstanceMasterDao
-            .findDataInstanceByIntervalWithClassMaster(initial, end,userStoreID);
+            .findDataInstanceByIntervalWithClassMaster(initial, end,projectStoreID);
       } else {
         commentCopy = await dataInstanceMasterDao
             .findDataInstanceByIntervalWithClassMasterV1(
-                initial, end, widget.viewType,userStoreID);
+                initial, end, widget.viewType,projectStoreID);
       }
     }
     processTodayData();

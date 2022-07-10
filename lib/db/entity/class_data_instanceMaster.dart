@@ -1,5 +1,6 @@
 
 class ClassDataInstanceMaterDuplicate{
+
   final int? dataInstanceID;
 
   final int itemMasterID;
@@ -12,7 +13,6 @@ class ClassDataInstanceMaterDuplicate{
   
   final int instancesStatus;
 
-  final int userStoreID;
 
 
   ClassDataInstanceMaterDuplicate(
@@ -22,6 +22,5 @@ class ClassDataInstanceMaterDuplicate{
       required this.instancesTime,
       required this.itemClassColorID,
       required this.instancesStatus,
-      required this.userStoreID
      });
 }

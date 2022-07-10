@@ -72,8 +72,8 @@ class HomePageActivity extends State<homePage> {
     print(
         "***************************************************************************");
     var state = StoreProvider.of<AppStore>(context);
-    int userStoreID = state.state.selectedIndex;
-    List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(userStoreID);
+    int projectStoreID = state.state.projectStoreID;
+    List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
     dataInstanceMaster = database.dataInstanceMasterDao;
     dataCopy.forEach((classMaster) async {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
@@ -136,7 +136,8 @@ class HomePageActivity extends State<homePage> {
                           itemPriority: 1,
                           isItemCommentable: 1,
                           description: "dummy",
-                          userStoreID: 1
+                          //TODO : 696969696969696969696 adding dummy prjid
+                          projectStoreID: 1
                         ), 
                         graphType: 2)
                     // Container(

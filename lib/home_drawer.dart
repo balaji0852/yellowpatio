@@ -22,6 +22,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
   
   var state;
   int uid = 0;
+  int projectStoreID = 0;
 
   @override
   void initState() {
@@ -44,7 +45,8 @@ class HomeDraweWidget extends State<HomeDrawer> {
     super.didChangeDependencies();
     state = StoreProvider.of<AppStore>(context);
     setState(() {
-          uid = state.state.selectedIndex;
+          uid = state.state.userStoreID;
+          projectStoreID = state.state.projectStoreID;
     });
   }
 
@@ -104,7 +106,8 @@ class HomeDraweWidget extends State<HomeDrawer> {
             const SizedBox(
               height: 10,
             ),
-            Text(" uid "+uid.toString())    
+            Text(" uid "+uid.toString())   ,
+             Text(" project id "+projectStoreID.toString())    
           ],
         ),
       ),

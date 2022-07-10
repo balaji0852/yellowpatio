@@ -19,3 +19,17 @@ class ChangeMainWidgetScrollViewIndex{
 
   ChangeMainWidgetScrollViewIndex(this.mainWidgetScrollViewIndex);
 }
+
+//using to store projectStoreID
+class ChangeProjectStoreID{
+  final int projectStoreID;
+
+  ChangeProjectStoreID(this.projectStoreID);
+}
+
+//To store userStoreID
+class ChangeUserStoreID{
+  final int userStoreID;
+
+  ChangeUserStoreID(this.userStoreID);
+}
