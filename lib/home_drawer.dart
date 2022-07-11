@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/Pages/projectPage.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer.dart';
 
 import 'config.dart';
+import 'home.dart';
 
 class HomeDrawer extends StatefulWidget {
   @override
@@ -15,11 +17,10 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class HomeDraweWidget extends State<HomeDrawer> {
-
   //TODO - FOR REMOVAL ---- LINE 102 <-REASON
   int viewTypeState = 1;
-  // ignore: prefer_typing_uninitialized_variables 
-  
+  // ignore: prefer_typing_uninitialized_variables
+
   var state;
   int uid = 0;
   int projectStoreID = 0;
@@ -45,8 +46,8 @@ class HomeDraweWidget extends State<HomeDrawer> {
     super.didChangeDependencies();
     state = StoreProvider.of<AppStore>(context);
     setState(() {
-          uid = state.state.userStoreID;
-          projectStoreID = state.state.projectStoreID;
+      uid = state.state.userStoreID;
+      projectStoreID = state.state.projectStoreID;
     });
   }
 
@@ -100,14 +101,29 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 const SizedBox(
                   height: 2,
                 ),
-                datePreferenceWidget(5, 'Five day')
+                datePreferenceWidget(5, 'Five day'),
+                const SizedBox(
+                  height: 15,
+                ),
+                MaterialButton(
+                  key: UniqueKey(),
+                  height: 50,
+                  color:Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ProjectPage()),
+                    );
+                  },
+                  child: const Text("Projects"),
+                )
               ],
             ),
             const SizedBox(
               height: 10,
             ),
-            Text(" uid "+uid.toString())   ,
-             Text(" project id "+projectStoreID.toString())    
+            Text(" uid " + uid.toString()),
+            Text(" project id " + projectStoreID.toString())
           ],
         ),
       ),
