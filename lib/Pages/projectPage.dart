@@ -24,95 +24,106 @@ class ProjectPageState extends State<ProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          navigateProject();
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                        iconSize: 45,
+                      ),
+                      const Text(
+                        "Project Creation",
+                        style: TextStyle(fontSize: 35),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 57,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: TextField(
+                        controller: projectTitleEditorController,
+                        maxLength: 35,
+                        onChanged: (value) {},
+                        decoration: const InputDecoration(
+                            counterText: ' ',
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 9, horizontal: 9),
+                            border: InputBorder.none),
+                        style: const TextStyle(fontSize: 25)),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(15)),
+                    child: TextField(
+                        controller: projectDescriptionController,
+                        maxLength: 255,
+                        maxLines: 5,
+                        onChanged: (value) {},
+                        decoration: const InputDecoration(
+                            counterText: ' ',
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 9, horizontal: 9),
+                            border: InputBorder.none),
+                        style: const TextStyle(fontSize: 15)),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  MaterialButton(
                     onPressed: () {
-                      navigateProject();
+                      if (projectTitleEditorController.text.isNotEmpty) {
+                        updateProjectEntity();
+                      }
                     },
-                    icon: const Icon(Icons.arrow_back),
-                    iconSize: 45,
+                    height: 45,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    color: Colors.blueAccent,
+                    child: const Text(
+                      'Create',
+                      style: TextStyle(fontSize: 19),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
                   ),
                   const Text(
-                    "Project Creation",
-                    style: TextStyle(fontSize: 35),
+                    'Projects',
+                    style: TextStyle(fontSize: 19),
                   ),
+                  AllProjectPage(loaded: loaded),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: 57,
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextField(
-                    controller: projectTitleEditorController,
-                    maxLength: 35,
-                    onChanged: (value) {},
-                    decoration: const InputDecoration(
-                        counterText: ' ',
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 9, horizontal: 9),
-                        border: InputBorder.none),
-                    style: const TextStyle(fontSize: 25)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextField(
-                    controller: projectDescriptionController,
-                    maxLength: 255,
-                    maxLines: 5,
-                    onChanged: (value) {},
-                    decoration: const InputDecoration(
-                        counterText: ' ',
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 9, horizontal: 9),
-                        border: InputBorder.none),
-                    style: const TextStyle(fontSize: 15)),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              MaterialButton(
-                onPressed: () {
-                  if (projectTitleEditorController.text.isNotEmpty) {
-                    updateProjectEntity();
-                  }
-                },
-                height: 45,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                color: Colors.blueAccent,
-                child: const Text(
-                  'Create',
-                  style: TextStyle(fontSize: 19),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              AllProjectPage(loaded: loaded)
-            ],
+            ),
           ),
-        ),
+          // SliverPadding(
+          //   padding: EdgeInsets.all(1),
+          // )
+        ],
       ),
     );
   }

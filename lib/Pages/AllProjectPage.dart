@@ -29,8 +29,8 @@ class AllProjectPageState extends State<AllProjectPage> {
     final projectStoreDao = database.projectStoreDao;
     var _projectStoreList =
         await projectStoreDao.findAllProjectByUserStoreID(userStoreID);
-    setState((){
-       projectStoreList = _projectStoreList;
+    setState(() {
+      projectStoreList = _projectStoreList;
     });
     state.dispatch(ChangeBottomNavigationView(projectStoreList.length));
   }
@@ -42,11 +42,11 @@ class AllProjectPageState extends State<AllProjectPage> {
     print("............");
     getProjects();
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -58,46 +58,70 @@ class AllProjectPageState extends State<AllProjectPage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-        height: 600,
-        child:
-        ListView(
-          scrollDirection: Axis.vertical,
-          children: projectStoreList
-              .map((e) => GestureDetector(
-                    key: UniqueKey(),
-                    child: Padding(padding: const EdgeInsets.all(3),
-                    child: Column(
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+
+      // itemCount: projectStoreList.length,
+      // itemBuilder: (BuildContext context, int index) {
+      //   return GestureDetector(
+      //     key: UniqueKey(),
+      //     child: Padding(
+      //       padding: const EdgeInsets.all(3),
+      //       child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             Text(
+      //               projectStoreList.elementAt(index).projectName,
+      //               style: const TextStyle(
+      //                   decoration: TextDecoration.underline,
+      //                   color: Colors.blue,
+      //                   fontSize: 20),
+      //             ),
+      //             Text(projectStoreList.elementAt(index).projectDescription)
+      //           ]),
+      //     ),
+      //     onTap: () {
+      //       print("jj");
+      //       navigateProject(projectStoreList.elementAt(index).projectStoreID!);
+      //     },
+      //   );
+      // }
+
+      children: projectStoreList
+          .map((e) => GestureDetector(
+                key: UniqueKey(),
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:[
+                      children: [
                         Text(
-                      e.projectName,
-                      style: const TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue,
-                          fontSize: 20),
-                    ),
-                    Text(e.projectDescription)
-                      ]
-                    ),),
-                    onTap: () {
-                      print("jj");
-                      navigateProject(e.projectStoreID!);
-                    },
-                  ))
-              .toList(),
-        ),
-      
+                          e.projectName,
+                          style: const TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue,
+                              fontSize: 20),
+                        ),
+                        Text(e.projectDescription)
+                      ]),
+                ),
+                onTap: () {
+                  print("jj");
+                  navigateProject(e.projectStoreID!);
+                },
+              ))
+          .toList(),
     );
   }
 
-  navigateProject(int projectStoreID){
+  navigateProject(int projectStoreID) {
     var state = StoreProvider.of<AppStore>(context);
     state.dispatch(ChangeProjectStoreID(projectStoreID));
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
   }
 }
