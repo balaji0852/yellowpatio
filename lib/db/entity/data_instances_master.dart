@@ -33,16 +33,38 @@ class DataInstancesMaster {
       required this.instancesTime,
       required this.instancesStatus
       // required this.userStoreID
-      });
+  });
+
+
+  //cloud
+  // {
+  //   "classMaster": {
+  //       "itemMasterID": 2542
+  //   },
+  //   "dataInstances": "4",
+  //   "instanceTime":   1656181019013,
+  //   "instancesStatus": 2
+  // }
+
+  Map<String,dynamic> toMapObject()=>
+  {
+      "classMaster": {
+          "itemMasterID": itemMasterID
+      },
+      "dataInstances": dataInstances,
+      "instanceTime": instancesTime,
+      "instancesStatus": instancesStatus
+  };
 
   String toJsonString() {
-    return jsonEncode(<String, dynamic>{
-      'instancesStatus':instancesStatus,
-      'dataInstanceID':dataInstanceID,
-      // 'userStoreID':userStoreID,
-      'dataInstances': dataInstances,
-      'instanceTime':instancesTime,
-      'classMaster': {'itemMasterID': itemMasterID},
-    });
+    return jsonEncode(toMapObject());
   }
+
+
+  String toJsonStringWithKey() {
+    var dataInstancesMaster = toMapObject();
+    dataInstancesMaster["dataInstanceID"] = dataInstanceID;
+    return jsonEncode(dataInstancesMaster);
+  }
+
 }

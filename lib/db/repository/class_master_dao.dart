@@ -20,5 +20,5 @@ abstract class ClassMasterDao {
   @delete
   //@Query('DELETE FROM ClassMaster WHERE id = :id')
   Future<void> deleteItemById(ClassMaster classMaster);
-
+  
 }
