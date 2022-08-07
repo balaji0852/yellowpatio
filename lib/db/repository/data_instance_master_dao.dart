@@ -18,10 +18,11 @@ abstract class DataInstanceMasterDao{
   //skipping userStoreID, as we have itemMasterID
   Future<DataInstancesMaster?> findDataInstanceByLastComment(int itemMasterID);
   
-
+  
   @Query('SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3')
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneInterval(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int projectStoreID);
   
+
   Future<List<ClassDataInstanceMaterDuplicate>?> findDataInstanceByOneIntervalV1(int dateTimeEpoch,int zeroDateTimeEpoch, int itemMasterID,int statusType,int projectStoreID);
 
 

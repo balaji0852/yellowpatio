@@ -16,7 +16,7 @@ class ClassMasterCloud {
 
   Future<List<ClassMaster>?> findItemById(int projectStoreID) async {
     List<ClassMaster> classMasterItems = List.empty(growable: true);
-    var request = http.Request('POST',
+    var request = http.Request('GET',
         Uri.parse('${serverPath()}classMaster/projectStore/$projectStoreID'));
     http.StreamedResponse response = await request.send();
 
@@ -34,7 +34,6 @@ class ClassMasterCloud {
     var request = http.Request('DELETE',
         Uri.parse('${serverPath()}classMaster/$itemMasterID'));
     http.StreamedResponse response = await request.send();
-
     return response.statusCode;
   }
 
