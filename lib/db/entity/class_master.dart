@@ -74,8 +74,8 @@ class ClassMaster {
   }
 
   String toJsonStringWithKey() {
-    var classMaster = toMapObject();
-    classMaster["itemMasterID"] = projectStoreID;
+    Map<String, dynamic> classMaster = toMapObject();
+    classMaster["itemMasterID"] = itemMasterID;
     return jsonEncode(classMaster);
   }
 

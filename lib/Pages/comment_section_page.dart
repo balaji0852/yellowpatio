@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
@@ -150,7 +151,9 @@ class CommentSection extends State<CommentSectionPage> {
 
   textFieldheighManager(String value) {
     setState(() {
-      if (commentsLengthManager<value.length && value.length % 30 == 1 && value.length / 40 < 10) {
+      if (commentsLengthManager < value.length &&
+          value.length % 30 == 1 &&
+          value.length / 40 < 10) {
         heightManagement = heightManagement + 10;
         maxLinesManagement++;
       }
@@ -161,25 +164,29 @@ class CommentSection extends State<CommentSectionPage> {
   postComment() async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (commentEditController.text.isNotEmpty) {
-      final database =
-          await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-      final dataInstanceMasterDao = database.dataInstanceMasterDao;
-    var state = StoreProvider.of<AppStore>(context);
-    userStoreID = state.state.selectedIndex;
+      // final database =
+      //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+      // final dataInstanceMasterDao = database.dataInstanceMasterDao;
+      var state = StoreProvider.of<AppStore>(context);
+      userStoreID = state.state.selectedIndex;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
           instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
-      await dataInstanceMasterDao
-          .insertDataInstance(dataInstancesMaster)
-          .then((value) {                                            
-            print("inser");
-        heightManagement = 100;
-        maxLinesManagement = 1;
-        commentEditController.clear();
-        _key.currentState!.calls();
+
+      //cloud migration
+      await DataInstanceMasterCloud()
+          .postDataInstanceMaster(dataInstancesMaster)
+          .then((value) {
+        if (value == 200) {
+          print("inser");
+          heightManagement = 100;
+          maxLinesManagement = 1;
+          commentEditController.clear();
+          _key.currentState!.calls();
+        }
       }).onError((error, stackTrace) {
         print(error);
       });

@@ -14,20 +14,32 @@ class ClassMasterCloud {
     return response.statusCode;
   }
 
-  Future<List<ClassMaster>?> findItemById(int projectStoreID) async {
-    List<ClassMaster> classMasterItems = List.empty(growable: true);
+  Future<List<ClassMaster>> findItemById(int projectStoreID) async {
+    List<ClassMaster> listOfClassMasterList = List.empty(growable: true);
     var request = http.Request('GET',
         Uri.parse('${serverPath()}classMaster/projectStore/$projectStoreID'));
     http.StreamedResponse response = await request.send();
 
     var jsonResponse =
         convert.jsonDecode(await response.stream.bytesToString());
-    classMasterItems = jsonResponse;
-    // if (response.statusCode==200) {
-    //   classMasterItems = jsonResponse;
-    //   return classMasterItems;
-    // }
-    return classMasterItems;
+    if(response.statusCode==200 && jsonResponse.toString().length>5){
+      var listOfClassMaster = jsonResponse;
+      for(var item in listOfClassMaster){
+        listOfClassMasterList.add(
+         ClassMaster(
+          itemMasterID: item["itemMasterID"],
+          itemName: item["itemName"],
+          categoryID: item["categoryID"],
+          subCategoryID: item["subCategoryID"],
+          itemClassColorID: item["itemClassColorID"], 
+          itemPriority: item["itemPriority"], 
+          isItemCommentable: item["isItemCommentable"], 
+          description: item["description"], 
+          projectStoreID: item["projectStore"]["projectStoreID"]));
+      }
+    
+    }
+     return listOfClassMasterList;
   }
 
   Future<int> deleteItemById(int itemMasterID) async {

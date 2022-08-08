@@ -7,6 +7,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/Pages/comment_section_page.dart';
 import 'package:yellowpatioapp/Pages/insights_page.dart';
+import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
+import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
@@ -54,7 +56,7 @@ class HomePageActivity extends State<homePage> {
   @override
   void initState() {
     super.initState();
-    getNotes();
+    //getNotes();
   }
 
   @override
@@ -64,17 +66,28 @@ class HomePageActivity extends State<homePage> {
     print("oop");
   }
 
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    getNotes();
+  }
+
 
 
   Future getNotes() async {
-    database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    //cloud migration
+    //database =
+        //await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     print(
         "***************************************************************************");
     var state = StoreProvider.of<AppStore>(context);
     int projectStoreID = state.state.projectStoreID;
-    List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
-    dataInstanceMaster = database.dataInstanceMasterDao;
+
+    //cloud migration
+    //List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
+    List<ClassMaster> dataCopy = await ClassMasterCloud().findItemById(projectStoreID);
+    //dataInstanceMaster = database.dataInstanceMasterDao;
     dataCopy.forEach((classMaster) async {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
       // Future.delayed(Duration(microseconds: 10000000),
@@ -96,8 +109,10 @@ class HomePageActivity extends State<homePage> {
 
   Future<void> findLastComment(int itemMasterID) async {
     lastCommentsMap.putIfAbsent(itemMasterID, () => 'loading...');
+
+    //cloud migration
     DataInstancesMaster? lastComment =
-        await dataInstanceMaster.findDataInstanceByLastComment(itemMasterID);
+        await DataInstanceMasterCloud().findDataInstanceByLastComment(itemMasterID);
     //var lastCommentForTheClass = lastComment.elementAt(0);
     setState(() {
       if (null != lastComment) {
@@ -315,14 +330,16 @@ class HomePageActivity extends State<homePage> {
 
   void deleteClass(ClassMaster classMasterItem) async {
     //need validations
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final classMaster = database.classMasterDao;
 
-    await classMaster.deleteItemById(classMasterItem).then((value) {
+    //cloud migration
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final classMaster = database.classMasterDao;
+
+    await ClassMasterCloud().deleteItemById(classMasterItem.itemMasterID!).then((value) {
       setState(() {
         data.remove(classMasterItem);
-        data = data;
+        //data = data;
       });
       print("delete successfully");
     }).onError((error, stackTrace) {

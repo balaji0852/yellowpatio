@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/cloud/projectStoreCloud.dart';
 import 'package:yellowpatioapp/db/entity/project_store.dart';
 import 'package:yellowpatioapp/db/repository/project_store_dao.dart';
 import 'package:yellowpatioapp/home.dart';
@@ -24,11 +25,13 @@ class AllProjectPageState extends State<AllProjectPage> {
   getProjects() async {
     var state = StoreProvider.of<AppStore>(context);
     int userStoreID = state.state.userStoreID;
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final projectStoreDao = database.projectStoreDao;
+
+    //migration
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final projectStoreDao = database.projectStoreDao;
     var _projectStoreList =
-        await projectStoreDao.findAllProjectByUserStoreID(userStoreID);
+        await projectStoreCloud().findAllProjectByUserStoreID(2519);
     setState(() {
       projectStoreList = _projectStoreList;
     });

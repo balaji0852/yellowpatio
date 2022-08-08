@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
+import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
@@ -22,15 +23,15 @@ class TimeInstanceWidget extends StatefulWidget {
   final int viewType;
   final int graphType;
   final int filter;
-  const TimeInstanceWidget({
-    Key? key,
-    required this.classMaster,
-    required this.today,
-    required this.openCallback,
-    required this.viewType,
-    required this.graphType,
-    required this.filter
-  }) : super(key: key);
+  const TimeInstanceWidget(
+      {Key? key,
+      required this.classMaster,
+      required this.today,
+      required this.openCallback,
+      required this.viewType,
+      required this.graphType,
+      required this.filter})
+      : super(key: key);
 
   @override
   TimeInstancePage createState() {
@@ -54,7 +55,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     super.initState();
     //updateStoreValue();
     getTodayInstance(widget.today);
-
   }
 
   void updateStoreValue() {
@@ -196,47 +196,66 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                     .substring(0, 10) +
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
-
+    //cloud migration
     if (widget.graphType == 1) {
       if (widget.viewType == 0) {
-        commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
-            initial, end, widget.classMaster.itemMasterID!,projectStoreID);
+        commentCopy = await DataInstanceMasterCloud()
+            .findDataInstanceByOneInterval(
+                initial, end, widget.classMaster.itemMasterID!, projectStoreID);
+        // commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
+        //     initial, end, widget.classMaster.itemMasterID!,projectStoreID);
       } else {
-        commentCopy =
-            await dataInstanceMasterDao.findDataInstanceByOneIntervalV1(initial,
-                end, widget.classMaster.itemMasterID!, widget.viewType,projectStoreID);
+        commentCopy = await DataInstanceMasterCloud()
+            .findDataInstanceByOneIntervalV1(
+                initial,
+                end,
+                widget.classMaster.itemMasterID!,
+                widget.viewType,
+                projectStoreID);
+        // commentCopy =
+        //     await dataInstanceMasterDao.findDataInstanceByOneIntervalV1(initial,
+        //         end, widget.classMaster.itemMasterID!, widget.viewType,projectStoreID);
       }
     } else {
       //commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
 
       //join is a wrong methodology for this action, use single query for this, using itemMasterID
       if (widget.viewType == 0) {
-        commentCopy = await dataInstanceMasterDao
-            .findDataInstanceByIntervalWithClassMaster(initial, end,projectStoreID);
+        commentCopy = await DataInstanceMasterCloud()
+            .findDataInstanceByIntervalWithClassMaster(
+                initial, end, projectStoreID);
+        // commentCopy = await dataInstanceMasterDao
+        //     .findDataInstanceByIntervalWithClassMaster(initial, end,projectStoreID);
       } else {
-        commentCopy = await dataInstanceMasterDao
+        commentCopy = await DataInstanceMasterCloud()
             .findDataInstanceByIntervalWithClassMasterV1(
-                initial, end, widget.viewType,projectStoreID);
+                initial, end, widget.viewType, projectStoreID);
+        //  commentCopy = await dataInstanceMasterDao
+        //     .findDataInstanceByIntervalWithClassMasterV1(
+        //         initial, end, widget.viewType,projectStoreID);
       }
     }
     processTodayData();
   }
 
   processTodayData() {
-    setState(() {
-      if (commentCopy!.isNotEmpty) {
-        todayInstance = List.generate(24, (index) => []);
-        for (var element in commentCopy!) {
-          var timeInstance =
-              DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
+    //added mounted for cloud migration
+    if (mounted) {
+      setState(() {
+        if (null != commentCopy && commentCopy!.isNotEmpty) {
+          todayInstance = List.generate(24, (index) => []);
+          for (var element in commentCopy!) {
+            var timeInstance =
+                DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
 
-          todayInstance
-              .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
-              .add(element);
+            todayInstance
+                .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
+                .add(element);
+          }
+        } else {
+          todayInstance = List.generate(24, (index) => []);
         }
-      } else {
-        todayInstance = List.generate(24, (index) => []);
-      }
-    });
+      });
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/graph/dropwdown.dart';
 
 import '../db/database.dart';
@@ -45,28 +46,30 @@ class ShimDropDownWidget extends State<ShimDropDown> {
   }
 
   updateCommentStatus(String? selectedCategory) async {
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final dataInstanceMasterDao = database.dataInstanceMasterDao;
+    //cloud migration
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final dataInstanceMasterDao = database.dataInstanceMasterDao;
     var state = StoreProvider.of<AppStore>(context);
     userStoreID = state.state.selectedIndex;
     print(selectedCategory);
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
-        dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
-        itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
-        dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
-        instancesStatus: viewCategory.indexOf(selectedCategory!) +1,
-        instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime,
-        );
+      dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
+      itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
+      dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
+      instancesStatus: viewCategory.indexOf(selectedCategory!) + 1,
+      instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime,
+    );
 
-    await dataInstanceMasterDao
-        .updateDataInstanceByEntity(dataInstancesMaster)
+    await DataInstanceMasterCloud()
+        .putDataInstanceMaster(dataInstancesMaster)
         .then((value) {
-      setState(() {
- 
-        shimDropDownTitle = selectedCategory;
-      });
-      print("inserted");
+      if (value == 200) {
+        setState(() {
+          shimDropDownTitle = selectedCategory;
+        });
+        print("inserted");
+      }
     }).onError((error, stackTrace) {
       setState(() {
         shimDropDownTitle = widget.dropdownTitle;

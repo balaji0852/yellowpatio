@@ -142,13 +142,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> checkUser() async {
     //write logic to check presence of user;
     if (await _googleSignIn.isSignedIn()) {
-      var userManagement = UserManagement();
-      int _userStoreID = await userManagement.userRegisterationShim(context);
-      while (_userStoreID==-1){
-        _userStoreID = await userManagement.userRegisterationShim(context);
-      } 
+
+
+      //cloud migration
+      // var userManagement = UserManagement();
+      // int _userStoreID = await userManagement.userRegisterationShim(context);
+      // while (_userStoreID==-1){
+      //   _userStoreID = await userManagement.userRegisterationShim(context);
+      // } 
       var state = StoreProvider.of<AppStore>(context);
-      state.dispatch(ChangeUserStoreID(_userStoreID));
+      state.dispatch(ChangeUserStoreID(2519));
       Navigator.pop(context);
       Navigator.push(
         context,

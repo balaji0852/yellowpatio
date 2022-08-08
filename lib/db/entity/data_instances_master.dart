@@ -62,7 +62,7 @@ class DataInstancesMaster {
 
 
   String toJsonStringWithKey() {
-    var dataInstancesMaster = toMapObject();
+    Map<String, dynamic> dataInstancesMaster = toMapObject();
     dataInstancesMaster["dataInstanceID"] = dataInstanceID;
     return jsonEncode(dataInstancesMaster);
   }

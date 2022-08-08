@@ -18,6 +18,18 @@ class DataInstanceMasterCloud{
     return response.statusCode;
   }
 
+
+  Future<int> putDataInstanceMaster(DataInstancesMaster dataInstancesMaster) async {
+          
+    var request = http.Request('PUT',
+        Uri.parse('${serverPath()}dataInstanceMaster'));
+    request.body = dataInstancesMaster.toJsonStringWithKey();
+    print(request.body);
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    return response.statusCode;
+  }
+
   Future<DataInstancesMaster?> findDataInstanceByLastComment(int itemMasterID) async{
     var request = http.Request('GET',
         Uri.parse('${serverPath()}dataInstanceMaster/lastComment?itemMasterID=$itemMasterID'));
@@ -48,20 +60,20 @@ class DataInstanceMasterCloud{
         convert.jsonDecode(await response.stream.bytesToString());
     
     if(response.statusCode==200 && jsonResponse.toString().length>5){
-      List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMaster = List.empty(growable: true);
+      List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMasterList = List.empty(growable: true);
       var listOfDataInstanceMaster = jsonResponse;
       for(var item in listOfDataInstanceMaster){
-        listOfDataInstanceMaster.add(
+        listOfDataInstancesMasterList.add(
           ClassDataInstanceMaterDuplicate(
             dataInstanceID: item["dataInstanceID"],
             itemMasterID: item["classMaster"]["itemMasterID"],
-            dataInstances: jsonResponse["dataInstances"],
-            instancesTime: jsonResponse["instanceTime"],
+            dataInstances: item["dataInstances"],
+            instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
-            instancesStatus: jsonResponse["instancesStatus"])
+            instancesStatus: item["instancesStatus"])
         );
       }
-      return listOfDataInstancesMaster;
+      return listOfDataInstancesMasterList;
     }
 
     return null;
@@ -79,20 +91,20 @@ class DataInstanceMasterCloud{
         convert.jsonDecode(await response.stream.bytesToString());
     
     if(response.statusCode==200 && jsonResponse.toString().length>5){
-      List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMaster = List.empty(growable: true);
+     List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMasterList = List.empty(growable: true);
       var listOfDataInstanceMaster = jsonResponse;
       for(var item in listOfDataInstanceMaster){
-        listOfDataInstanceMaster.add(
+        listOfDataInstancesMasterList.add(
           ClassDataInstanceMaterDuplicate(
             dataInstanceID: item["dataInstanceID"],
             itemMasterID: item["classMaster"]["itemMasterID"],
-            dataInstances: jsonResponse["dataInstances"],
-            instancesTime: jsonResponse["instanceTime"],
+            dataInstances: item["dataInstances"],
+            instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
-            instancesStatus: jsonResponse["instancesStatus"])
+            instancesStatus: item["instancesStatus"])
         );
       }
-      return listOfDataInstancesMaster;
+      return listOfDataInstancesMasterList;
     }
 
     return null;
@@ -111,20 +123,20 @@ class DataInstanceMasterCloud{
         convert.jsonDecode(await response.stream.bytesToString());
     
     if(response.statusCode==200 && jsonResponse.toString().length>5){
-      List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMaster = List.empty(growable: true);
+     List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMasterList = List.empty(growable: true);
       var listOfDataInstanceMaster = jsonResponse;
       for(var item in listOfDataInstanceMaster){
-        listOfDataInstanceMaster.add(
-          ClassDataInstanceMaterDuplicate(
+        listOfDataInstancesMasterList.add(
+            ClassDataInstanceMaterDuplicate(
             dataInstanceID: item["dataInstanceID"],
             itemMasterID: item["classMaster"]["itemMasterID"],
-            dataInstances: jsonResponse["dataInstances"],
-            instancesTime: jsonResponse["instanceTime"],
+            dataInstances: item["dataInstances"],
+            instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
-            instancesStatus: jsonResponse["instancesStatus"])
+            instancesStatus: item["instancesStatus"])
         );
       }
-      return listOfDataInstancesMaster;
+      return listOfDataInstancesMasterList;
     }
 
     return null;
@@ -142,20 +154,20 @@ class DataInstanceMasterCloud{
         convert.jsonDecode(await response.stream.bytesToString());
     
     if(response.statusCode==200 && jsonResponse.toString().length>5){
-      List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMaster = List.empty(growable: true);
+     List<ClassDataInstanceMaterDuplicate> listOfDataInstancesMasterList = List.empty(growable: true);
       var listOfDataInstanceMaster = jsonResponse;
       for(var item in listOfDataInstanceMaster){
-        listOfDataInstanceMaster.add(
+        listOfDataInstancesMasterList.add(
           ClassDataInstanceMaterDuplicate(
             dataInstanceID: item["dataInstanceID"],
             itemMasterID: item["classMaster"]["itemMasterID"],
-            dataInstances: jsonResponse["dataInstances"],
-            instancesTime: jsonResponse["instanceTime"],
+            dataInstances: item["dataInstances"],
+            instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
-            instancesStatus: jsonResponse["instancesStatus"])
+            instancesStatus: item["instancesStatus"])
         );
       }
-      return listOfDataInstancesMaster;
+      return listOfDataInstancesMasterList;
     }
 
     return null;

@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/category_store.dart';
+import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 
@@ -257,13 +258,14 @@ class Insights extends State<InsightsPage> {
   }
 
   void addDataToDb() async {
+    // cloud migration
     //need validations
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final classMasterDao = database.classMasterDao;
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final classMasterDao = database.classMasterDao;
     var state = StoreProvider.of<AppStore>(context);
     int projectStoreID = state.state.projectStoreID;
-    
+
     //TODO : 696969696969696969696 adding dummy prjid
     ClassMaster classMasterItem = ClassMaster(
         itemName: classTitleController.text,
@@ -278,15 +280,19 @@ class Insights extends State<InsightsPage> {
         projectStoreID: projectStoreID);
 
     // ignore: avoid_print
-    await classMasterDao.insertItem(classMasterItem).then((value) {
-      print("inserted successfully");
-      classTitleController.clear();
-      descriptionController.clear();
-      setState(() {
-        selectedCategory = 'default';
-        selectedSubCategory = 'default';
-        selectedColor = 'red';
-      });
+    await ClassMasterCloud()
+        .postClassMasterMaster(classMasterItem)
+        .then((value) {
+      if (value == 200) {
+        print("inserted successfully");
+        classTitleController.clear();
+        descriptionController.clear();
+        setState(() {
+          selectedCategory = 'default';
+          selectedSubCategory = 'default';
+          selectedColor = 'red';
+        });
+      }
     }).onError((error, stackTrace) {
       print(error);
     });
@@ -368,22 +374,27 @@ class Insights extends State<InsightsPage> {
             .indexOf(selectedSubCategory)
             .toString());
 
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final classMasterDao = database.classMasterDao;
-    await classMasterDao.updateItemByEntity(classMasterItem).then((value) {
-      print(classMasterItem.itemMasterID);
-      print("inserted successfully1");
-      classTitleController.clear();
-      descriptionController.clear();
-      setState(() {
-        selectedCategory = 'default';
-        categorystore.setSubCategoryList = selectedCategory;
-        selectedSubCategory = 'default';
-        selectedColor = 'red';
-        updateButtonName = 'add';
-        widget.changePage!(0, widget.classMaster!, false);
-      });
+    //cloud migration
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final classMasterDao = database.classMasterDao;
+    await ClassMasterCloud()
+        .putClassMasterMaster(classMasterItem)
+        .then((value) {
+      if (value == 200) {
+        print(classMasterItem.itemMasterID);
+        print("inserted successfully1");
+        classTitleController.clear();
+        descriptionController.clear();
+        setState(() {
+          selectedCategory = 'default';
+          categorystore.setSubCategoryList = selectedCategory;
+          selectedSubCategory = 'default';
+          selectedColor = 'red';
+          updateButtonName = 'add';
+          widget.changePage!(0, widget.classMaster!, false);
+        });
+      }
     }).onError((error, stackTrace) {
       print(error);
     });

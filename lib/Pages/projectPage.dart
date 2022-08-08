@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/AllProjectPage.dart';
+import 'package:yellowpatioapp/cloud/projectStoreCloud.dart';
 import 'package:yellowpatioapp/db/entity/project_store.dart';
 import 'package:yellowpatioapp/db/repository/project_store_dao.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
@@ -130,11 +131,13 @@ class ProjectPageState extends State<ProjectPage> {
 
   updateProjectEntity() async {
     var projectStore = createProjectEntity();
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final projectStoreDao = database.projectStoreDao;
-    projectStoreDao.insertProject(projectStore).then((value) {
-      print("pass");
+
+    //cloud migration
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final projectStoreDao = database.projectStoreDao;
+    projectStoreCloud().postProjectStore(projectStore,2519).then((value) {
+      print(value);
       setState(() {
         loaded = loaded;
       });
