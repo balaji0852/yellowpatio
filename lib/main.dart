@@ -13,15 +13,16 @@ import 'package:yellowpatioapp/login_page.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/app_state_reducer.dart';
 
+import 'Pages/projectPage.dart';
 import 'db/database.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      //options: DefaultFirebaseOptions.currentPlatform,
-      );
+   await Firebase.initializeApp(
+  //options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 

@@ -22,7 +22,7 @@ class DataInstanceMasterCloud{
   Future<int> putDataInstanceMaster(DataInstancesMaster dataInstancesMaster) async {
           
     var request = http.Request('PUT',
-        Uri.parse('${serverPath()}dataInstanceMaster'));
+        Uri.parse('${serverPath()}dataInstanceMaster/update'));
     request.body = dataInstancesMaster.toJsonStringWithKey();
     print(request.body);
     request.headers.addAll({'Content-Type': 'application/json'});
