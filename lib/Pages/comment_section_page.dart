@@ -33,6 +33,10 @@ class CommentSection extends State<CommentSectionPage> {
   final GlobalKey<PlannerGraphPage> _key = GlobalKey();
   int commentsLengthManager = 0;
   late int userStoreID;
+  //sig -30, sep 22
+  bool callingServer = false;
+
+  int lineCounter = 1;
 
   @override
   void initState() {
@@ -115,7 +119,10 @@ class CommentSection extends State<CommentSectionPage> {
                       ),
                       ElevatedButton(
                           onPressed: () {
-                            postComment();
+                            if (!callingServer) {
+                              callingServer = true;
+                              postComment();
+                            }
                           },
                           child: const Text('post')),
                       const Spacer(
@@ -151,11 +158,27 @@ class CommentSection extends State<CommentSectionPage> {
 
   textFieldheighManager(String value) {
     setState(() {
-      if (commentsLengthManager < value.length &&
-          value.length % 30 == 1 &&
-          value.length / 40 < 10) {
-        heightManagement = heightManagement + 10;
-        maxLinesManagement++;
+      print(value.length);
+      if (commentsLengthManager < value.length) {
+        print('inc');
+        if (value.length > lineCounter * 45 && lineCounter < 5) {
+          print('incr');
+
+          lineCounter++;
+          heightManagement = heightManagement + 10;
+          maxLinesManagement++;
+        }
+      } else {
+        print('dec');
+
+        if ((value.length <= 45 || value.length < (lineCounter - 1) * 45) &&
+            heightManagement > 100) {
+          lineCounter--;
+          heightManagement = heightManagement - 10;
+          if (maxLinesManagement != 1) {
+            maxLinesManagement--;
+          }
+        }
       }
     });
     commentsLengthManager = value.length;
@@ -182,8 +205,12 @@ class CommentSection extends State<CommentSectionPage> {
           .then((value) {
         if (value == 200) {
           print("inser");
-          heightManagement = 100;
-          maxLinesManagement = 1;
+          callingServer = false;
+          setState(() {
+            heightManagement = 100;
+            maxLinesManagement = 1;
+          });
+
           commentEditController.clear();
           _key.currentState!.calls();
         }

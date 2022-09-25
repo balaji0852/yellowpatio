@@ -42,6 +42,8 @@ class Insights extends State<InsightsPage> {
   late ClassMaster classMaster;
   GlobalKey globalKey = GlobalKey(debugLabel: 'btm_app_bar');
   bool editables = false;
+  //sig 30: added for topology
+  bool callingServer = false;
 
   // Insights(){
 
@@ -234,7 +236,9 @@ class Insights extends State<InsightsPage> {
             MaterialButton(
               onPressed: () {
                 if (classTitleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty) {
+                    descriptionController.text.isNotEmpty && !callingServer) {
+                  //sep 25-2022, sig -30
+                  callingServer = true;
                   if (widget.editable) {
                     updateDataToDatabase();
                   } else {
@@ -284,6 +288,8 @@ class Insights extends State<InsightsPage> {
         .postClassMasterMaster(classMasterItem)
         .then((value) {
       if (value == 200) {
+        //sig-30
+        callingServer = !callingServer;
         print("inserted successfully");
         classTitleController.clear();
         descriptionController.clear();
@@ -386,6 +392,10 @@ class Insights extends State<InsightsPage> {
         print("inserted successfully1");
         classTitleController.clear();
         descriptionController.clear();
+
+        //sig-30
+        callingServer = !callingServer;
+
         setState(() {
           selectedCategory = 'default';
           categorystore.setSubCategoryList = selectedCategory;

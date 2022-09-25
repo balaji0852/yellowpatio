@@ -3,7 +3,10 @@
 class CategoryStore{
   
   static final _categories = ['finance','default'];
-  static final _subCategories = [['expenditure','savings','stock','interest'],['default']];
+  //balaji - sig 34: adding category is not planned or drafted, 
+  //        sig 34 gets temporary fix, since e-app gives 1-1 as category,
+  //         universal fix solves this issues.
+  static final _subCategories = [['expenditure','savings','stock','interest'],['default','default']];
   List<String>? _subCategoryList;
 
 
