@@ -74,6 +74,7 @@ flutter:
     - assets/fiveDayImage.png
     - assets/women_working_on_task.jpg
     - assets/man_working_sofa.jpg
+    - assets/project5.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

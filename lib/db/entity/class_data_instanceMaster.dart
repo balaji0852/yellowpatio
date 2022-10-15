@@ -17,6 +17,15 @@ class ClassDataInstanceMaterDuplicate{
   
   final int instancesStatus;
 
+  //balaji : 10/15/2022-adding extra class master fields(title,description), to satisfy the 
+  //          graph dialog(sig-54),
+  //balaji : this is a test feature may be we might making , classmaste field required
+  //          for this constr
+  String? itemName = 'itemName';
+
+  String? description = 'description';
+  //sig-50
+
   
 
 
@@ -28,6 +37,10 @@ class ClassDataInstanceMaterDuplicate{
       required this.instancesTime,
       required this.itemClassColorID,
       required this.instancesStatus,
+      //sig-50
+      this.itemName,
+      this.description
+      //sig-50
      });
 
   //cloud

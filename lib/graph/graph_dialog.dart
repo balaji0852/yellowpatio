@@ -42,9 +42,9 @@ class graphDialogPage extends State<GraphDialog> {
       padding: const EdgeInsets.all(20),
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            color: Colors.white54,
-            borderRadius: BorderRadius.circular(20)),
+            border: Border.all(color: Colors.black87),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(0)),
         height: 450,
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -101,14 +101,21 @@ class graphDialogPage extends State<GraphDialog> {
                                       // });
                                     },
                                     dropdownTitle: viewCategory
-                                        .elementAt(e.instancesStatus-1),
+                                        .elementAt(e.instancesStatus - 1),
                                     viewCategory: viewCategory,
                                   )
                                 ],
                               ),
+                              Text(
+                                e.itemName!,
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(e.description!),
                               const SizedBox(
                                 height: 10,
                               ),
+                              const SizedBox(height: 10,),
                               Container(
                                 decoration: BoxDecoration(
                                     color: colorStore
@@ -161,20 +168,18 @@ class graphDialogPage extends State<GraphDialog> {
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
-            dataInstanceID: selectedDataInstance.dataInstanceID,
-            itemMasterID: selectedDataInstance.itemMasterID,
-            dataInstances: selectedDataInstance.dataInstances,
-            instancesStatus: selectedViewCategoryID,
-            instancesTime: selectedDataInstance.instancesTime,
-            itemClassColorID: classDataInstanceMaterDuplicate.itemClassColorID,
-            );
+      dataInstanceID: selectedDataInstance.dataInstanceID,
+      itemMasterID: selectedDataInstance.itemMasterID,
+      dataInstances: selectedDataInstance.dataInstances,
+      instancesStatus: selectedViewCategoryID,
+      instancesTime: selectedDataInstance.instancesTime,
+      itemClassColorID: classDataInstanceMaterDuplicate.itemClassColorID,
+    );
     //postDataInstanceMaster(dataInstancesMaster);
     await dataInstanceMasterDao
         .updateDataInstanceByEntity(dataInstancesMaster)
         .then((value) {
-
       return classDataInstanceMaterDuplicateClone;
-
     }).onError((error, stackTrace) {
       selectedViewCategoryID = 0;
       print(error);
