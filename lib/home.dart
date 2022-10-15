@@ -53,16 +53,16 @@ class HomePage extends State<Home> {
     setState(() {
       _selectedIndex = index;
       this.classMaster = classMaster;
-      if(_selectedIndex==1){
-      _widgetOptions[_selectedIndex] = editable
-          ? InsightsPage(
-              editable: editable,
-              classMaster: this.classMaster,
-              changePage: changePageIndex,
-            )
-          : InsightsPage(
-              editable: false,
-            );
+      if (_selectedIndex == 1) {
+        _widgetOptions[_selectedIndex] = editable
+            ? InsightsPage(
+                editable: editable,
+                classMaster: this.classMaster,
+                changePage: changePageIndex,
+              )
+            : InsightsPage(
+                editable: false,
+              );
       }
     });
   }
@@ -70,6 +70,14 @@ class HomePage extends State<Home> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
+      //sig50, balaji this issue was required to remove dirty class from widget list.
+      if (index == 0) {
+        _widgetOptions[1] = InsightsPage(
+          editable: false,
+        );
+      }
+      //sig50
     });
   }
 
@@ -87,6 +95,13 @@ class HomePage extends State<Home> {
     ///
     print('initState');
     getUser();
+  }
+
+  @override
+  void didUpdateWidget(covariant Home oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    print("oop");
   }
 
   Future<void> signOut() async {
@@ -125,7 +140,6 @@ class HomePage extends State<Home> {
     return StoreConnector<AppStore, int>(
       converter: (store) => store.state.selectedIndex,
       builder: (context, bottomNavigationCurrentIndex) {
-
         //checking index for bottomNavigation
         print(bottomNavigationCurrentIndex);
 
@@ -138,15 +152,13 @@ class HomePage extends State<Home> {
             actions: <Widget>[
               MaterialButton(
                 onPressed: signOut,
-                child: state['nan'] != 'nan'? 
-                  CircleAvatar(
-                  backgroundImage: NetworkImage(state['photoURL']!),
-                  backgroundColor: Colors.yellow,
-                  radius: 16):const CircleAvatar(
-                  backgroundColor: Colors.lightBlue,
-                  radius: 16
-                )
-                ,
+                child: state['nan'] != 'nan'
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(state['photoURL']!),
+                        backgroundColor: Colors.yellow,
+                        radius: 16)
+                    : const CircleAvatar(
+                        backgroundColor: Colors.lightBlue, radius: 16),
               )
             ],
           ),

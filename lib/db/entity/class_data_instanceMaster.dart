@@ -17,6 +17,8 @@ class ClassDataInstanceMaterDuplicate{
   
   final int instancesStatus;
 
+  
+
 
 
   ClassDataInstanceMaterDuplicate(

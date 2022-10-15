@@ -73,12 +73,10 @@ class HomePageActivity extends State<homePage> {
     getNotes();
   }
 
-
-
   Future getNotes() async {
     //cloud migration
     //database =
-        //await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    //await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     print(
         "***************************************************************************");
     var state = StoreProvider.of<AppStore>(context);
@@ -86,14 +84,15 @@ class HomePageActivity extends State<homePage> {
 
     //cloud migration
     //List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
-    List<ClassMaster> dataCopy = await ClassMasterCloud().findItemById(projectStoreID);
+    List<ClassMaster> dataCopy =
+        await ClassMasterCloud().findItemById(projectStoreID);
     //dataInstanceMaster = database.dataInstanceMasterDao;
     dataCopy.forEach((classMaster) async {
       lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
       // Future.delayed(Duration(microseconds: 10000000),
       //     (() async =>
-      await findLastComment(classMaster.itemMasterID!); 
-     // ));
+      await findLastComment(classMaster.itemMasterID!);
+      // ));
     });
     // TODO done- FOR MIGRATION
     //List<DataInstancesMaster> datas = await database.dataInstanceMasterDao.findAllDataInstance();
@@ -101,29 +100,31 @@ class HomePageActivity extends State<homePage> {
     //postDataInstanceMaster(DataInstancesMaster);
     //});
     //for migration
-
-    setState(() {
-      data = dataCopy;
-    });
+    if (mounted) {
+      setState(() {
+        data = dataCopy;
+      });
+    }
   }
 
   Future<void> findLastComment(int itemMasterID) async {
     lastCommentsMap.putIfAbsent(itemMasterID, () => 'loading...');
 
     //cloud migration
-    DataInstancesMaster? lastComment =
-        await DataInstanceMasterCloud().findDataInstanceByLastComment(itemMasterID);
+    DataInstancesMaster? lastComment = await DataInstanceMasterCloud()
+        .findDataInstanceByLastComment(itemMasterID);
     //var lastCommentForTheClass = lastComment.elementAt(0);
-    setState(() {
-      if (null != lastComment) {
-      lastCommentsMap.update(
-          itemMasterID, (value) => lastComment.dataInstances);
-    }else{
-      lastCommentsMap.update(
-          itemMasterID, (value) => 'no comments, yet...');
+    if (mounted) {
+      setState(() {
+        if (null != lastComment) {
+          lastCommentsMap.update(
+              itemMasterID, (value) => lastComment.dataInstances);
+        } else {
+          lastCommentsMap.update(
+              itemMasterID, (value) => 'no comments, yet...');
+        }
+      });
     }
-    });
-    
   }
 
   @override
@@ -144,16 +145,15 @@ class HomePageActivity extends State<homePage> {
                         MainWidgetScrollView: mainWidgetScrollController,
                         key: plannerGraphKey,
                         classMaster: ClassMaster(
-                          itemName: "dummy",
-                          categoryID: 1,
-                          subCategoryID: 2,
-                          itemClassColorID: 1,
-                          itemPriority: 1,
-                          isItemCommentable: 1,
-                          description: "dummy",
-                          //TODO : 696969696969696969696 adding dummy prjid
-                          projectStoreID: 1
-                        ), 
+                            itemName: "dummy",
+                            categoryID: 1,
+                            subCategoryID: 2,
+                            itemClassColorID: 1,
+                            itemPriority: 1,
+                            isItemCommentable: 1,
+                            description: "dummy",
+                            //TODO : 696969696969696969696 adding dummy prjid
+                            projectStoreID: 1),
                         graphType: 2)
                     // Container(
                     //   height: 500,
@@ -178,107 +178,109 @@ class HomePageActivity extends State<homePage> {
                               // findLastComment(e.itemMasterID!);
                               // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
                               return SizedBox(
-                                child:Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 7),
-                                decoration: BoxDecoration(
-                                    color: colorStore
-                                        .getColorByID(e.itemClassColorID),
-                                    borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(25),
-                                        topRight: Radius.circular(25))),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        //adding text inside expanded makes the text to spread out, otherwise it will overflow
-                                        Expanded(
-                                          child: Text(
-                                            e.itemName,
-                                            maxLines: 2,
-                                            style: const TextStyle(
-                                                overflow: TextOverflow.ellipsis,
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 28,
-                                          child: PopupMenuButton(
-                                            icon: const Icon(Icons.more_vert),
-                                            itemBuilder:
-                                                (BuildContext context) =>
-                                                    <PopupMenuEntry>[
-                                              PopupMenuItem(
-                                                child: ListTile(
-                                                  title: Text('edit'),
-                                                  onTap: () {
-                                                    widget.changePage(
-                                                        1, e, true);
-                                                    Navigator.pop(context);
-                                                  },
-                                                ),
-                                              ),
-                                              PopupMenuItem(
-                                                  child: ListTile(
-                                                title: const Text('delete'),
-                                                onTap: () {
-                                                  deleteClass(e);
-                                                  Navigator.pop(context);
-                                                },
-                                              )),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(e.description,
-                                        style: const TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold),
-                                        softWrap: false,
-                                        maxLines: 3,
-                                        overflow: TextOverflow.ellipsis // new
-                                        ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            commentButton(e);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            padding: const EdgeInsets.all(3),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 7),
+                                  decoration: BoxDecoration(
+                                      color: colorStore
+                                          .getColorByID(e.itemClassColorID),
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(25),
+                                          topRight: Radius.circular(25))),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          //adding text inside expanded makes the text to spread out, otherwise it will overflow
+                                          Expanded(
                                             child: Text(
-                                              lastCommentsMap[e.itemMasterID],
-                                              maxLines: 6,
+                                              e.itemName,
+                                              maxLines: 2,
                                               style: const TextStyle(
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w600),
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 28,
+                                            child: PopupMenuButton(
+                                              icon: const Icon(Icons.more_vert),
+                                              itemBuilder:
+                                                  (BuildContext context) =>
+                                                      <PopupMenuEntry>[
+                                                PopupMenuItem(
+                                                  child: ListTile(
+                                                    title: Text('edit'),
+                                                    onTap: () {
+                                                      widget.changePage(
+                                                          1, e, true);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ),
+                                                PopupMenuItem(
+                                                    child: ListTile(
+                                                  title: const Text('delete'),
+                                                  onTap: () {
+                                                    deleteClass(e);
+                                                    Navigator.pop(context);
+                                                  },
+                                                )),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(e.description,
+                                          style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold),
+                                          softWrap: false,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis // new
+                                          ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              commentButton(e);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              padding: const EdgeInsets.all(3),
+                                              child: Text(
+                                                lastCommentsMap[e.itemMasterID],
+                                                maxLines: 6,
+                                                style: const TextStyle(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
                               );
                             },
                           ).toList(),
@@ -336,7 +338,9 @@ class HomePageActivity extends State<homePage> {
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final classMaster = database.classMasterDao;
 
-    await ClassMasterCloud().deleteItemById(classMasterItem.itemMasterID!).then((value) {
+    await ClassMasterCloud()
+        .deleteItemById(classMasterItem.itemMasterID!)
+        .then((value) {
       setState(() {
         data.remove(classMasterItem);
         //data = data;

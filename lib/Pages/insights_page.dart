@@ -236,7 +236,8 @@ class Insights extends State<InsightsPage> {
             MaterialButton(
               onPressed: () {
                 if (classTitleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty && !callingServer) {
+                    descriptionController.text.isNotEmpty &&
+                    !callingServer) {
                   //sep 25-2022, sig -30
                   callingServer = true;
                   if (widget.editable) {
@@ -259,6 +260,12 @@ class Insights extends State<InsightsPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   void addDataToDb() async {
