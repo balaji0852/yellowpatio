@@ -1,5 +1,5 @@
 
-const server = 'https://sightcloud.azurewebsites.net/api/';
+const server = 'https://sightcloud-test.azurewebsites.net/';
 
 String serverPath(){
   return server;

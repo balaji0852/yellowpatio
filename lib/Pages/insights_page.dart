@@ -261,6 +261,17 @@ class Insights extends State<InsightsPage> {
     );
   }
 
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    //balaji : sig-50 adding below line...
+    widget.changePage!(0, widget.classMaster!, false);
+    
+  }
+
   void addDataToDb() async {
     // cloud migration
     //need validations
@@ -392,7 +403,6 @@ class Insights extends State<InsightsPage> {
         print("inserted successfully1");
         classTitleController.clear();
         descriptionController.clear();
-
         //sig-30
         callingServer = !callingServer;
 

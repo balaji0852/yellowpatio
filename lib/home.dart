@@ -50,21 +50,27 @@ class HomePage extends State<Home> {
   void changePageIndex(int index, ClassMaster classMaster, bool editable) {
     //editable true, then set index to 1, and set the InsightsPage
     //editable false, then set index to 0, and set the
+    print('changePageIndex(');
+    // WidgetsBinding.instance.addPostFrameCallback((_) => 
     setState(() {
-      _selectedIndex = index;
-      this.classMaster = classMaster;
-      if(_selectedIndex==1){
-      _widgetOptions[_selectedIndex] = editable
-          ? InsightsPage(
-              editable: editable,
-              classMaster: this.classMaster,
-              changePage: changePageIndex,
-            )
-          : InsightsPage(
-              editable: false,
-            );
-      }
-    });
+          print('changePageIndex(2');
+
+          _selectedIndex = index;
+          this.classMaster = classMaster;
+          if (_selectedIndex == 1) {
+            _widgetOptions[_selectedIndex] = editable
+                ? InsightsPage(
+                    editable: editable,
+                    classMaster: this.classMaster,
+                    changePage: changePageIndex,
+                  )
+                : InsightsPage(
+                    editable: false,
+                  );
+          }
+
+          print(_widgetOptions.toList());
+        });
   }
 
   void _onItemTapped(int index) {
@@ -125,7 +131,6 @@ class HomePage extends State<Home> {
     return StoreConnector<AppStore, int>(
       converter: (store) => store.state.selectedIndex,
       builder: (context, bottomNavigationCurrentIndex) {
-
         //checking index for bottomNavigation
         print(bottomNavigationCurrentIndex);
 
@@ -138,15 +143,13 @@ class HomePage extends State<Home> {
             actions: <Widget>[
               MaterialButton(
                 onPressed: signOut,
-                child: state['nan'] != 'nan'? 
-                  CircleAvatar(
-                  backgroundImage: NetworkImage(state['photoURL']!),
-                  backgroundColor: Colors.yellow,
-                  radius: 16):const CircleAvatar(
-                  backgroundColor: Colors.lightBlue,
-                  radius: 16
-                )
-                ,
+                child: state['nan'] != 'nan'
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage(state['photoURL']!),
+                        backgroundColor: Colors.yellow,
+                        radius: 16)
+                    : const CircleAvatar(
+                        backgroundColor: Colors.lightBlue, radius: 16),
               )
             ],
           ),
