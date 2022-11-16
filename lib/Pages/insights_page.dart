@@ -236,7 +236,8 @@ class Insights extends State<InsightsPage> {
             MaterialButton(
               onPressed: () {
                 if (classTitleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty && !callingServer) {
+                    descriptionController.text.isNotEmpty &&
+                    !callingServer) {
                   //sep 25-2022, sig -30
                   callingServer = true;
                   if (widget.editable) {
@@ -261,14 +262,13 @@ class Insights extends State<InsightsPage> {
     );
   }
 
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
 
     //balaji : sig-50 adding below line...
-    widget.changePage!(0, widget.classMaster!, false);
+   // widget.changePage!(0, widget.classMaster!, false);
     
   }
 

@@ -90,31 +90,58 @@ class AllProjectPageState extends State<AllProjectPage> {
       //     },
       //   );
       // }
-
-      children: projectStoreList
-          .map((e) => GestureDetector(
-                key: UniqueKey(),
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          e.projectName,
-                          style: const TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.blue,
-                              fontSize: 20),
-                        ),
-                        Text(e.projectDescription)
-                      ]),
-                ),
-                onTap: () {
-                  print("jj");
-                  navigateProject(e.projectStoreID!);
-                },
-              ))
-          .toList(),
+      //sig42: balaji:adding loading description for the page
+      children: projectStoreList.isEmpty
+          ? [
+              Container(
+                alignment: Alignment.center,
+                child: Column(children: [
+                  Image.asset(
+                    "assets/project5.png",
+                    scale: 2,
+                    width: 400,
+                    height: 350,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text(
+                    "we're fetching you're mission critical business...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  )
+                ]),
+              )
+            ]
+          : projectStoreList
+              .map((e) => GestureDetector(
+                    key: UniqueKey(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              e.projectName,
+                              style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue,
+                                  fontSize: 20),
+                            ),
+                            Text(e.projectDescription)
+                          ]),
+                    ),
+                    onTap: () {
+                      print("jj");
+                      navigateProject(e.projectStoreID!);
+                    },
+                  ))
+              .toList(),
     );
   }
 

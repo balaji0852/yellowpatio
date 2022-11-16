@@ -53,29 +53,33 @@ class HomePage extends State<Home> {
     print('changePageIndex(');
     // WidgetsBinding.instance.addPostFrameCallback((_) => 
     setState(() {
-          print('changePageIndex(2');
-
-          _selectedIndex = index;
-          this.classMaster = classMaster;
-          if (_selectedIndex == 1) {
-            _widgetOptions[_selectedIndex] = editable
-                ? InsightsPage(
-                    editable: editable,
-                    classMaster: this.classMaster,
-                    changePage: changePageIndex,
-                  )
-                : InsightsPage(
-                    editable: false,
-                  );
-          }
-
-          print(_widgetOptions.toList());
-        });
+      _selectedIndex = index;
+      this.classMaster = classMaster;
+      if (_selectedIndex == 1) {
+        _widgetOptions[_selectedIndex] = editable
+            ? InsightsPage(
+                editable: editable,
+                classMaster: this.classMaster,
+                changePage: changePageIndex,
+              )
+            : InsightsPage(
+                editable: false,
+              );
+      }
+    });
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+
+      //sig50, balaji this issue was required to remove dirty class from widget list.
+      if (index == 0) {
+        _widgetOptions[1] = InsightsPage(
+          editable: false,
+        );
+      }
+      //sig50
     });
   }
 
@@ -93,6 +97,13 @@ class HomePage extends State<Home> {
     ///
     print('initState');
     getUser();
+  }
+
+  @override
+  void didUpdateWidget(covariant Home oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    print("oop");
   }
 
   Future<void> signOut() async {
