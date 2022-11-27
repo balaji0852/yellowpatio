@@ -137,12 +137,15 @@ class CommentSection extends State<CommentSectionPage> {
             // ]),
           ),
           Positioned(
-            height: 125,
-            left: 25,
-            child: BackButton(
-              onPressed: backButton,
-            ),
-          ),
+              height: 125,
+              left: 25,
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: BackButton(
+                  color: Colors.black,
+                  onPressed: backButton,
+                ),
+              )),
         ],
       ),
     );

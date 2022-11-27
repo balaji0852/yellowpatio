@@ -151,6 +151,7 @@ class HomePage extends State<Home> {
             iconTheme: const IconThemeData(color: Colors.black),
             title: const Text(appName, style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.white,
+            
             actions: <Widget>[
               MaterialButton(
                 onPressed: signOut,

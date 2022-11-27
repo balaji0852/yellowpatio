@@ -633,6 +633,11 @@ class _$ProjectStoreDao extends ProjectStoreDao {
 
   final DeletionAdapter<projectStore> _projectStoreDeletionAdapter;
 
+  final _ServicePlanStore = ServicePlanStore(serviceName: 'dummy', 
+                regionStore: RegionStore(regionName: 'dummy',
+                  regionDescription: 'deosnt exist',
+                  server: 'dummy.com')
+                );
   @override
   Future<List<projectStore>> findAllProject() async {
     return _queryAdapter.queryList('SELECT * FROM projectStore',
@@ -643,7 +648,10 @@ class _$ProjectStoreDao extends ProjectStoreDao {
             userStoreID: row['userStoreID'] as int,
             deactivateProject: row['deactivateProject'] == null
                 ? null
-                : (row['deactivateProject'] as int) != 0));
+                : (row['deactivateProject'] as int) != 0, 
+                servicePlanStore: _ServicePlanStore
+              )
+            );
   }
 
    @override
@@ -656,7 +664,8 @@ class _$ProjectStoreDao extends ProjectStoreDao {
             userStoreID: row['userStoreID'] as int,
             deactivateProject: row['deactivateProject'] == null
                 ? null
-                : (row['deactivateProject'] as int) != 0),
+                : (row['deactivateProject'] as int) != 0,
+                servicePlanStore: _ServicePlanStore),
                 arguments: [userStoreID]);
   }
 

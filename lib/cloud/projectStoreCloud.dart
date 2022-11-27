@@ -1,15 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'package:yellowpatioapp/cloud/serverPath.dart';
+import 'package:yellowpatioapp/db/entity/RegionStore.dart';
+import 'package:yellowpatioapp/db/entity/ServicePlanStore.dart';
 import 'dart:convert' as convert;
 import 'package:yellowpatioapp/db/entity/project_store.dart';
 
 class projectStoreCloud {
   Future<int> postProjectStore(
       projectStore projectStore, int userStoreID) async {
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            '${serverPath()}projectStore?userStoreID=$userStoreID'));
+    var request = http.Request('POST',
+        Uri.parse('${serverPath()}projectStore?userStoreID=$userStoreID'));
     request.body = projectStore.toJsonString();
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
@@ -36,7 +36,21 @@ class projectStoreCloud {
             projectName: item["projectName"],
             projectDescription: item["projectDescription"],
             userStoreID: userStoreID,
-            deactivateProject: item["deactivateProject"]));
+            deactivateProject: item["deactivateProject"],
+            servicePlanStore: ServicePlanStore(
+                serviceID: item['servicePlanStore']['serviceID'],
+                serviceName: item['servicePlanStore']['serviceName'],
+                serviceDescription: item['servicePlanStore']
+                    ['serviceDescription'],
+                regionStore: RegionStore(
+                    regionID: item['servicePlanStore']['regionStore']
+                        ['regionID'],
+                    regionName: item['servicePlanStore']['regionStore']
+                        ['regionName'],
+                    regionDescription: item['servicePlanStore']['regionStore']
+                        ['regionDescription'],
+                    server: item['servicePlanStore']['regionStore']
+                        ['server']))));
       }
     }
     return listOfProjectStoreList;

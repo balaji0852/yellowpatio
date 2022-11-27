@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'package:floor/floor.dart';
+import 'package:yellowpatioapp/db/entity/ServicePlanStore.dart';
 import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
 
 @Entity(
@@ -20,14 +21,17 @@ class projectStore{
 
   final bool? deactivateProject;
 
-  final int userStoreID;
+  final int? userStoreID;
+
+  final ServicePlanStore servicePlanStore;
 
   projectStore({
     this.projectStoreID,
     required this.projectName,
     required this.projectDescription,
-    required this.userStoreID,
-    this.deactivateProject
+    this.userStoreID,
+    this.deactivateProject,
+    required this.servicePlanStore
   });
 
     //cloud
@@ -44,7 +48,8 @@ class projectStore{
     "deactivateProject":deactivateProject,
     "servicePlanID":1,
     "projectName":projectName,
-    "projectDescription":projectDescription
+    "projectDescription":projectDescription,
+    "servicePlanStore":servicePlanStore.toMapObjectWithKey()
   };
 
   String toJsonString() {

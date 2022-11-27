@@ -377,7 +377,11 @@ class PlannerGraphPage extends State<PlannerGraph> {
         ),
         Positioned(
           bottom: 550,
-          child: IconButton(
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.white,
+            child: IconButton(
+              color: Colors.black,
             onPressed: () {
               pageDownScroller(widget.MainWidgetScrollView);
             },
@@ -386,6 +390,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
               size: 35,
             ),
           ),
+          )
         ),
         if (openDialog)
           GraphDialog(

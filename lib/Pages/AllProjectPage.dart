@@ -35,7 +35,10 @@ class AllProjectPageState extends State<AllProjectPage> {
     setState(() {
       projectStoreList = _projectStoreList;
     });
-    state.dispatch(ChangeBottomNavigationView(projectStoreList.length));
+
+    //balaji : 11/25/2022 : plan:sending the 1 if empty projects, or
+    //                      the first project id to the store, to BottomNavigationView
+    state.dispatch(ChangeBottomNavigationView(projectStoreList.isEmpty?0:projectStoreList.elementAt(0).projectStoreID!));
   }
 
   @override
@@ -124,14 +127,15 @@ class AllProjectPageState extends State<AllProjectPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(3),
                       child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
                               e.projectName,
                               style: const TextStyle(
                                   decoration: TextDecoration.underline,
                                   color: Colors.blue,
-                                  fontSize: 20),
+                                   fontWeight: FontWeight.w400,
+                                  fontSize: 19),
                             ),
                             Text(e.projectDescription)
                           ]),
