@@ -40,6 +40,7 @@ class ShimDropDownWidget extends State<ShimDropDown> {
   @override
   Widget build(BuildContext context) {
     return DropDown(
+        darkMode: false,
         callBack: updateCommentStatus,
         dropdownTitle: shimDropDownTitle,
         viewCategory: widget.viewCategory);

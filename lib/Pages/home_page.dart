@@ -42,6 +42,9 @@ class HomePageActivity extends State<homePage> {
   static late var database;
   static late var classMaster;
   static late var dataInstanceMaster;
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
 
   getInstance() async {
     //singleton wrong implementation
@@ -129,13 +132,16 @@ class HomePageActivity extends State<homePage> {
 
   @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
+
     return StoreConnector<AppStore, int>(
       converter: (store) => store.state.dateViewPreference,
       builder: (context, userDateViewPreference) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: darkMode ? Colors.black : Colors.white,
             body: CustomScrollView(
               controller: mainWidgetScrollController,
               slivers: [
@@ -260,17 +266,18 @@ class HomePageActivity extends State<homePage> {
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: darkMode?Colors.grey[850]:Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
                                               padding: const EdgeInsets.all(3),
                                               child: Text(
                                                 lastCommentsMap[e.itemMasterID],
                                                 maxLines: 6,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     fontSize: 10,
+                                                    color: darkMode?Colors.white:Colors.black,
                                                     fontWeight:
                                                         FontWeight.w600),
                                               ),
@@ -301,9 +308,12 @@ class HomePageActivity extends State<homePage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            const Text(
+                            Text(
                               "post you're task and work efficiently...",
-                              style: TextStyle(fontSize: 20),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
                             ),
                             const SizedBox(
                               height: 10,

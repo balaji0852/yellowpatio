@@ -21,6 +21,9 @@ class AllProjectPage extends StatefulWidget {
 class AllProjectPageState extends State<AllProjectPage> {
   bool loading = false;
   List<projectStore> projectStoreList = [];
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
 
   getProjects() async {
     var state = StoreProvider.of<AppStore>(context);
@@ -38,7 +41,9 @@ class AllProjectPageState extends State<AllProjectPage> {
 
     //balaji : 11/25/2022 : plan:sending the 1 if empty projects, or
     //                      the first project id to the store, to BottomNavigationView
-    state.dispatch(ChangeBottomNavigationView(projectStoreList.isEmpty?0:projectStoreList.elementAt(0).projectStoreID!));
+    state.dispatch(ChangeBottomNavigationView(projectStoreList.isEmpty
+        ? 0
+        : projectStoreList.elementAt(0).projectStoreID!));
   }
 
   @override
@@ -64,6 +69,9 @@ class AllProjectPageState extends State<AllProjectPage> {
 
   @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
+
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -108,12 +116,12 @@ class AllProjectPageState extends State<AllProjectPage> {
                   const SizedBox(
                     height: 5,
                   ),
-                  const Text(
+                  Text(
                     "we're fetching you're mission critical business...",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 20,
-                    ),
+                        fontSize: 20,
+                        color: darkMode ? Colors.white : Colors.black),
                   ),
                   const SizedBox(
                     height: 10,
@@ -134,10 +142,15 @@ class AllProjectPageState extends State<AllProjectPage> {
                               style: const TextStyle(
                                   decoration: TextDecoration.underline,
                                   color: Colors.blue,
-                                   fontWeight: FontWeight.w400,
+                                  fontWeight: FontWeight.w400,
                                   fontSize: 19),
                             ),
-                            Text(e.projectDescription)
+                            Text(
+                              e.projectDescription,
+                              style: TextStyle(
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            )
                           ]),
                     ),
                     onTap: () {

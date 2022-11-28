@@ -14,10 +14,10 @@ class ChangeBottomNavigationView{
 }
 
 
-class ChangeMainWidgetScrollViewIndex{
-  final bool mainWidgetScrollViewIndex;
+class ChangeDarkMode{
+  final bool DarkMode;
 
-  ChangeMainWidgetScrollViewIndex(this.mainWidgetScrollViewIndex);
+  ChangeDarkMode(this.DarkMode);
 }
 
 //using to store projectStoreID

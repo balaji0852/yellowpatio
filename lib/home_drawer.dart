@@ -24,12 +24,16 @@ class HomeDraweWidget extends State<HomeDrawer> {
   var state;
   int uid = 0;
   int projectStoreID = 0;
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
 
   @override
   void initState() {
     super.initState();
     setState(() {
       viewTypeState = Config.dateViewPreference;
+      // state = StoreProvider.of<AppStore>(context);
+      // darkMode = state.state.darkMode;
     });
   }
 
@@ -54,8 +58,10 @@ class HomeDraweWidget extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
 
     return Drawer(
+      backgroundColor: darkMode ? Colors.black : Colors.white,
       key: UniqueKey(),
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -64,23 +70,22 @@ class HomeDraweWidget extends State<HomeDrawer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const Text("planB"),
-                CloseButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
+                Text("planB",
+                    style: TextStyle(
+                        color: darkMode ? Colors.white : Colors.white)),
               ],
             ),
             const SizedBox(
               height: 20,
             ),
             Row(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   width: 20,
                 ),
-                Text("Date view")
+                Text("Date view",
+                    style: TextStyle(
+                        color: darkMode ? Colors.black : Colors.white))
               ],
             ),
             const SizedBox(
@@ -103,27 +108,57 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 ),
                 datePreferenceWidget(5, 'Five day'),
                 const SizedBox(
-                  height: 15,
+                  height: 5,
                 ),
                 MaterialButton(
                   key: UniqueKey(),
                   height: 50,
-                  color:Colors.white,
+                  color: darkMode ? Colors.grey[850] : Colors.white,
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ProjectPage()),
+                      MaterialPageRoute(
+                          builder: (context) => const ProjectPage()),
                     );
                   },
-                  child: const Text("Projects"),
+                  child: Text(
+                    "Projects",
+                    style: TextStyle(
+                        color: darkMode ? Colors.white : Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                MaterialButton(
+                  key: UniqueKey(),
+                  height: 50,
+                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  onPressed: () {
+                    setState(() {
+                      state.dispatch(ChangeDarkMode(!darkMode));
+                      darkMode = !darkMode;
+                    });
+                  },
+                  child: Text(
+                    "Dark Mode",
+                    style: TextStyle(
+                        color: darkMode ? Colors.white : Colors.black),
+                  ),
                 )
               ],
             ),
             const SizedBox(
               height: 10,
             ),
-            Text(" uid " + uid.toString()),
-            Text(" project id " + projectStoreID.toString())
+            Text(
+              " uid " + uid.toString(),
+              style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+            ),
+            Text(
+              " project id " + projectStoreID.toString(),
+              style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+            )
           ],
         ),
       ),
@@ -147,12 +182,15 @@ class HomeDraweWidget extends State<HomeDrawer> {
       return MaterialButton(
         key: UniqueKey(),
         height: 50,
-        focusColor: Colors.red,
+        focusColor: darkMode ? Colors.grey[850] : Colors.white,
         color: state.state.dateViewPreference == viewType
-            ? Colors.grey
-            : Colors.white,
+            ? Colors.blue
+            : darkMode
+                ? Colors.grey[850]
+                : Colors.white,
         onPressed: callback,
-        child: Text(text),
+        child: Text(text,
+            style: TextStyle(color: darkMode ? Colors.white : Colors.black)),
       );
     });
   }

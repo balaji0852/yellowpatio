@@ -35,7 +35,9 @@ class CommentSection extends State<CommentSectionPage> {
   late int userStoreID;
   //sig -30, sep 22
   bool callingServer = false;
-
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
   int lineCounter = 1;
 
   @override
@@ -46,6 +48,8 @@ class CommentSection extends State<CommentSectionPage> {
 
   @override
   Widget build(BuildContext context) {
+        state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
     return Scaffold(
       body: Stack(
         children: [
@@ -55,7 +59,7 @@ class CommentSection extends State<CommentSectionPage> {
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height - heightManagement,
-                  color: Colors.white,
+                  color: darkMode?Colors.black:Colors.white,
                   child: ListView(
                     controller: mainWidgetScrollController,
                     children: [
@@ -66,8 +70,9 @@ class CommentSection extends State<CommentSectionPage> {
                         alignment: Alignment.center,
                         child: Text(
                           widget.classMaster!.itemName,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 30,
+                            color: darkMode?Colors.white:Colors.black
                           ),
                         ),
                       ),
@@ -76,8 +81,8 @@ class CommentSection extends State<CommentSectionPage> {
                             horizontal: 15, vertical: 10),
                         child: Text(
                           widget.classMaster!.description,
-                          style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 14, color: darkMode?Colors.white:Colors.black ,fontWeight: FontWeight.bold),
                         ),
                       ),
                       PlannerGraph(
@@ -102,7 +107,7 @@ class CommentSection extends State<CommentSectionPage> {
                 ),
                 Container(
                   height: heightManagement,
-                  color: Colors.grey,
+                  color: darkMode?Colors.grey[900]:Colors.grey,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -140,9 +145,9 @@ class CommentSection extends State<CommentSectionPage> {
               height: 125,
               left: 25,
               child: CircleAvatar(
-                backgroundColor: Colors.white,
+                backgroundColor:  darkMode?Colors.black:Colors.white,
                 child: BackButton(
-                  color: Colors.black,
+                  color:  darkMode?Colors.white:Colors.black,
                   onPressed: backButton,
                 ),
               )),

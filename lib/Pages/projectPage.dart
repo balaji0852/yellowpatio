@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -26,7 +25,9 @@ class ProjectPageState extends State<ProjectPage> {
   bool loaded = true;
   TextEditingController projectTitleEditorController = TextEditingController();
   TextEditingController projectDescriptionController = TextEditingController();
-
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
   //balaji : 11/25/2022 : adding the list servicePlans of type servicePlanStore
   List<ServicePlanStore> servicePlans =
       List<ServicePlanStore>.empty(growable: true);
@@ -68,7 +69,9 @@ class ProjectPageState extends State<ProjectPage> {
             dropdownItems.add(DropdownMenuItem(
                 key: UniqueKey(),
                 child: Text(e.regionStore.regionName,
-                    style: const TextStyle(fontSize: 13)),
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: darkMode ? Colors.white : Colors.black)),
                 value: e.serviceID.toString()));
           }
         }
@@ -80,22 +83,27 @@ class ProjectPageState extends State<ProjectPage> {
                 dropdownItems.add(DropdownMenuItem(
                     key: UniqueKey(),
                     child: Text(e.serviceName,
-                        style: const TextStyle(fontSize: 13)),
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: darkMode ? Colors.white : Colors.black)),
                     value: e.serviceID.toString()))
               });
     }
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: darkMode ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(0),
       ),
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: DropdownButton<String>(
+        dropdownColor: darkMode ? Colors.grey[900] : Colors.white,
         hint: Text(
           dropdownTitle,
-          style: const TextStyle(
-              color: Colors.black, fontSize: 13, fontWeight: FontWeight.normal),
+          style: TextStyle(
+              color: darkMode ? Colors.white : Colors.black,
+              fontSize: 13,
+              fontWeight: FontWeight.normal),
         ),
         items: dropdownItems,
         borderRadius: BorderRadius.circular(5),
@@ -106,28 +114,31 @@ class ProjectPageState extends State<ProjectPage> {
 
   @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: darkMode ? Colors.black : Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
             floating: true,
-            backgroundColor: Colors.white,
+            backgroundColor: darkMode ? Colors.black : Colors.white,
             leading: BackButton(
               onPressed: (() {
                 navigateProject();
               }),
-              color: Colors.black,
+              color: darkMode ? Colors.white : Colors.black,
             ),
-            flexibleSpace: const FlexibleSpaceBar(
+            flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
                 'Project creation',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
-                    color: Colors.black),
+                    color: darkMode ? Colors.white : Colors.black),
               ),
             ),
           ),
@@ -148,9 +159,11 @@ class ProjectPageState extends State<ProjectPage> {
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.zero),
                       color: Colors.blueAccent,
-                      child: const Text(
+                      child: Text(
                         'New project',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: darkMode ? Colors.white : Colors.black),
                       ),
                     ),
                     IconButton(
@@ -159,7 +172,10 @@ class ProjectPageState extends State<ProjectPage> {
                             isCreateProject = true;
                           });
                         },
-                        icon: const Icon(Icons.arrow_left_sharp))
+                        icon: Icon(
+                          Icons.arrow_left_sharp,
+                          color: darkMode ? Colors.white : Colors.black,
+                        ))
                   ],
                 ),
               ),
@@ -195,18 +211,26 @@ class ProjectPageState extends State<ProjectPage> {
                     Container(
                       height: 55,
                       decoration: BoxDecoration(
+                          color: darkMode ? Colors.grey[900] : Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1, color: Colors.black)),
+                          border: Border.all(
+                              width: 1,
+                              color: darkMode ? Colors.white : Colors.black)),
                       child: TextField(
                         controller: projectTitleEditorController,
                         maxLength: 35,
                         onChanged: (value) {},
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                             counterText: ' ',
                             hintText: "Project Title",
-                            contentPadding: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                            hintStyle: TextStyle(
+                                color: darkMode ? Colors.white : Colors.black),
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(4, 0, 0, 0),
                             border: InputBorder.none),
-                        style: const TextStyle(fontSize: 22),
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: darkMode ? Colors.white : Colors.black),
                       ),
                     ),
                     const SizedBox(
@@ -215,27 +239,41 @@ class ProjectPageState extends State<ProjectPage> {
                     Container(
                       height: 150,
                       decoration: BoxDecoration(
+                          color: darkMode ? Colors.grey[900] : Colors.white,
                           borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.black, width: 1)),
+                          border: Border.all(
+                              color: darkMode ? Colors.white : Colors.black,
+                              width: 1)),
                       child: TextField(
                           controller: projectDescriptionController,
                           maxLength: 255,
                           maxLines: 7,
                           onChanged: (value) {},
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                               counterText: ' ',
                               fillColor: Colors.green,
-                              contentPadding: EdgeInsets.fromLTRB(4, 10, 0, 0),
+                              hintStyle: TextStyle(
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(4, 10, 0, 0),
                               hintText: "Description",
                               border: InputBorder.none),
-                          style: const TextStyle(fontSize: 14)),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: darkMode ? Colors.white : Colors.black)),
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: Text('Server region  '),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          child: Text(
+                            'Server region  ',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: darkMode ? Colors.white : Colors.black),
+                          ),
                         ),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,8 +318,11 @@ class ProjectPageState extends State<ProjectPage> {
                                     "Note \n" +
                                         servicePlanStore
                                             .regionStore.regionDescription!,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 13,
+                                        color: darkMode
+                                            ? Colors.white
+                                            : Colors.black,
                                         fontWeight: FontWeight.w500))
                             ])
                       ],
@@ -289,9 +330,15 @@ class ProjectPageState extends State<ProjectPage> {
                     Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            child: Text('Service plan    '),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Text(
+                              'Service plan    ',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            ),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,8 +362,11 @@ class ProjectPageState extends State<ProjectPage> {
                                 Text(
                                   "Note \n" +
                                       servicePlanStore.serviceDescription!,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 13,
+                                      color: darkMode
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontWeight: FontWeight.w500),
                                 )
                             ],
@@ -329,6 +379,7 @@ class ProjectPageState extends State<ProjectPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
+                          color: darkMode?Colors.white:Colors.black,
                             onPressed: () {
                               setState(() {
                                 isCreateProject = false;
@@ -375,9 +426,9 @@ class ProjectPageState extends State<ProjectPage> {
                     const Text(
                       'Your Projects',
                       style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
                     ),
                     AllProjectPage(loaded: loaded)
                   ]),

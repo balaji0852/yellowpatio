@@ -48,6 +48,9 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   List<ClassDataInstanceMaterDuplicate>? temp;
   int viewType = 2;
   late int projectStoreID;
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
 
   @override
   void initState() {
@@ -80,10 +83,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
 
   @override
   Widget build(BuildContext context) {
+     state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
     return Container(
       height: 2400,
       width: (MediaQuery.of(context).size.width - 50) / widget.filter,
-      color: Colors.white,
+      color: darkMode?Colors.black:Colors.white,
       child: Column(
           children: todayInstance.map((element) {
         int index = 0;

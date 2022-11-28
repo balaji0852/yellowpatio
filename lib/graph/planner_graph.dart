@@ -54,6 +54,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   bool openDialog = false;
   List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild = [];
   int viewType = 1;
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
 
   @override
   void initState() {
@@ -171,13 +173,15 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   @override
   Widget build(BuildContext context) {
+    state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
     return Stack(
       children: [
         Column(
           children: [
             Container(
               height: 575,
-              color: Colors.white,
+              color: darkMode?Colors.black:Colors.white,
               child: ListView(
                 itemExtent: itemSize,
                 controller: widgetScrollCOntroller,
@@ -196,17 +200,18 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                   children: time
                                       .map((e) => SizedBox(
                                             height: 100,
-                                            child: Text(e),
+                                            child: Text(e
+                                            ,style: TextStyle(color: darkMode?Colors.white:Colors.black),),
                                           ))
                                       .toList()),
                             ),
-                            SizedBox(
-                              height: 2400,
-                              width: 2,
-                              child: Container(
-                                color: Colors.black,
-                              ),
-                            ),
+                            // SizedBox(
+                            //   height: 2400,
+                            //   width: 2,
+                            //   child: Container(
+                            //     color:darkMode?Colors.white: Colors.black,
+                            //   ),
+                            // ),
                             //Dates are provided to TimeIntanceWidget, they query it and save in 24-List, type 2D...
                             //TimeIntanceWidget makes the query for a day, or based csp(comment section page) view
                             //csp will provide the 2D List, classmaster object is provided. plannerGraph->timeInstanceWidget...
@@ -288,23 +293,23 @@ class PlannerGraphPage extends State<PlannerGraph> {
                             //   ),
                             // ),
                           ]),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 40,
-                          ),
-                          SizedBox(
-                            height: 2,
-                            width: MediaQuery.of(context).size.width - 50,
-                            child: Container(
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          )
-                        ],
-                      )
+                      // Row(
+                      //   children: [
+                      //     const SizedBox(
+                      //       width: 40,
+                      //     ),
+                      //     SizedBox(
+                      //       height: 2,
+                      //       width: MediaQuery.of(context).size.width - 50,
+                      //       child: Container(
+                      //         color: Colors.black,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(
+                      //       width: 5,
+                      //     )
+                      //   ],
+                      // )
                     ],
                   )
                 ],
@@ -321,7 +326,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children:
-                          dates!.map((e) => Text(e.substring(5, 10))).toList(),
+                          dates!.map((e) => Text(e.substring(5, 10),style: TextStyle(color: darkMode?Colors.white:Colors.black),)).toList(),
                     )),
                 const SizedBox(
                   width: 5,
@@ -334,9 +339,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
                 const Spacer(
                   flex: 3,
                 ),
-                const Text('View',
+                 Text('View',
                     style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 14, color: darkMode?Colors.white:Colors.black, fontWeight: FontWeight.bold)),
                 DropDown(
                     callBack: (selected) {
                       setState(() {
@@ -344,6 +349,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                             viewCategory.indexOf(selected!);
                       });
                     },
+                    darkMode: darkMode,
                     dropdownTitle:
                         viewCategory.elementAt(selectedViewCategoryID),
                         viewCategory: viewCategory,),
@@ -351,18 +357,20 @@ class PlannerGraphPage extends State<PlannerGraph> {
                   flex: 1,
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon:  Icon(
                     Icons.arrow_back_ios_new,
                     size: 25,
+                    color: darkMode?Colors.white:Colors.black
                   ),
                   onPressed: () {
                     dateSetter(false, false);
                   },
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_forward_ios,
                     size: 25,
+                    color: darkMode?Colors.white:Colors.black
                   ),
                   onPressed: () {
                     dateSetter(true, false);
@@ -379,9 +387,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
           bottom: 550,
           child: CircleAvatar(
             radius: 20,
-            backgroundColor: Colors.white,
+            backgroundColor:darkMode?Colors.black: Colors.white,
             child: IconButton(
-              color: Colors.black,
+              color: darkMode?Colors.white:Colors.black,
             onPressed: () {
               pageDownScroller(widget.MainWidgetScrollView);
             },

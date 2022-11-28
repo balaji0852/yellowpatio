@@ -70,6 +70,9 @@ class Insights extends State<InsightsPage> {
   TextEditingController descriptionController = TextEditingController();
   CategoryStore categorystore = CategoryStore();
   String updateButtonName = "add";
+  //11/28/2022 : balaji , using local variable to set darkMode
+  bool darkMode = false;
+  var state;
 
   @override
   void initState() {
@@ -143,120 +146,127 @@ class Insights extends State<InsightsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          //Balaji: No crossAxisAlignment required for the first container, since containers
-          //fills themselves to fill the parent width...
-          //height is the key : if height is present container fills to body parent width..
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(25)),
-              // width: MediaQuery.of(context).size.width-20,
-              height: 100,
-              child: Align(
+    state = StoreProvider.of<AppStore>(context);
+    darkMode = state.state.darkMode;
+
+
+    return Scaffold(
+      backgroundColor: darkMode?Colors.black:Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            //Balaji: No crossAxisAlignment required for the first container, since containers
+            //fills themselves to fill the parent width...
+            //height is the key : if height is present container fills to body parent width..
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.lightBlueAccent,
+                    borderRadius: BorderRadius.circular(25)),
+                // width: MediaQuery.of(context).size.width-20,
+                height: 100,
+                child: Align(
+                  child: TextField(
+                    controller: classTitleController,
+                    onChanged: (value) {
+                      setState(() {
+                        classTitle = value;
+                      });
+                    },
+                    maxLength: 15,
+                    decoration: const InputDecoration(
+                        counterText: ' ',
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                        border: InputBorder.none),
+                    style: const TextStyle(fontSize: 47),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              androidDropdown(categorystore.getCategoryList, (value) {
+                setState(() {
+                  selectedCategory = value!;
+                  categorystore.setSubCategoryList = selectedCategory;
+                  selectedSubCategory =
+                      categorystore.getSubCategoryList.elementAt(0);
+                });
+              }, selectedCategory),
+              const SizedBox(
+                height: 10,
+              ),
+              androidDropdown(categorystore.getSubCategoryList, (value) {
+                setState(() {
+                  selectedSubCategory = value!;
+                });
+              }, selectedSubCategory),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 50,
+                child: colorPicker(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.lightBlueAccent,
+                    borderRadius: BorderRadius.circular(25)),
+                // width: MediaQuery.of(context).size.width-20,
+                height: 150,
                 child: TextField(
-                  controller: classTitleController,
+                  maxLength: 255,
+                  maxLines: 9,
                   onChanged: (value) {
                     setState(() {
-                      classTitle = value;
+                      descriptionString = value;
                     });
                   },
-                  maxLength: 15,
+                  controller: descriptionController,
                   decoration: const InputDecoration(
                       counterText: ' ',
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 7, horizontal: 7),
+                          EdgeInsets.symmetric(vertical: 9, horizontal: 9),
                       border: InputBorder.none),
-                  style: const TextStyle(fontSize: 47),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            androidDropdown(categorystore.getCategoryList, (value) {
-              setState(() {
-                selectedCategory = value!;
-                categorystore.setSubCategoryList = selectedCategory;
-                selectedSubCategory =
-                    categorystore.getSubCategoryList.elementAt(0);
-              });
-            }, selectedCategory),
-            const SizedBox(
-              height: 10,
-            ),
-            androidDropdown(categorystore.getSubCategoryList, (value) {
-              setState(() {
-                selectedSubCategory = value!;
-              });
-            }, selectedSubCategory),
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 50,
-              child: colorPicker(),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(25)),
-              // width: MediaQuery.of(context).size.width-20,
-              height: 150,
-              child: TextField(
-                maxLength: 255,
-                maxLines: 9,
-                onChanged: (value) {
-                  setState(() {
-                    descriptionString = value;
-                  });
-                },
-                controller: descriptionController,
-                decoration: const InputDecoration(
-                    counterText: ' ',
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 9, horizontal: 9),
-                    border: InputBorder.none),
-                style: const TextStyle(fontSize: 16),
+              const SizedBox(
+                height: 50,
               ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            MaterialButton(
-              onPressed: () {
-                if (classTitleController.text.isNotEmpty &&
-                    descriptionController.text.isNotEmpty &&
-                    !callingServer) {
-                  //sep 25-2022, sig -30
-                  callingServer = true;
-                  if (widget.editable) {
-                    updateDataToDatabase();
-                  } else {
-                    addDataToDb();
+              MaterialButton(
+                onPressed: () {
+                  if (classTitleController.text.isNotEmpty &&
+                      descriptionController.text.isNotEmpty &&
+                      !callingServer) {
+                    //sep 25-2022, sig -30
+                    callingServer = true;
+                    if (widget.editable) {
+                      updateDataToDatabase();
+                    } else {
+                      addDataToDb();
+                    }
                   }
-                }
-              },
-              height: 45,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              color: Colors.lightBlueAccent,
-              child: Text(
-                updateButtonName,
-                style: const TextStyle(fontSize: 19),
+                },
+                height: 45,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                color: Colors.lightBlueAccent,
+                child: Text(
+                  updateButtonName,
+                  style: const TextStyle(fontSize: 19),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -268,8 +278,7 @@ class Insights extends State<InsightsPage> {
     super.dispose();
 
     //balaji : sig-50 adding below line...
-   // widget.changePage!(0, widget.classMaster!, false);
-    
+    // widget.changePage!(0, widget.classMaster!, false);
   }
 
   void addDataToDb() async {
