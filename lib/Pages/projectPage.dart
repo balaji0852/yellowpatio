@@ -423,12 +423,12 @@ class ProjectPageState extends State<ProjectPage> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Your Projects',
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
-                          color: Colors.black),
+                          color:  darkMode ? Colors.white : Colors.black),
                     ),
                     AllProjectPage(loaded: loaded)
                   ]),

@@ -50,7 +50,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ? (index + 1).toString() + "am"
           : (index + 1).toString() + "pm");
   late List<String>? dates = [];
-  final itemSize = 2402.0;
+  final itemSize = 2462.0;
   bool openDialog = false;
   List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild = [];
   int viewType = 1;
@@ -181,7 +181,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
           children: [
             Container(
               height: 575,
-              color: darkMode?Colors.black:Colors.white,
+              color: darkMode ? Colors.black : Colors.white,
               child: ListView(
                 itemExtent: itemSize,
                 controller: widgetScrollCOntroller,
@@ -200,8 +200,13 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                   children: time
                                       .map((e) => SizedBox(
                                             height: 100,
-                                            child: Text(e
-                                            ,style: TextStyle(color: darkMode?Colors.white:Colors.black),),
+                                            child: Text(
+                                              e,
+                                              style: TextStyle(
+                                                  color: darkMode
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                            ),
                                           ))
                                       .toList()),
                             ),
@@ -293,23 +298,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
                             //   ),
                             // ),
                           ]),
-                      // Row(
-                      //   children: [
-                      //     const SizedBox(
-                      //       width: 40,
-                      //     ),
-                      //     SizedBox(
-                      //       height: 2,
-                      //       width: MediaQuery.of(context).size.width - 50,
-                      //       child: Container(
-                      //         color: Colors.black,
-                      //       ),
-                      //     ),
-                      //     const SizedBox(
-                      //       width: 5,
-                      //     )
-                      //   ],
-                      // )
                     ],
                   )
                 ],
@@ -321,12 +309,35 @@ class PlannerGraphPage extends State<PlannerGraph> {
                   width: 40,
                 ),
                 SizedBox(
+                  height: 1.5,
+                  width: MediaQuery.of(context).size.width - 50,
+                  child: Container(
+                    color: darkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                )
+              ],
+            ),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 40,
+                ),
+                SizedBox(
                     height: 20,
                     width: MediaQuery.of(context).size.width - 50,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children:
-                          dates!.map((e) => Text(e.substring(5, 10),style: TextStyle(color: darkMode?Colors.white:Colors.black),)).toList(),
+                      children: dates!
+                          .map((e) => Text(
+                                e.substring(5, 10),
+                                style: TextStyle(
+                                    color:
+                                        darkMode ? Colors.white : Colors.black),
+                              ))
+                          .toList(),
                     )),
                 const SizedBox(
                   width: 5,
@@ -339,39 +350,34 @@ class PlannerGraphPage extends State<PlannerGraph> {
                 const Spacer(
                   flex: 3,
                 ),
-                 Text('View',
-                    style:
-                        TextStyle(fontSize: 14, color: darkMode?Colors.white:Colors.black, fontWeight: FontWeight.bold)),
+                Text('View',
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: darkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold)),
                 DropDown(
-                    callBack: (selected) {
-                      setState(() {
-                        selectedViewCategoryID =
-                            viewCategory.indexOf(selected!);
-                      });
-                    },
-                    darkMode: darkMode,
-                    dropdownTitle:
-                        viewCategory.elementAt(selectedViewCategoryID),
-                        viewCategory: viewCategory,),
+                  callBack: (selected) {
+                    setState(() {
+                      selectedViewCategoryID = viewCategory.indexOf(selected!);
+                    });
+                  },
+                  darkMode: darkMode,
+                  dropdownTitle: viewCategory.elementAt(selectedViewCategoryID),
+                  viewCategory: viewCategory,
+                ),
                 const Spacer(
                   flex: 1,
                 ),
                 IconButton(
-                  icon:  Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 25,
-                    color: darkMode?Colors.white:Colors.black
-                  ),
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      size: 25, color: darkMode ? Colors.white : Colors.black),
                   onPressed: () {
                     dateSetter(false, false);
                   },
                 ),
                 IconButton(
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 25,
-                    color: darkMode?Colors.white:Colors.black
-                  ),
+                  icon: Icon(Icons.arrow_forward_ios,
+                      size: 25, color: darkMode ? Colors.white : Colors.black),
                   onPressed: () {
                     dateSetter(true, false);
                   },
@@ -384,22 +390,21 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ],
         ),
         Positioned(
-          bottom: 550,
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor:darkMode?Colors.black: Colors.white,
-            child: IconButton(
-              color: darkMode?Colors.white:Colors.black,
-            onPressed: () {
-              pageDownScroller(widget.MainWidgetScrollView);
-            },
-            icon: const Icon(
-              Icons.arrow_circle_down,
-              size: 35,
-            ),
-          ),
-          )
-        ),
+            bottom: 550,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: darkMode ? Colors.black : Colors.white,
+              child: IconButton(
+                color: darkMode ? Colors.white : Colors.black,
+                onPressed: () {
+                  pageDownScroller(widget.MainWidgetScrollView);
+                },
+                icon: const Icon(
+                  Icons.arrow_circle_down,
+                  size: 35,
+                ),
+              ),
+            )),
         if (openDialog)
           GraphDialog(
             openCallback: openDialogCallback,

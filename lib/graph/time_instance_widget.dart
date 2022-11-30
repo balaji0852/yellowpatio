@@ -83,12 +83,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-     state = StoreProvider.of<AppStore>(context);
+    state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
     return Container(
-      height: 2400,
+      height: 2460,
       width: (MediaQuery.of(context).size.width - 50) / widget.filter,
-      color: darkMode?Colors.black:Colors.white,
+      color: darkMode ? Colors.black : Colors.white,
       child: Column(
           children: todayInstance.map((element) {
         int index = 0;

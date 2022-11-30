@@ -67,12 +67,13 @@ class HomeDraweWidget extends State<HomeDrawer> {
         padding: const EdgeInsets.all(5),
         child: ListView(
           children: [
+            const SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text("planB",
                     style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.white)),
+                        color: darkMode ? Colors.white : Colors.black,fontSize: 20)),
               ],
             ),
             const SizedBox(

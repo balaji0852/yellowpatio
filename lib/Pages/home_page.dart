@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -16,6 +18,7 @@ import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/db/repository/data_instance_master_dao.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
 import '../redux_state_store/appStore.dart';
 
@@ -135,13 +138,13 @@ class HomePageActivity extends State<homePage> {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    return StoreConnector<AppStore, int>(
-      converter: (store) => store.state.dateViewPreference,
-      builder: (context, userDateViewPreference) {
+    return StoreConnector<AppStore, bool>(
+      converter: (store) => store.state.darkMode,
+      builder: (context, _darkMode) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           child: Scaffold(
-            backgroundColor: darkMode ? Colors.black : Colors.white,
+            backgroundColor: _darkMode ? Colors.black : Colors.white,
             body: CustomScrollView(
               controller: mainWidgetScrollController,
               slivers: [
@@ -216,13 +219,22 @@ class HomePageActivity extends State<homePage> {
                                           SizedBox(
                                             width: 28,
                                             child: PopupMenuButton(
+                                              color: _darkMode
+                                                  ? Colors.grey[900]
+                                                  : Colors.white,
                                               icon: const Icon(Icons.more_vert),
                                               itemBuilder:
                                                   (BuildContext context) =>
                                                       <PopupMenuEntry>[
                                                 PopupMenuItem(
                                                   child: ListTile(
-                                                    title: Text('edit'),
+                                                    title: Text(
+                                                      'edit',
+                                                      style: TextStyle(
+                                                          color: _darkMode
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                    ),
                                                     onTap: () {
                                                       widget.changePage(
                                                           1, e, true);
@@ -232,7 +244,11 @@ class HomePageActivity extends State<homePage> {
                                                 ),
                                                 PopupMenuItem(
                                                     child: ListTile(
-                                                  title: const Text('delete'),
+                                                  title: Text('delete',
+                                                      style: TextStyle(
+                                                          color: _darkMode
+                                                              ? Colors.white
+                                                              : Colors.black)),
                                                   onTap: () {
                                                     deleteClass(e);
                                                     Navigator.pop(context);
@@ -266,7 +282,9 @@ class HomePageActivity extends State<homePage> {
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: darkMode?Colors.grey[850]:Colors.white,
+                                                  color: _darkMode
+                                                      ? Colors.grey[850]
+                                                      : Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
                                               padding: const EdgeInsets.all(3),
@@ -277,7 +295,9 @@ class HomePageActivity extends State<homePage> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     fontSize: 10,
-                                                    color: darkMode?Colors.white:Colors.black,
+                                                    color: _darkMode
+                                                        ? Colors.white
+                                                        : Colors.black,
                                                     fontWeight:
                                                         FontWeight.w600),
                                               ),

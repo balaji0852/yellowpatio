@@ -114,9 +114,19 @@ class CommentSection extends State<CommentSectionPage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 100,
                         child: TextField(
+                          decoration: InputDecoration(
+                            counterText: ' ',
+                            hintText: "comment",
+                            hintStyle: TextStyle(
+                                color: darkMode ? Colors.white : Colors.black),
+                           
+                            ),
                           controller: commentEditController,
                           maxLines: maxLinesManagement,
                           onChanged: textFieldheighManager,
+                          style: TextStyle(
+                            color: darkMode?Colors.white:Colors.black
+                          ),
                         ),
                       ),
                       const Spacer(

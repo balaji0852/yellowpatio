@@ -35,9 +35,11 @@ class AllProjectPageState extends State<AllProjectPage> {
     // final projectStoreDao = database.projectStoreDao;
     var _projectStoreList =
         await projectStoreCloud().findAllProjectByUserStoreID(2519);
-    setState(() {
-      projectStoreList = _projectStoreList;
-    });
+    if (mounted) {
+      setState(() {
+        projectStoreList = _projectStoreList;
+      });
+    }
 
     //balaji : 11/25/2022 : plan:sending the 1 if empty projects, or
     //                      the first project id to the store, to BottomNavigationView

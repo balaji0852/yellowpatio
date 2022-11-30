@@ -144,21 +144,19 @@ class HomePage extends State<Home> {
   Widget build(BuildContext context) {
     reduxState = StoreProvider.of<AppStore>(context);
     darkMode = reduxState.state.darkMode;
-    return StoreConnector<AppStore, int>(
-      converter: (store) => store.state.selectedIndex,
-      builder: (context, bottomNavigationCurrentIndex) {
-        //checking index for bottomNavigation
-        print(bottomNavigationCurrentIndex);
+    return StoreConnector<AppStore, bool>(
+      converter: (store) => store.state.darkMode,
+      builder: (context, _darkMode) {
 
         return Scaffold(
           drawer: HomeDrawer(),
           appBar: AppBar(
             iconTheme:
-                IconThemeData(color: darkMode ? Colors.white : Colors.black),
+                IconThemeData(color: _darkMode ? Colors.white : Colors.black),
             title: Text(appName,
                 style:
-                    TextStyle(color: darkMode ? Colors.white : Colors.black)),
-            backgroundColor: darkMode ? Colors.black : Colors.white,
+                    TextStyle(color: _darkMode ? Colors.white : Colors.black)),
+            backgroundColor: _darkMode ? Colors.black : Colors.white,
             actions: <Widget>[
               MaterialButton(
                 onPressed: signOut,
@@ -174,27 +172,27 @@ class HomePage extends State<Home> {
           ),
           body: _widgetOptions.elementAt(_selectedIndex),
           bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: darkMode ? Colors.black : Colors.white,
+            backgroundColor: _darkMode ? Colors.black : Colors.white,
             unselectedLabelStyle:
-                TextStyle(color: darkMode ? Colors.white : Colors.black),
+                TextStyle(color: _darkMode ? Colors.white : Colors.black),
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
-                  color: darkMode ? Colors.white : Colors.black,
+                  color: _darkMode ? Colors.white : Colors.black,
                 ),
                 label: 'home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.insights,
-                  color: darkMode ? Colors.white : Colors.black,
+                  color: _darkMode ? Colors.white : Colors.black,
                 ),
                 label: 'add',
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: darkMode ? Colors.white : Colors.black,
+            selectedItemColor: _darkMode ? Colors.white : Colors.black,
             onTap: (index) {
               _onItemTapped(index);
             },
