@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -39,6 +41,7 @@ class CommentSection extends State<CommentSectionPage> {
   bool darkMode = false;
   var state;
   int lineCounter = 1;
+  int reKey = 1;
 
   @override
   void initState() {
@@ -90,6 +93,7 @@ class CommentSection extends State<CommentSectionPage> {
                         key: _key,
                         classMaster: widget.classMaster!,
                         graphType: 1,
+                        reKey: reKey,
                       ),
                       const SizedBox(
                         height: 5,
@@ -227,6 +231,7 @@ class CommentSection extends State<CommentSectionPage> {
           setState(() {
             heightManagement = 100;
             maxLinesManagement = 1;
+            reKey++;
           });
 
           commentEditController.clear();

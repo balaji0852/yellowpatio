@@ -20,17 +20,23 @@ class TimeInstanceWidget extends StatefulWidget {
   final ClassMaster classMaster;
   final int today;
   final Function(bool, List<ClassDataInstanceMaterDuplicate>) openCallback;
+  final Function(int, List<ClassDataInstanceMaterDuplicate>) getDataCallBack;
+  final int columnName;
   final int viewType;
   final int graphType;
   final int filter;
+   final int reKey;
   const TimeInstanceWidget(
       {Key? key,
+      required this.reKey,
       required this.classMaster,
       required this.today,
       required this.openCallback,
       required this.viewType,
       required this.graphType,
-      required this.filter})
+      required this.filter,
+      required this.columnName,
+      required this.getDataCallBack})
       : super(key: key);
 
   @override
@@ -57,20 +63,27 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     // TODO: implement initState
     super.initState();
     //updateStoreValue();
-    getTodayInstance(widget.today);
+    //getTodayInstance(widget.today);
   }
 
-  void updateStoreValue() {
-    var state = StoreProvider.of<AppStore>(context);
-    viewType = state.state.dateViewPreference;
-  }
+  //balaji : 12/3/22 - r
+  // void updateStoreValue() {
+  //   var state = StoreProvider.of<AppStore>(context);
+  //   viewType = state.state.dateViewPreference;
+  // }
 
   @override
   void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    updateStoreValue();
-    getTodayInstance(widget.today);
+    
+    //balaji : 11/30/2022 adding this if case for quick view impl
+    if (oldWidget.today != widget.today || oldWidget.filter!=widget.filter 
+    || oldWidget.viewType!=widget.viewType || oldWidget.reKey!=widget.reKey) {
+      print(oldWidget.today.toString()+" "+widget.today.toString());
+      //balaji : 12/4/2022, adding below cleanup, as per pg.1.1
+      todayInstance = List.generate(24, (index) => []);
+      getTodayInstance(widget.today);
+     }
   }
 
   @override
@@ -78,15 +91,17 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     // updateStoreValue();
-    // getTodayInstance(widget.today);
+    getTodayInstance(widget.today);
   }
 
   @override
   Widget build(BuildContext context) {
+
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+
     return Container(
-      height: 2460,
+      height: 2402,
       width: (MediaQuery.of(context).size.width - 50) / widget.filter,
       color: darkMode ? Colors.black : Colors.white,
       child: Column(
@@ -107,22 +122,20 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 direction: Axis.horizontal,
                 children: element.map((e) {
                   int viewSetterValues =
-                      ViewChangesHelper().viewSetterForType(viewType);
+                      ViewChangesHelper().viewSetterForType(widget.viewType);
                   double fontSize = viewSetterValues == 1
-                      ? 11
+                      ? 9
                       : viewSetterValues == 2
-                          ? 12
-                          : 13;
+                          ? 10
+                          : 11;
                   index++;
-                  // print(DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
-                  //     .minute);
+
                   double height =
                       (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
                                   .minute /
                               60) *
-                          90;
-                  // print(index);
-                  if (index > ViewChangesHelper().viewSetterForType(viewType)) {
+                          20;
+                  if (index > ViewChangesHelper().viewSetterForType(widget.viewType)) {
                     return SizedBox(
                       width: 3,
                       child: Column(
@@ -156,7 +169,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                 borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(5),
                                     topRight: Radius.circular(5)),
-                                //TODO - FOR REMOVAL
+                                
                                 color: e.itemClassColorID == 999
                                     ? colorStore.getColorByID(
                                         widget.classMaster.itemClassColorID)
@@ -180,10 +193,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   }
 
   getTodayInstance(int sampletoday) async {
-    final database =
-        await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-    final dataInstanceMasterDao = database.dataInstanceMasterDao;
-    final ClassMasterDao = database.classMasterDao;
+    // final database =
+    //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    // final dataInstanceMasterDao = database.dataInstanceMasterDao;
+    // final ClassMasterDao = database.classMasterDao;
 
     var state = StoreProvider.of<AppStore>(context);
     projectStoreID = state.state.projectStoreID;
@@ -248,6 +261,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     if (mounted) {
       setState(() {
         if (null != commentCopy && commentCopy!.isNotEmpty) {
+          widget.getDataCallBack(widget.columnName, commentCopy!);
           todayInstance = List.generate(24, (index) => []);
           for (var element in commentCopy!) {
             var timeInstance =

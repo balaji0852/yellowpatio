@@ -113,6 +113,8 @@ class HomePageActivity extends State<homePage> {
     }
   }
 
+
+
   Future<void> findLastComment(int itemMasterID) async {
     lastCommentsMap.putIfAbsent(itemMasterID, () => 'loading...');
 
@@ -151,6 +153,7 @@ class HomePageActivity extends State<homePage> {
                 //container is not sLiver, so use sliverToBoxAdapter..
                 SliverToBoxAdapter(
                     child: PlannerGraph(
+                      reKey: 1,
                         MainWidgetScrollView: mainWidgetScrollController,
                         key: plannerGraphKey,
                         classMaster: ClassMaster(
