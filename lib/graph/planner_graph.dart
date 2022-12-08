@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:floor/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -135,8 +137,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
               colorID: dataInstances.itemClassColorID,
               presenceCount: 1,
               columnName: column));
+          currentPresence++;
         }
-        currentPresence++;
 
         //_todayQuickData[dataInstances.itemClassColorID] += 1;
         // if (_todayQuickData.containsKey(dataInstances.itemClassColorID)) {
@@ -596,21 +598,35 @@ class PlannerGraphPage extends State<PlannerGraph> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: quickViewData!
             .elementAt(index)
-            .map(
-              (quickDate) => Padding(
-                  padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 13,
-                    width: 10,
-                    color: ColorStore().getColorByID(quickDate.colorID),
-                    child: Text(
-                      quickDate.presenceCount.toString(),
-                      style: const TextStyle(fontSize: 9),
-                    ),
-                  )),
-            )
-            .toList(),
+            .where((element) => viewType > 2
+                ? element.index <
+                    4
+                : true)
+
+            .map((quickDate) {
+          
+
+         
+
+          return Padding(
+              padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
+              child: Container(
+                alignment: Alignment.center,
+                height: 15,
+                width: quickDate.presenceCount < 10 ? 15 : 18,
+                color: quickDate.index > 2 && viewType > 2?darkMode?Colors.black:Colors.white: ColorStore().getColorByID(quickDate.colorID),
+                child: Text(
+                  quickDate.index > 2 && viewType > 2
+                      ? "..."
+                      : quickDate.presenceCount > 10
+                          ? "10+"
+                          : quickDate.presenceCount.toString(),
+                  style: TextStyle(fontSize: 9
+                      ,color:  quickDate.index > 2 && viewType > 2?darkMode?Colors.white:Colors.black:Colors.black
+                      ),
+                ),
+              ));
+        }).toList(),
       ),
     );
   }
@@ -629,9 +645,5 @@ class test {
   final int colorID;
   final int presenceCount;
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   // TODO: implement build
-  //   return Text(text!);
-  // }
+
 }

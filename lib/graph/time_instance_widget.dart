@@ -122,7 +122,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 direction: Axis.horizontal,
                 children: element.map((e) {
                   int viewSetterValues =
-                      ViewChangesHelper().viewSetterForType(widget.viewType);
+                      ViewChangesHelper().viewSetterForType(widget.filter);
                   double fontSize = viewSetterValues == 1
                       ? 9
                       : viewSetterValues == 2
@@ -135,7 +135,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                   .minute /
                               60) *
                           20;
-                  if (index > ViewChangesHelper().viewSetterForType(widget.viewType)) {
+                  if (index > ViewChangesHelper().viewSetterForType(widget.filter)) {
                     return SizedBox(
                       width: 3,
                       child: Column(

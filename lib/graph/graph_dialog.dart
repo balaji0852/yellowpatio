@@ -45,7 +45,7 @@ class graphDialogPage extends State<GraphDialog> {
             border: Border.all(color: Colors.black87),
             color: Colors.white,
             borderRadius: BorderRadius.circular(0)),
-        height: 450,
+        height: 575,
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
@@ -61,7 +61,7 @@ class graphDialogPage extends State<GraphDialog> {
               ],
             ),
             SizedBox(
-              height: 390,
+              height: 475,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: widget.hourlyDataInstance.map((e) {
