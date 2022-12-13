@@ -34,8 +34,28 @@ class graphDialogPage extends State<GraphDialog> {
   int selectedViewCategoryID = 0;
   late ClassDataInstanceMaterDuplicate selectedDataInstance;
   late int userStoreID;
-
+  var currentViewDataInstance;
+  var currentViewDataInstanceIndex = 0 ;
   ColorStore colorStore = ColorStore();
+
+  changeView(int _currentViewDataInstanceIndex) {
+    if (_currentViewDataInstanceIndex >= 0 &&
+        _currentViewDataInstanceIndex < widget.hourlyDataInstance.length) {
+      setState(() {
+        currentViewDataInstanceIndex = _currentViewDataInstanceIndex;
+        currentViewDataInstance =
+            widget.hourlyDataInstance.elementAt(_currentViewDataInstanceIndex);
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    currentViewDataInstance = widget.hourlyDataInstance.elementAt(0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -43,7 +63,7 @@ class graphDialogPage extends State<GraphDialog> {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black87),
-            color: Colors.white,
+            color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
             borderRadius: BorderRadius.circular(0)),
         height: 575,
         width: MediaQuery.of(context).size.width,
@@ -61,88 +81,122 @@ class graphDialogPage extends State<GraphDialog> {
               ],
             ),
             SizedBox(
-              height: 475,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: widget.hourlyDataInstance.map((e) {
-                  var classDataInstanceMaterDuplicateClone = e;
-                  return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width - 70,
-                      child: ListView(
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'comments',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const Text("status"),
-                                  ShimDropDown(
-                                    classDataInstanceMaterDuplicate: e,
-                                    callBack: (selected) {
-                                      // setState(() {
-                                      //   selectedDataInstance =
-                                      //       classDataInstanceMaterDuplicateClone;
-                                      //   selectedViewCategoryID =
-                                      //       viewCategory.indexOf(selected!) + 1;
-                                      //   updateCommentStatus(
-                                      //           classDataInstanceMaterDuplicateClone)
-                                      //       .then((value) {
-                                      //     classDataInstanceMaterDuplicateClone =
-                                      //         value;
-                                      //   });
-                                      // });
-                                    },
-                                    dropdownTitle: viewCategory
-                                        .elementAt(e.instancesStatus - 1),
-                                    viewCategory: viewCategory,
-                                  )
-                                ],
-                              ),
-                              Text(
-                                e.itemName!,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              Text(e.description!),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const SizedBox(height: 10,),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: colorStore
-                                        .getColorByID(e.itemClassColorID),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Text(e.dataInstances),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(DateTime.fromMillisecondsSinceEpoch(
-                                          e.instancesTime)
-                                      .toString()
-                                      .substring(0, 16))
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
+              height: 450,
+              child:
+
+                  //  ListView(
+                  //   scrollDirection: Axis.horizontal,
+                  //   children: widget.hourlyDataInstance.map((e) {
+                  //     var classDataInstanceMaterDuplicateClone = e;
+                  //     return
+                  Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width - 70,
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'comments',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    const Text("status"),
+                                    ShimDropDown(
+                                      classDataInstanceMaterDuplicate: currentViewDataInstance,
+                                      callBack: (selected) {
+                                        // setState(() {
+                                        //   selectedDataInstance =
+                                        //       classDataInstanceMaterDuplicateClone;
+                                        //   selectedViewCategoryID =
+                                        //       viewCategory.indexOf(selected!) + 1;
+                                        //   updateCommentStatus(
+                                        //           classDataInstanceMaterDuplicateClone)
+                                        //       .then((value) {
+                                        //     classDataInstanceMaterDuplicateClone =
+                                        //         value;
+                                        //   });
+                                        // });
+                                      },
+                                      dropdownTitle: viewCategory
+                                          .elementAt(currentViewDataInstance.instancesStatus - 1),
+                                      viewCategory: viewCategory,
+                                    )
+                                  ],
+                                ),
+                                Text(
+                                  currentViewDataInstance.itemName!,
+                                  style: const TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(currentViewDataInstance.description!),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: colorStore
+                                          .getColorByID(currentViewDataInstance.itemClassColorID),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Text(currentViewDataInstance.dataInstances),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(DateTime.fromMillisecondsSinceEpoch(
+                                            currentViewDataInstance.instancesTime)
+                                        .toString()
+                                        .substring(0, 16))
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                      //     );
+                      //   }).toList(),
+                      // ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              ),
+            ),
+            Row(
+
+              children: [
+                Spacer(flex: 2,),
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new,
+                      size: 25, color: Colors.black),
+                  onPressed: () {
+                     int index = currentViewDataInstanceIndex-1;
+                                        changeView(index);
+
+                  },
+                ),
+                                Spacer(flex: 3,),
+
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios,
+                      size: 25, color: Colors.black),
+                  onPressed: () {
+                    int index = currentViewDataInstanceIndex+1;
+                                        changeView(index);
+
+                  },
+                ),                Spacer(flex: 2,),
+
+              ],
             )
           ],
         ),

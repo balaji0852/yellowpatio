@@ -9,7 +9,7 @@ class ServicePlanStoreCloud {
   Future<List<ServicePlanStore>> getServicePlans() async {
     var request =
         http.Request('GET', Uri.parse('${serverPath()}servicePlanStore'));
-    http.StreamedResponse response = await request.send();
+    http.StreamedResponse response =  await request.send();
     var jsonResponse =
         convert.jsonDecode(await response.stream.bytesToString());
     List<ServicePlanStore> listOfServicePlanStoreList =

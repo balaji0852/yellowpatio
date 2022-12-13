@@ -5,6 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class DataInstanceMasterCloud {
+
+
+  
+
+
   Future<int> postDataInstanceMaster(
       DataInstancesMaster dataInstancesMaster) async {
     var request =
@@ -86,10 +91,12 @@ class DataInstanceMasterCloud {
   Future<List<ClassDataInstanceMaterDuplicate>?>
       findDataInstanceByIntervalWithClassMaster(
           int dateTimeEpoch, int zeroDateTimeEpoch, int projectStoreID) async {
+   
     var request = http.Request(
         'GET',
         Uri.parse(
             '${serverPath()}dataInstanceMaster/query2?dateTimeEpoch=$dateTimeEpoch&zeroDateTimeEpoch=$zeroDateTimeEpoch&projectStoreID=$projectStoreID'));
+
     http.StreamedResponse response = await request.send();
     var jsonResponse =
         convert.jsonDecode(await response.stream.bytesToString());

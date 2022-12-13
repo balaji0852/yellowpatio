@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -57,6 +58,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  CancelableOperation? _cancelableOperation;
 
   @override
   void initState() {
@@ -82,6 +84,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       print(oldWidget.today.toString()+" "+widget.today.toString());
       //balaji : 12/4/2022, adding below cleanup, as per pg.1.1
       todayInstance = List.generate(24, (index) => []);
+      _cancelableOperation!.cancel();
       getTodayInstance(widget.today);
      }
   }
@@ -102,7 +105,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
 
     return Container(
       height: 2402,
-      width: (MediaQuery.of(context).size.width - 50) / widget.filter,
+      width: (MediaQuery.of(context).size.width - 20) / widget.filter,
       color: darkMode ? Colors.black : Colors.white,
       child: Column(
           children: todayInstance.map((element) {
@@ -192,7 +195,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     );
   }
 
-  getTodayInstance(int sampletoday) async {
+  void getTodayInstance(int sampletoday) async {
     // final database =
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final dataInstanceMasterDao = database.dataInstanceMasterDao;
@@ -217,42 +220,63 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     //cloud migration
     if (widget.graphType == 1) {
       if (widget.viewType == 0) {
-        commentCopy = await DataInstanceMasterCloud()
+
+         _cancelableOperation = CancelableOperation.fromFuture(DataInstanceMasterCloud()
             .findDataInstanceByOneInterval(
-                initial, end, widget.classMaster.itemMasterID!, projectStoreID);
+                initial, end, widget.classMaster.itemMasterID!, projectStoreID),onCancel: () => [],);
+        // commentCopy = await DataInstanceMasterCloud()
+        //     .findDataInstanceByOneInterval(
+        //         initial, end, widget.classMaster.itemMasterID!, projectStoreID);
         // commentCopy = await dataInstanceMasterDao.findDataInstanceByOneInterval(
         //     initial, end, widget.classMaster.itemMasterID!,projectStoreID);
       } else {
-        commentCopy = await DataInstanceMasterCloud()
+        // commentCopy = await DataInstanceMasterCloud()
+        //     .findDataInstanceByOneIntervalV1(
+        //         initial,
+        //         end,
+        //         widget.classMaster.itemMasterID!,
+        //         widget.viewType,
+        //         projectStoreID);
+          _cancelableOperation = CancelableOperation.fromFuture(DataInstanceMasterCloud()
             .findDataInstanceByOneIntervalV1(
                 initial,
                 end,
                 widget.classMaster.itemMasterID!,
                 widget.viewType,
-                projectStoreID);
+                projectStoreID),onCancel: () => [],);
         // commentCopy =
         //     await dataInstanceMasterDao.findDataInstanceByOneIntervalV1(initial,
         //         end, widget.classMaster.itemMasterID!, widget.viewType,projectStoreID);
       }
     } else {
       //commentCopy = await dataInstanceMasterDao.findDataInstanceByInterval(initial,end);
-
+     
       //join is a wrong methodology for this action, use single query for this, using itemMasterID
       if (widget.viewType == 0) {
-        commentCopy = await DataInstanceMasterCloud()
+        // commentCopy = await DataInstanceMasterCloud()
+        //     .findDataInstanceByIntervalWithClassMaster(
+        //         initial, end, projectStoreID);
+         _cancelableOperation = CancelableOperation.fromFuture(DataInstanceMasterCloud()
             .findDataInstanceByIntervalWithClassMaster(
-                initial, end, projectStoreID);
+                initial, end, projectStoreID),onCancel: () => [],);
         // commentCopy = await dataInstanceMasterDao
         //     .findDataInstanceByIntervalWithClassMaster(initial, end,projectStoreID);
       } else {
-        commentCopy = await DataInstanceMasterCloud()
+        // commentCopy = await DataInstanceMasterCloud()
+        //     .findDataInstanceByIntervalWithClassMasterV1(
+        //         initial, end, widget.viewType, projectStoreID);
+         _cancelableOperation = CancelableOperation.fromFuture(DataInstanceMasterCloud()
             .findDataInstanceByIntervalWithClassMasterV1(
-                initial, end, widget.viewType, projectStoreID);
+                initial, end, widget.viewType, projectStoreID),onCancel: () => [],);
         //  commentCopy = await dataInstanceMasterDao
         //     .findDataInstanceByIntervalWithClassMasterV1(
         //         initial, end, widget.viewType,projectStoreID);
       }
     }
+  
+    final value = await _cancelableOperation?.value;
+    commentCopy  = value as List<ClassDataInstanceMaterDuplicate>?;
+
     processTodayData();
   }
 
@@ -260,7 +284,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     //added mounted for cloud migration
     if (mounted) {
       setState(() {
-        if (null != commentCopy && commentCopy!.isNotEmpty) {
+        if (null != commentCopy && commentCopy!.isNotEmpty && _cancelableOperation!.isCompleted) {
           widget.getDataCallBack(widget.columnName, commentCopy!);
           todayInstance = List.generate(24, (index) => []);
           for (var element in commentCopy!) {

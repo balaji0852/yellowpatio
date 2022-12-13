@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:floor/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +51,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   static List<String> time = List.generate(
       24,
       (index) => index <= 11
-          ? (index + 1).toString() + "am"
-          : (index + 1).toString() + "pm");
+          ? (index + 1).toString() 
+          : (index + 1).toString() );
   late List<String>? dates = [];
   final itemSize = 2402.0;
   bool openDialog = false;
@@ -63,13 +61,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   //11/30/2022 : balaji, adding below list for implementing quick view
-  List<List<test>>? quickViewData = [
-    List.empty(growable: true),
-    List.empty(growable: true),
-    List.empty(growable: true),
-    List.empty(growable: true),
-    List.empty(growable: true)
-  ];
+  List<List<test>>? quickViewData = List.generate(5, (index) => List.empty(growable: true));
 
   @override
   void initState() {
@@ -84,7 +76,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
 
     //TODO removal - used to call for 3 view previously
-    initializeDate();
+    initializeDate(DateTime.now().millisecondsSinceEpoch);
     //moving dateSetter to didChangeDependencies
   }
 
@@ -117,20 +109,21 @@ class PlannerGraphPage extends State<PlannerGraph> {
         if (_todayQuickData.where((instance) {
           return instance.colorID == dataInstances.itemClassColorID;
         }).isNotEmpty) {
-          _todayQuickData[_todayQuickData.lastIndexWhere(
-              (instance) =>
-                  instance.colorID == dataInstances.itemClassColorID)] = test(
-              index: currentPresence,
-              columnName: column,
-              colorID: dataInstances.itemClassColorID,
-              presenceCount: _todayQuickData
+
+          var _test = _todayQuickData
                       .where((instance) {
                         return instance.colorID ==
                             dataInstances.itemClassColorID;
                       })
-                      .first
-                      .presenceCount +
-                  1);
+                      .first;
+          
+          _todayQuickData[_todayQuickData.lastIndexWhere(
+              (instance) =>
+                  instance.colorID == dataInstances.itemClassColorID)] = test(
+              index: _test.index,
+              columnName: column,
+              colorID: dataInstances.itemClassColorID,
+              presenceCount: _test.presenceCount+1 );
         } else {
           _todayQuickData.add(test(
               index: currentPresence,
@@ -163,8 +156,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
   }
 
-  initializeDate() {
-    int day = DateTime.now().millisecondsSinceEpoch;
+  initializeDate(int day) {
+    //int day = DateTime.now().millisecondsSinceEpoch;
     day5 = day - 4 * 86400000;
     day4 = day - 3 * 86400000;
     day3 = day - 2 * 86400000;
@@ -199,12 +192,14 @@ class PlannerGraphPage extends State<PlannerGraph> {
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    //balaji : 12/4/2022 : viewChange redux needs this, and if needs to handle
-    //                    unwanted network calls triggered re-renders
+  
     int _viewType = state.state.dateViewPreference;
     if (_viewType != viewType || widget.reKey != oldWidget.reKey) {
+      initializeDate(DateTime.parse(dates!.last).millisecondsSinceEpoch);
       viewType = _viewType;
-      dateSetter(false, true);
+      quickViewDataCleanUp();
+      addDateToList();
+      //dateSetter(false, true);
     }
   }
 
@@ -219,6 +214,14 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
     updateStoreValue();
     dateSetter(false, true);
+  }
+
+  quickViewDataCleanUp() {
+    quickViewData![0].clear();
+    quickViewData![1].clear();
+    quickViewData![2].clear();
+    quickViewData![3].clear();
+    quickViewData![4].clear();
   }
 
   pageDownScroller(ScrollController mainWidgetScrollController) {
@@ -247,7 +250,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: 40,
+                              width: 15,
                               // ignore: prefer_const_literals_to_create_immutables
                               child: Column(
                                   mainAxisAlignment:
@@ -380,11 +383,11 @@ class PlannerGraphPage extends State<PlannerGraph> {
             Row(
               children: [
                 const SizedBox(
-                  width: 40,
+                  width: 15,
                 ),
                 SizedBox(
                   height: 1.5,
-                  width: MediaQuery.of(context).size.width - 50,
+                  width: MediaQuery.of(context).size.width - 20,
                   child: Container(
                     color: darkMode ? Colors.white : Colors.black,
                   ),
@@ -398,7 +401,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const SizedBox(
-                  width: 40,
+                  width: 15,
                 ),
                 if (viewType >= 5) quickViewDataWidget(4),
                 if (viewType >= 4) quickViewDataWidget(3),
@@ -413,11 +416,11 @@ class PlannerGraphPage extends State<PlannerGraph> {
             Row(
               children: [
                 const SizedBox(
-                  width: 40,
+                  width: 15,
                 ),
                 SizedBox(
                     height: 20,
-                    width: MediaQuery.of(context).size.width - 50,
+                    width: MediaQuery.of(context).size.width - 20,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: dates!
@@ -471,11 +474,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                   callBack: (selected) {
                     setState(() {
                       selectedViewCategoryID = viewCategory.indexOf(selected!);
-                      quickViewData![0].clear();
-                      quickViewData![1].clear();
-                      quickViewData![2].clear();
-                      quickViewData![3].clear();
-                      quickViewData![4].clear();
+                      quickViewDataCleanUp();
                     });
                   },
                   darkMode: darkMode,
@@ -509,10 +508,12 @@ class PlannerGraphPage extends State<PlannerGraph> {
         Positioned(
             bottom: 550,
             child: CircleAvatar(
-              radius: 20,
+              radius: 21,
+             
               backgroundColor: darkMode ? Colors.black : Colors.white,
-              child: IconButton(
+              child:Center(child:  IconButton(
                 color: darkMode ? Colors.white : Colors.black,
+              
                 onPressed: () {
                   pageDownScroller(widget.MainWidgetScrollView);
                 },
@@ -520,62 +521,70 @@ class PlannerGraphPage extends State<PlannerGraph> {
                   Icons.arrow_circle_down,
                   size: 35,
                 ),
-              ),
+              ),),
             )),
+        if (openDialog)
+        GestureDetector(
+          onTap: () => openDialogCallback(false,[]),
+          child:  Container(
+            height: 670,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.transparent,
+            child: Text(''),
+          ),
+        )
+         ,
         if (openDialog)
           GraphDialog(
             openCallback: openDialogCallback,
             hourlyDataInstance: hourlyDataInstanceFromChild,
             classMaster: widget.classMaster,
           ),
+        
       ],
     );
   }
 
   dateSetter(bool isIncrement, bool isIntl) {
-    // setState(() {
-    if (viewType == 1) {
-      day1 = isIntl
-          ? day1
-          : isIncrement
-              ? day1 + 86400000
-              : day1 - 86400000;
-    } else if (viewType == 2) {
-      day2 = isIntl
-          ? day2
-          : isIncrement
-              ? day1 + 86400000
-              : day2 - 2 * 86400000;
-      day1 = day2 + 86400000;
-    } else if (viewType == 3) {
-      day3 = isIntl
-          ? day3
-          : isIncrement
-              ? day1 + 86400000
-              : day3 - 3 * 86400000;
-      day2 = day3 + 86400000;
-      day1 = day3 + 2 * 86400000;
-    } else if (viewType == 5) {
-      day5 = isIntl
-          ? day5
-          : isIncrement
-              ? day1 + 86400000
-              : day5 - 5 * 86400000;
-      day4 = day5 + 86400000;
-      day3 = day5 + 2 * 86400000;
-      day2 = day5 + 3 * 86400000;
-      day1 = day5 + 4 * 86400000;
-    }
-    // });
+      //setState(() {
+      if (viewType == 1) {
+        day1 = isIntl
+            ? day1
+            : isIncrement
+                ? day1 + 86400000
+                : day1 - 86400000;
+      } else if (viewType == 2) {
+        day2 = isIntl
+            ? day2
+            : isIncrement
+                ? day1 + 86400000
+                : day2 - 2 * 86400000;
+        day1 = day2 + 86400000;
+      } else if (viewType == 3) {
+        day3 = isIntl
+            ? day3
+            : isIncrement
+                ? day1 + 86400000
+                : day3 - 3 * 86400000;
+        day2 = day3 + 86400000;
+        day1 = day3 + 2 * 86400000;
+      } else if (viewType == 5) {
+        day5 = isIntl
+            ? day5
+            : isIncrement
+                ? day1 + 86400000
+                : day5 - 5 * 86400000;
+        day4 = day5 + 86400000;
+        day3 = day5 + 2 * 86400000;
+        day2 = day5 + 3 * 86400000;
+        day1 = day5 + 4 * 86400000;
+      }
+    //});
     setListviewWidget();
     //balaji : 12/4/2022 : adding below if/ for quickview implementation
-    if (!isIntl) {
-      quickViewData![0].clear();
-      quickViewData![1].clear();
-      quickViewData![2].clear();
-      quickViewData![3].clear();
-      quickViewData![4].clear();
-    }
+    //if (!isIntl) {
+    quickViewDataCleanUp();
+    //}
     addDateToList();
   }
 
@@ -585,9 +594,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
     print(day2);
     print(day3);
 
-    // _key1.currentState!.getTodayInstance(day1);
-    // _key2.currentState!.getTodayInstance(day2);
-    // _key2.currentState!.getTodayInstance(day3);
   }
 
   Widget quickViewDataWidget(int index) {
@@ -598,32 +604,32 @@ class PlannerGraphPage extends State<PlannerGraph> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: quickViewData!
             .elementAt(index)
-            .where((element) => viewType > 2
-                ? element.index <
-                    4
-                : true)
-
+            .where((element) => viewType > 2 ? element.index < 3 : true)
             .map((quickDate) {
-          
-
-         
-
           return Padding(
               padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
               child: Container(
                 alignment: Alignment.center,
                 height: 15,
                 width: quickDate.presenceCount < 10 ? 15 : 18,
-                color: quickDate.index > 2 && viewType > 2?darkMode?Colors.black:Colors.white: ColorStore().getColorByID(quickDate.colorID),
+                color: quickDate.index > 1 && viewType > 2
+                    ? darkMode
+                        ? Colors.black
+                        : Colors.white
+                    : ColorStore().getColorByID(quickDate.colorID),
                 child: Text(
-                  quickDate.index > 2 && viewType > 2
-                      ? "..."
+                  quickDate.index > 1 && viewType > 2
+                      ? "+"
                       : quickDate.presenceCount > 10
                           ? "10+"
                           : quickDate.presenceCount.toString(),
-                  style: TextStyle(fontSize: 9
-                      ,color:  quickDate.index > 2 && viewType > 2?darkMode?Colors.white:Colors.black:Colors.black
-                      ),
+                  style: TextStyle(
+                      fontSize: 9,
+                      color: quickDate.index > 1 && viewType > 2
+                          ? darkMode
+                              ? Colors.white
+                              : Colors.black
+                          : Colors.black),
                 ),
               ));
         }).toList(),
@@ -644,6 +650,4 @@ class test {
   final int columnName;
   final int colorID;
   final int presenceCount;
-
-
 }

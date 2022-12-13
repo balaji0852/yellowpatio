@@ -20,7 +20,7 @@ import 'package:redux/redux.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp(
+  await Firebase.initializeApp(
   //options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());

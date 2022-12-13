@@ -20,7 +20,7 @@ class AppStore {
     this.state = const {'state':'initialized/by constructor'},
     this.dateViewPreference = 2,
     this.selectedIndex = 0,
-    this.darkMode  = false,
+    this.darkMode  = true,
     this.projectStoreID = 999,
     this.userStoreID = 999
   });
