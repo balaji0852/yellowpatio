@@ -6,7 +6,7 @@ import 'package:yellowpatioapp/db/entity/RegionStore.dart';
 import 'package:yellowpatioapp/db/entity/ServicePlanStore.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
-import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/db/entity/project_store.dart';
 // import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/db/repository/class_master_dao.dart';

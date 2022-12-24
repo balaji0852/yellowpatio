@@ -8,6 +8,7 @@ import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
 
@@ -218,6 +219,7 @@ class CommentSection extends State<CommentSectionPage> {
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
+          userStore: UserStore(userStoreID: 2519,userName: "",linkedEmail: "",linkedPhone: "",themeID: 1,timeViewPreference: 1,dateViewPreference: 1,photoURL: ""),
           instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
 

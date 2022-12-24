@@ -28,7 +28,7 @@ class ShimDropDown extends StatefulWidget {
 
 class ShimDropDownWidget extends State<ShimDropDown> {
   String shimDropDownTitle = "loading";
-  List<String> viewCategory = ["done", "to-do", "working"];
+  List<String> viewCategory = ["working", "to-do","done" ];
   late int userStoreID;
 
   @override
@@ -55,6 +55,7 @@ class ShimDropDownWidget extends State<ShimDropDown> {
     userStoreID = state.state.selectedIndex;
     print(selectedCategory);
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
+      userStore: widget.classDataInstanceMaterDuplicate.userStore,
       dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
       itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
       dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,

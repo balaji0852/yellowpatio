@@ -307,6 +307,7 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
         mapper: (Map<String, Object?> row) => DataInstancesMaster(
             dataInstanceID: row['dataInstanceID'] as int?,
             itemMasterID: row['itemMasterID'] as int,
+            userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
             dataInstances: row['dataInstances'] as String,
             instancesTime: row['instancesTime'] as int,
             instancesStatus: row['instancesStatus'] as int));
@@ -318,6 +319,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
         'SELECT * FROM DataInstancesMaster WHERE dataInstanceID = ?1',
         mapper: (Map<String, Object?> row) => DataInstancesMaster(
             dataInstanceID: row['dataInstanceID'] as int?,
+                       userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+
             itemMasterID: row['itemMasterID'] as int,
             dataInstances: row['dataInstances'] as String,
             instancesTime: row['instancesTime'] as int,
@@ -352,7 +355,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
       int itemMasterID) async {
     return _queryAdapter.query(
         'SELECT * FROM DataInstancesMaster WHERE  itemMasterID= ?1 ORDER BY instancesTime DESC LIMIT 1',
-        mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: row['instancesTime'] as int, instancesStatus: row['instancesStatus'] as int),
+        mapper: (Map<String, Object?> row) => DataInstancesMaster(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: row['instancesTime'] as int, instancesStatus: row['instancesStatus'] as int,            userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+),
         arguments: [itemMasterID]);
   }
 
@@ -364,8 +368,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
       int projectStoreID) async {
     return _queryAdapter.queryList(
         'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [
+  mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),        arguments: [
           dateTimeEpoch,
           zeroDateTimeEpoch,
           itemMasterID,
@@ -384,8 +388,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
           int dateTimeEpoch, int zeroDateTimeEpoch, int projectStoreID) async {
     return _queryAdapter.queryList(
         'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.projectStoreID = ?3',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [dateTimeEpoch, zeroDateTimeEpoch, projectStoreID]);
+  mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),        arguments: [dateTimeEpoch, zeroDateTimeEpoch, projectStoreID]);
   }
 
   @override
@@ -394,8 +398,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
           int itemMasterID, int statusType, int projectStoreID) async {
     return _queryAdapter.queryList(
         'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus  FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND ClassMaster.itemMasterID = ?3 AND DataInstancesMaster.instancesStatus = ?4 ',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstanceID: row['dataInstanceID'] as int?, itemMasterID: row['itemMasterID'] as int, dataInstances: row['dataInstances'] as String, instancesTime: int.parse(row['instancesTime'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
-        arguments: [
+  mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),        arguments: [
           dateTimeEpoch,
           zeroDateTimeEpoch,
           itemMasterID,
@@ -415,7 +419,8 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
           int zeroDateTimeEpoch, int statusType, int projectStoreID) async {
     return _queryAdapter.queryList(
         'SELECT ClassMaster.itemClassColorID,DataInstancesMaster.dataInstanceID,DataInstancesMaster.itemMasterID,DataInstancesMaster.dataInstances,DataInstancesMaster.instancesTime,DataInstancesMaster.instancesStatus FROM DataInstancesMaster,ClassMaster WHERE DataInstancesMaster.itemMasterID=ClassMaster.itemMasterID AND instancesTime <= ?2 AND instancesTime >= ?1 AND DataInstancesMaster.instancesStatus = ?3 AND ClassMaster.projectStoreID = ?4',
-        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
+        mapper: (Map<String, Object?> row) => ClassDataInstanceMaterDuplicate(userStore:       UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
+dataInstances: row['dataInstances'].toString(), itemMasterID: int.parse(row['itemMasterID'].toString()), dataInstanceID: int.parse(row['dataInstanceID'].toString()), instancesStatus: int.parse(row['instancesStatus'].toString()), instancesTime: int.parse(row['instancesTime'].toString()), itemClassColorID: int.parse(row['itemClassColorID'].toString())),
         arguments: [dateTimeEpoch, zeroDateTimeEpoch, statusType, projectStoreID]);
   }
 
@@ -430,6 +435,7 @@ class _$DataInstanceMasterDao extends DataInstanceMasterDao {
             dataInstanceID: int.parse(row['dataInstanceID'].toString()),
             instancesStatus: int.parse(row['instancesStatus'].toString()),
             instancesTime: int.parse(row['instancesTime'].toString()),
+            userStore: UserStore(photoURL: "",linkedEmail: "",linkedPhone: "",userName: "",userStoreID: 1,dateViewPreference: 1,themeID: 1,timeViewPreference: 1),
             itemClassColorID: 1
             ),
         arguments: [itemMasterID],
@@ -448,7 +454,7 @@ class _$UserStoreDao extends UserStoreDao {
                   'userStoreID': item.userStoreID,
                   'linkedEmail': item.linkedEmail,
                   'linkedPhone': item.linkedPhone,
-                  'projectStoreID': item.projectStoreID,
+                  // 'projectStoreID': item.projectStoreID,
                   'dateViewPreference': item.dateViewPreference,
                   'timeViewPreference': item.timeViewPreference,
                   'themeID': item.themeID,
@@ -463,7 +469,7 @@ class _$UserStoreDao extends UserStoreDao {
                   'userStoreID': item.userStoreID,
                   'linkedEmail': item.linkedEmail,
                   'linkedPhone': item.linkedPhone,
-                  'projectStoreID': item.projectStoreID,
+                  // 'projectStoreID': item.projectStoreID,
                   'dateViewPreference': item.dateViewPreference,
                   'timeViewPreference': item.timeViewPreference,
                   'themeID': item.themeID,
@@ -478,7 +484,7 @@ class _$UserStoreDao extends UserStoreDao {
                   'userStoreID': item.userStoreID,
                   'linkedEmail': item.linkedEmail,
                   'linkedPhone': item.linkedPhone,
-                  'projectStoreID': item.projectStoreID,
+                  // 'projectStoreID': item.projectStoreID,
                   'dateViewPreference': item.dateViewPreference,
                   'timeViewPreference': item.timeViewPreference,
                   'themeID': item.themeID,
@@ -506,7 +512,9 @@ class _$UserStoreDao extends UserStoreDao {
             userName: row['userName'] as String,
             userStoreID: row['userStoreID'] as int?,
             linkedPhone: row['linkedPhone'] as String?,
-            projectStoreID: row['projectStoreID'] as int?,
+                        photoURL: "",
+
+            // projectStoreID: row['projectStoreID'] as int?,
             dateViewPreference: row['dateViewPreference'] as int?,
             timeViewPreference: row['timeViewPreference'] as int?,
             themeID: row['themeID'] as int?));
@@ -521,7 +529,9 @@ class _$UserStoreDao extends UserStoreDao {
             userName: row['userName'] as String,
             userStoreID: row['userStoreID'] as int?,
             linkedPhone: row['linkedPhone'] as String?,
-            projectStoreID: row['projectStoreID'] as int?,
+                        photoURL: "",
+
+            // projectStoreID: row['projectStoreID'] as int?,
             dateViewPreference: row['dateViewPreference'] as int?,
             timeViewPreference: row['timeViewPreference'] as int?,
             themeID: row['themeID'] as int?),
@@ -539,7 +549,9 @@ class _$UserStoreDao extends UserStoreDao {
             userName: row['userName'] as String,
             userStoreID: row['userStoreID'] as int?,
             linkedPhone: row['linkedPhone'] as String?,
-            projectStoreID: row['projectStoreID'] as int?,
+                        photoURL: "",
+
+            // projectStoreID: row['projectStoreID'] as int?,
             dateViewPreference: row['dateViewPreference'] as int?,
             timeViewPreference: row['timeViewPreference'] as int?,
             themeID: row['themeID'] as int?),
@@ -555,7 +567,8 @@ class _$UserStoreDao extends UserStoreDao {
             userName: row['userName'] as String,
             userStoreID: row['userStoreID'] as int?,
             linkedPhone: row['linkedPhone'] as String?,
-            projectStoreID: row['projectStoreID'] as int?,
+            photoURL: "",
+            // projectStoreID: row['projectStoreID'] as int?,
             dateViewPreference: row['dateViewPreference'] as int?,
             timeViewPreference: row['timeViewPreference'] as int?,
             themeID: row['themeID'] as int?),

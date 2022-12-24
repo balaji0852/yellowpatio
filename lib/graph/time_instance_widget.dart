@@ -104,7 +104,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     darkMode = state.state.darkMode;
 
     return Container(
-      height: 2402,
+      height: 2642,
       width: (MediaQuery.of(context).size.width - 20) / widget.filter,
       color: darkMode ? Colors.black : Colors.white,
       child: Column(
@@ -114,7 +114,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
         // print(element.map((e) => e));
         //element = element.length>=5?element.sublist(0,3):element;
         return SizedBox(
-          height: 100,
+          height: 110,
           child: GestureDetector(
             onTap: () {
               widget.openCallback(true, element);
@@ -163,8 +163,11 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          // SizedBox(
+                          //   height: height,
+                          // ),
                           SizedBox(
-                            height: height,
+                            height: 10,
                           ),
                           Expanded(
                             child: Container(
@@ -179,11 +182,36 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                     : colorStore
                                         .getColorByID(e.itemClassColorID),
                               ),
-                              child: Text(
+                              child: Stack(children: [
+                                
+                                Positioned(
+                                  top: 16,
+                                  left: 0,
+                                  right: 0,
+                                  child: 
+                                  Text(
                                 e.dataInstances,
                                 maxLines: 8,
                                 style: TextStyle(fontSize: fontSize),
-                              ),
+                              )
+                               )
+                               ,
+                              if(e.userStore.photoURL.isNotEmpty)
+                              Positioned(
+                                right: 1,
+                                top: 1,
+                                child: 
+                                CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 9,
+                                  child:  CircleAvatar(
+
+                                  radius: 8,
+                                  backgroundImage: NetworkImage(e.userStore.photoURL),
+                                  ) ,)
+                              ,
+                                )
+                              ],)
                             ),
                           )
                         ],

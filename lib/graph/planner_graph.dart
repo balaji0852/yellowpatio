@@ -54,7 +54,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ? (index + 1).toString() 
           : (index + 1).toString() );
   late List<String>? dates = [];
-  final itemSize = 2402.0;
+  final itemSize = 2642.0;
   bool openDialog = false;
   List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild = [];
   int viewType = 1;
@@ -257,7 +257,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                       MainAxisAlignment.spaceAround,
                                   children: time
                                       .map((e) => SizedBox(
-                                            height: 100,
+                                            height: 110,
                                             child: Text(
                                               e,
                                               style: TextStyle(

@@ -30,7 +30,7 @@ class GraphDialog extends StatefulWidget {
 }
 
 class graphDialogPage extends State<GraphDialog> {
-  List<String> viewCategory = ["done", "to-do", "working"];
+  List<String> viewCategory = [ "working","to-do","done" ];
   int selectedViewCategoryID = 0;
   late ClassDataInstanceMaterDuplicate selectedDataInstance;
   late int userStoreID;
@@ -214,6 +214,7 @@ class graphDialogPage extends State<GraphDialog> {
     userStoreID = state.state.selectedIndex;
 
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
+      userStore: selectedDataInstance.userStore,
         dataInstanceID: selectedDataInstance.dataInstanceID,
         itemMasterID: selectedDataInstance.itemMasterID,
         dataInstances: selectedDataInstance.dataInstances,
@@ -222,6 +223,8 @@ class graphDialogPage extends State<GraphDialog> {
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
+                userStore: selectedDataInstance.userStore,
+
       dataInstanceID: selectedDataInstance.dataInstanceID,
       itemMasterID: selectedDataInstance.itemMasterID,
       dataInstances: selectedDataInstance.dataInstances,
@@ -239,6 +242,8 @@ class graphDialogPage extends State<GraphDialog> {
       print(error);
       ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
           ClassDataInstanceMaterDuplicate(
+                  userStore: selectedDataInstance.userStore,
+
               dataInstanceID: selectedDataInstance.dataInstanceID,
               itemMasterID: selectedDataInstance.itemMasterID,
               dataInstances: selectedDataInstance.dataInstances,

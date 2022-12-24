@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:yellowpatioapp/db/entity/user_store.dart';
+
 
 
 
@@ -24,6 +26,9 @@ class ClassDataInstanceMaterDuplicate{
   String? itemName = 'itemName';
 
   String? description = 'description';
+
+  final UserStore userStore;
+  
   //sig-50
 
   
@@ -37,9 +42,11 @@ class ClassDataInstanceMaterDuplicate{
       required this.instancesTime,
       required this.itemClassColorID,
       required this.instancesStatus,
+      required this.userStore,
       //sig-50
       this.itemName,
-      this.description
+      this.description,
+
       //sig-50
      });
 
@@ -60,7 +67,10 @@ class ClassDataInstanceMaterDuplicate{
       },
       "dataInstances": dataInstances,
       "instanceTime": instancesTime,
-      "instancesStatus": instancesStatus
+      "instancesStatus": instancesStatus,
+       "userStore":{
+        "userStoreID":userStore.userStoreID
+      }
   };
 
   String toJsonString() {
