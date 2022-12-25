@@ -35,6 +35,7 @@ class ClassMasterCloud {
           itemPriority: item["itemPriority"], 
           isItemCommentable: item["isItemCommentable"], 
           description: item["description"], 
+          carryForwardMyWork: item['carryForwardMyWork'],
           projectStoreID: item["projectStore"]["projectStoreID"]));
       }
     

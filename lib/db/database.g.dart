@@ -211,6 +211,7 @@ class _$ClassMasterDao extends ClassMasterDao {
             itemPriority: row['itemPriority'] as int,
             isItemCommentable: row['isItemCommentable'] as int,
             description: row['description'] as String,
+            carryForwardMyWork: false,
             projectStoreID: row['projectStoreID'] as int));
   }
 
@@ -225,6 +226,7 @@ class _$ClassMasterDao extends ClassMasterDao {
             itemClassColorID: row['itemClassColorID'] as int,
             itemPriority: row['itemPriority'] as int,
             isItemCommentable: row['isItemCommentable'] as int,
+            carryForwardMyWork: false,
             description: row['description'] as String,
             projectStoreID: row['projectStoreID'] as int),
         arguments: [projectStoreID]);

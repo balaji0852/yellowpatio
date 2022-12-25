@@ -30,6 +30,8 @@ class ClassMaster {
 
   final int projectStoreID;
 
+  final bool carryForwardMyWork;
+
   ClassMaster(
       {this.itemMasterID,
       required this.itemName,
@@ -39,7 +41,8 @@ class ClassMaster {
       required this.itemPriority,
       required this.isItemCommentable,
       required this.description,
-      required this.projectStoreID});
+      required this.projectStoreID,
+      required this.carryForwardMyWork});
 
   //cloud
   // {
@@ -64,6 +67,7 @@ class ClassMaster {
         "itemPriority": itemPriority,
         "isItemCommentable": isItemCommentable,
         "description": description,
+        "carryForwardMyWork":carryForwardMyWork,
         "projectStore": {
           "projectStoreID": projectStoreID
         }

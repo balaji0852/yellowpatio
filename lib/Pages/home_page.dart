@@ -163,6 +163,7 @@ class HomePageActivity extends State<homePage> {
                             itemClassColorID: 1,
                             itemPriority: 1,
                             isItemCommentable: 1,
+                            carryForwardMyWork: false,
                             description: "dummy",
                             //TODO : 696969696969696969696 adding dummy prjid
                             projectStoreID: 1),

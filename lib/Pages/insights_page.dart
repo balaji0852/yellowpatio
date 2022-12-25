@@ -292,7 +292,7 @@ class Insights extends State<InsightsPage> {
     var state = StoreProvider.of<AppStore>(context);
     int projectStoreID = state.state.projectStoreID;
 
-    //TODO : 696969696969696969696 adding dummy prjid
+    //cfmw should be dynamice, based on input
     ClassMaster classMasterItem = ClassMaster(
         itemName: classTitleController.text,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
@@ -301,6 +301,7 @@ class Insights extends State<InsightsPage> {
         itemClassColorID: colorsList
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
+        carryForwardMyWork: false,
         isItemCommentable: 1,
         description: descriptionController.text,
         projectStoreID: projectStoreID);
@@ -383,6 +384,7 @@ class Insights extends State<InsightsPage> {
     ClassMaster classMasterItem = ClassMaster(
         itemMasterID: widget.classMaster!.itemMasterID,
         itemName: classTitleController.text,
+        carryForwardMyWork: widget.classMaster!.carryForwardMyWork,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
         subCategoryID:
             categorystore.getSubCategoryList.indexOf(selectedSubCategory),

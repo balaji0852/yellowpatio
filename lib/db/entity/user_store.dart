@@ -26,7 +26,7 @@ class UserStore {
   UserStore({
         required this.linkedEmail,
         required this.userName,
-       this.userStoreID,
+        this.userStoreID,
         required this.linkedPhone,
         this.dateViewPreference,
         this.timeViewPreference,
