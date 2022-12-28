@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/projectPage.dart';
+import 'package:yellowpatioapp/Pages/project_setting.dart';
+import 'package:yellowpatioapp/db/entity/project_setting.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer.dart';
@@ -124,6 +126,26 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   },
                   child: Text(
                     "Projects",
+                    style: TextStyle(
+                        color: darkMode ? Colors.white : Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                MaterialButton(
+                  key: UniqueKey(),
+                  height: 50,
+                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProjectSettingW()),
+                    );
+                  },
+                  child: Text(
+                    "Projects Management",
                     style: TextStyle(
                         color: darkMode ? Colors.white : Colors.black),
                   ),

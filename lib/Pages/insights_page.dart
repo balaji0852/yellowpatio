@@ -8,7 +8,9 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:yellowpatioapp/Pages/category_store.dart';
+import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
@@ -44,6 +46,7 @@ class Insights extends State<InsightsPage> {
   bool editables = false;
   //sig 30: added for topology
   bool callingServer = false;
+  ColorStore colorStore = ColorStore();
 
   // Insights(){
 
@@ -73,6 +76,7 @@ class Insights extends State<InsightsPage> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  bool isCFMW = false;
 
   @override
   void initState() {
@@ -124,6 +128,7 @@ class Insights extends State<InsightsPage> {
                 onSelected: (bool selected) {
                   setState(() {
                     selectedColor = ele.colorName;
+                    // colorStore.setColorStore = selectedColor;
                   });
                 },
                 label: const Text(
@@ -146,8 +151,6 @@ class Insights extends State<InsightsPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return StoreConnector<AppStore, bool>(
         converter: (store) => store.state.darkMode,
         builder: (context, _darkMode) {
@@ -214,8 +217,37 @@ class Insights extends State<InsightsPage> {
                       height: 50,
                       child: colorPicker(),
                     ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        FlutterSwitch(
+                            padding: 3,
+                            width: 55,
+                            height: 27,
+                            showOnOff: true,
+                            valueFontSize: 9,
+                            activeColor:colorStore.getColorByName(selectedColor),
+                            value: isCFMW,
+                            onToggle: (cfmw_Value) => {
+                                  setState(() {
+                                    isCFMW = cfmw_Value;
+                                  })
+                                }),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Turning on CFMW (carry forward my work) will carry forward all the unfinished tasks to next day.',
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: _darkMode ? Colors.white : Colors.black),
+                          ),
+                        )
+                      ],
+                    ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -301,7 +333,7 @@ class Insights extends State<InsightsPage> {
         itemClassColorID: colorsList
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
-        carryForwardMyWork: false,
+        carryForwardMyWork: isCFMW,
         isItemCommentable: 1,
         description: descriptionController.text,
         projectStoreID: projectStoreID);
@@ -365,6 +397,7 @@ class Insights extends State<InsightsPage> {
       descriptionController.text = widget.classMaster!.description;
       selectedCategory = categorystore.getCategoryList
           .elementAt(widget.classMaster!.categoryID);
+      isCFMW = widget.classMaster!.carryForwardMyWork;
       //need to add another getter, for handing the 2D array...
       //adjustments for now...
       categorystore.setSubCategoryList = selectedCategory;
@@ -384,7 +417,7 @@ class Insights extends State<InsightsPage> {
     ClassMaster classMasterItem = ClassMaster(
         itemMasterID: widget.classMaster!.itemMasterID,
         itemName: classTitleController.text,
-        carryForwardMyWork: widget.classMaster!.carryForwardMyWork,
+        carryForwardMyWork: isCFMW,
         categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
         subCategoryID:
             categorystore.getSubCategoryList.indexOf(selectedSubCategory),
