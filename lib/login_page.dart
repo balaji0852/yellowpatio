@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/Pages/projectPage.dart';
 import 'package:yellowpatioapp/SupportSystem/user_management.dart';
+import 'package:yellowpatioapp/cloud/UserStoreCloud.dart';
 import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
@@ -129,6 +130,18 @@ class _MyHomePageState extends State<MyHomePage> {
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+
+      UserStore userStore = UserStore(
+        linkedEmail: googleSignInAccount.email, 
+        userName: "empty", 
+        linkedPhone: "empty", 
+        photoURL: googleSignInAccount.photoUrl!);
+
+      await UserStoreCloud().postUserStore(userStore);
+      // if(200==200){
+      //   throw Exception;
+      // }
     } catch (Exception) {
       //set the state to 0;
       setState(() {
@@ -150,8 +163,20 @@ class _MyHomePageState extends State<MyHomePage> {
       // while (_userStoreID==-1){
       //   _userStoreID = await userManagement.userRegisterationShim(context);
       // } 
+      UserStore userStore = UserStore(
+        linkedEmail: FirebaseAuth.instance.currentUser!.email!, 
+        userName:FirebaseAuth.instance.currentUser!.displayName! ,
+        linkedPhone: FirebaseAuth.instance.currentUser!.phoneNumber==null?"empty":FirebaseAuth.instance.currentUser!.phoneNumber!,
+        photoURL: FirebaseAuth.instance.currentUser!.photoURL!,
+        themeID: -1,
+        timeViewPreference: -1,
+        dateViewPreference: -1
+        );
+      
+      userStore = await UserStoreCloud().putUserStore(userStore);
+
       var state = StoreProvider.of<AppStore>(context);
-      state.dispatch(ChangeUserStoreID(2519));
+      state.dispatch(ChangeUserStoreID(userStore.userStoreID!));
       Navigator.pop(context);
       Navigator.push(
         context,

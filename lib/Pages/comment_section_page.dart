@@ -214,12 +214,12 @@ class CommentSection extends State<CommentSectionPage> {
       //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       // final dataInstanceMasterDao = database.dataInstanceMasterDao;
       var state = StoreProvider.of<AppStore>(context);
-      userStoreID = state.state.selectedIndex;
+      userStoreID = state.state.userStoreID;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
-          userStore: UserStore(userStoreID: 2519,userName: "",linkedEmail: "",linkedPhone: "",themeID: 1,timeViewPreference: 1,dateViewPreference: 1,photoURL: ""),
+          userStore: UserStore(userStoreID: userStoreID,userName: "",linkedEmail: "",linkedPhone: "",themeID: 1,timeViewPreference: 1,dateViewPreference: 1,photoURL: ""),
           instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
 
