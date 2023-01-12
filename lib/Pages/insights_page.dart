@@ -14,6 +14,7 @@ import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 
 import '../redux_state_store/appStore.dart';
 
@@ -323,6 +324,7 @@ class Insights extends State<InsightsPage> {
     // final classMasterDao = database.classMasterDao;
     var state = StoreProvider.of<AppStore>(context);
     int projectStoreID = state.state.projectStoreID;
+    int userStoreID = state.state.userStoreID;
 
     //cfmw should be dynamice, based on input
     ClassMaster classMasterItem = ClassMaster(
@@ -335,6 +337,8 @@ class Insights extends State<InsightsPage> {
         itemPriority: 1,
         carryForwardMyWork: isCFMW,
         isItemCommentable: 1,
+        createdDate: DateTime.now().millisecondsSinceEpoch,
+        userStore: UserStore(userStoreID: userStoreID,linkedEmail: "dummy",linkedPhone: "dummy",userName: "dummy",photoURL:"dummy" ),
         description: descriptionController.text,
         projectStoreID: projectStoreID);
 
@@ -424,6 +428,8 @@ class Insights extends State<InsightsPage> {
         itemClassColorID: colorsList
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
+        createdDate: widget.classMaster!.createdDate,
+        userStore: widget.classMaster!.userStore,
         isItemCommentable: 1,
         description: descriptionController.text,
         projectStoreID: projectStoreID);

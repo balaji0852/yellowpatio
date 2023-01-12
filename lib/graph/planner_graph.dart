@@ -45,7 +45,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
   double planner_graph_height = 625;
-  List<String> viewCategory = ["all", "done", "to-do", "working"];
+  List<String> viewCategory = ["all", "working", "to-do", "done"];
   int selectedViewCategoryID = 0;
 
   static List<String> time = List.generate(

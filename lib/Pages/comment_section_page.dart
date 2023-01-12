@@ -100,10 +100,18 @@ class CommentSection extends State<CommentSectionPage> {
                         height: 5,
                       ),
 
-                      const Text(
-                        "          Comment",
+                      Text(
+                        " created by "+widget.classMaster!.userStore.userName,
+                        style:  TextStyle(
+                          fontSize: 14,
+                           color: darkMode?Colors.white:Colors.black
+                        ),
+                      ),
+                       Text(
+                        " created on "+ DateTime.fromMillisecondsSinceEpoch(widget.classMaster!.createdDate).toString(),
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
+                           color: darkMode?Colors.white:Colors.black
                         ),
                       ),
                       // Column(children: )
