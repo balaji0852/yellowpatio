@@ -2,6 +2,7 @@ import 'package:floor/floor.dart';
 import 'dart:convert';
 
 import 'package:yellowpatioapp/db/entity/project_store.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 
 @Entity(tableName: "ClassMaster", foreignKeys: [
   ForeignKey(
@@ -30,6 +31,12 @@ class ClassMaster {
 
   final int projectStoreID;
 
+  final bool carryForwardMyWork;
+
+  final UserStore userStore;
+
+  final int createdDate;
+
   ClassMaster(
       {this.itemMasterID,
       required this.itemName,
@@ -39,7 +46,10 @@ class ClassMaster {
       required this.itemPriority,
       required this.isItemCommentable,
       required this.description,
-      required this.projectStoreID});
+      required this.projectStoreID,
+      required this.carryForwardMyWork,
+      required this.userStore,
+      required this.createdDate});
 
   //cloud
   // {
@@ -64,8 +74,13 @@ class ClassMaster {
         "itemPriority": itemPriority,
         "isItemCommentable": isItemCommentable,
         "description": description,
+        "carryForwardMyWork":carryForwardMyWork,
         "projectStore": {
           "projectStoreID": projectStoreID
+        },
+        "createdDate": createdDate,
+        "userStore": {
+          "userStoreID": userStore.userStoreID
         }
   };
 

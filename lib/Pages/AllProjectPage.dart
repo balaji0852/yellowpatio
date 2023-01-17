@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/SupportSystem/syncher.dart';
 import 'package:yellowpatioapp/cloud/projectStoreCloud.dart';
 import 'package:yellowpatioapp/db/entity/project_store.dart';
 import 'package:yellowpatioapp/db/repository/project_store_dao.dart';
@@ -33,8 +36,9 @@ class AllProjectPageState extends State<AllProjectPage> {
     // final database =
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final projectStoreDao = database.projectStoreDao;
+
     var _projectStoreList =
-        await projectStoreCloud().findAllProjectByUserStoreID(2519);
+        await projectStoreCloud().findAllProjectByUserStoreID(userStoreID);
     if (mounted) {
       setState(() {
         projectStoreList = _projectStoreList;
@@ -53,6 +57,7 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     print("............");
+
     getProjects();
   }
 
@@ -66,7 +71,13 @@ class AllProjectPageState extends State<AllProjectPage> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    getProjects();
+
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      if (mounted) {
+        getProjects();
+      }
+    });
+    // ReSyncher(interval: 1).serverConnector(getProjects(),mounted);
   }
 
   @override

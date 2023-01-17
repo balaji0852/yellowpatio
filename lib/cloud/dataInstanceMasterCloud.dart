@@ -1,5 +1,6 @@
 import 'package:yellowpatioapp/cloud/serverPath.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import '../db/entity/data_instances_master.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -46,7 +47,15 @@ class DataInstanceMasterCloud {
           itemMasterID: jsonResponse["classMaster"]["itemMasterID"],
           dataInstances: jsonResponse["dataInstances"],
           instancesTime: jsonResponse["instanceTime"],
-          instancesStatus: jsonResponse["instancesStatus"]);
+          instancesStatus: jsonResponse["instancesStatus"],
+            userStore: UserStore(linkedEmail:jsonResponse["userStore"]["linkedEmail"],
+            userName:jsonResponse["userStore"]["userName"],
+            userStoreID: jsonResponse["userStore"]["userStoreID"],
+            linkedPhone: jsonResponse["userStore"]["linkedPhone"],
+            dateViewPreference:jsonResponse["userStore"]["dateViewPreference"],
+            timeViewPreference: jsonResponse["userStore"]["timeViewPreference"],
+            themeID: jsonResponse["userStore"]["themeID"]
+            ,photoURL:jsonResponse["userStore"]["photoURL"]),);
     }
 
     return null;
@@ -79,6 +88,14 @@ class DataInstanceMasterCloud {
             //sig:54
             itemName: item["classMaster"]["itemName"],
             description: item["classMaster"]["description"],
+            userStore: UserStore(linkedEmail: item["userStore"]["linkedEmail"],
+            userName: item["userStore"]["userName"],
+            userStoreID: item["userStore"]["userStoreID"],
+            linkedPhone: item["userStore"]["linkedPhone"],
+            dateViewPreference: item["userStore"]["dateViewPreference"],
+            timeViewPreference: item["userStore"]["timeViewPreference"],
+            themeID: item["userStore"]["themeID"]
+            ,photoURL: item["userStore"]["photoURL"]),
             //sig:54
             instancesStatus: item["instancesStatus"]));
       }
@@ -116,6 +133,15 @@ class DataInstanceMasterCloud {
             itemName: item["classMaster"]["itemName"],
             description: item["classMaster"]["description"],
             //sig:54
+            
+            userStore: UserStore(linkedEmail: item["userStore"]["linkedEmail"],
+            userName: item["userStore"]["userName"],
+            userStoreID: item["userStore"]["userStoreID"],
+            linkedPhone: item["userStore"]["linkedPhone"],
+            dateViewPreference: item["userStore"]["dateViewPreference"],
+            timeViewPreference: item["userStore"]["timeViewPreference"],
+            themeID: item["userStore"]["themeID"]
+            ,photoURL: item["userStore"]["photoURL"]),
             instancesStatus: item["instancesStatus"]));
       }
       return listOfDataInstancesMasterList;
@@ -146,6 +172,14 @@ class DataInstanceMasterCloud {
             dataInstances: item["dataInstances"],
             instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
+            userStore: UserStore(linkedEmail: item["userStore"]["linkedEmail"],
+            userName: item["userStore"]["userName"],
+            userStoreID: item["userStore"]["userStoreID"],
+            linkedPhone: item["userStore"]["linkedPhone"],
+            dateViewPreference: item["userStore"]["dateViewPreference"],
+            timeViewPreference: item["userStore"]["timeViewPreference"],
+            themeID: item["userStore"]["themeID"]
+            ,photoURL: item["userStore"]["photoURL"]),
             //sig:54
             itemName: item["classMaster"]["itemName"],
             description: item["classMaster"]["description"],
@@ -180,6 +214,14 @@ class DataInstanceMasterCloud {
             dataInstances: item["dataInstances"],
             instancesTime: item["instanceTime"],
             itemClassColorID: item["classMaster"]["itemClassColorID"],
+            userStore: UserStore(linkedEmail: item["userStore"]["linkedEmail"],
+            userName: item["userStore"]["userName"],
+            userStoreID: item["userStore"]["userStoreID"],
+            linkedPhone: item["userStore"]["linkedPhone"],
+            dateViewPreference: item["userStore"]["dateViewPreference"],
+            timeViewPreference: item["userStore"]["timeViewPreference"],
+            themeID: item["userStore"]["themeID"]
+            ,photoURL: item["userStore"]["photoURL"]),
             //sig:54
             itemName: item["classMaster"]["itemName"],
             description: item["classMaster"]["description"],

@@ -12,7 +12,6 @@ class UserStore {
 
   final String? linkedPhone;
 
-  final int? projectStoreID;
 
   final int? dateViewPreference;
 
@@ -22,15 +21,17 @@ class UserStore {
 
   final String userName;
 
+  final String photoURL;
+
   UserStore({
         required this.linkedEmail,
         required this.userName,
         this.userStoreID,
-        this.linkedPhone,
-        this.projectStoreID,
+        required this.linkedPhone,
         this.dateViewPreference,
         this.timeViewPreference,
-        this.themeID});
+        this.themeID,
+        required this.photoURL});
 
   // cloud
   //   {
@@ -51,7 +52,8 @@ class UserStore {
     "linkedEmail": linkedEmail,
     "linkedPhone": linkedPhone,
     "themeID": themeID,
-    "userName": userName
+    "userName": userName,
+    "photoURL":photoURL
   };
 
   String toJsonString() {

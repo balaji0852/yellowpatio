@@ -3,6 +3,8 @@ import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:yellowpatioapp/db/entity/user_store.dart';
+
 class ClassMasterCloud {
 
   
@@ -35,6 +37,16 @@ class ClassMasterCloud {
           itemPriority: item["itemPriority"], 
           isItemCommentable: item["isItemCommentable"], 
           description: item["description"], 
+          carryForwardMyWork: item['carryForwardMyWork'],
+          createdDate: item['createdDate'],
+          userStore:UserStore(linkedEmail:item["userStore"]["linkedEmail"],
+            userName:item["userStore"]["userName"],
+            userStoreID: item["userStore"]["userStoreID"],
+            linkedPhone: item["userStore"]["linkedPhone"],
+            dateViewPreference:item["userStore"]["dateViewPreference"],
+            timeViewPreference: item["userStore"]["timeViewPreference"],
+            themeID: item["userStore"]["themeID"]
+            ,photoURL:item["userStore"]["photoURL"]),
           projectStoreID: item["projectStore"]["projectStoreID"]));
       }
     

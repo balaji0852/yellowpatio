@@ -15,13 +15,17 @@ import 'dropwdown.dart';
 class GraphDialog extends StatefulWidget {
   const GraphDialog(
       {Key? key,
+      required this.selectedIndex,
       required this.openCallback,
       required this.hourlyDataInstance,
       required this.classMaster})
       : super(key: key);
 
+
+  //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
+  final int selectedIndex;
   final ClassMaster classMaster;
-  final Function(bool, List<ClassDataInstanceMaterDuplicate>) openCallback;
+  final Function(bool, List<ClassDataInstanceMaterDuplicate>,int selectedIndex) openCallback;
   final List<ClassDataInstanceMaterDuplicate> hourlyDataInstance;
   @override
   graphDialogPage createState() {
@@ -30,7 +34,7 @@ class GraphDialog extends StatefulWidget {
 }
 
 class graphDialogPage extends State<GraphDialog> {
-  List<String> viewCategory = ["done", "to-do", "working"];
+  List<String> viewCategory = [ "working","to-do","done" ];
   int selectedViewCategoryID = 0;
   late ClassDataInstanceMaterDuplicate selectedDataInstance;
   late int userStoreID;
@@ -51,9 +55,13 @@ class graphDialogPage extends State<GraphDialog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    currentViewDataInstance = widget.hourlyDataInstance.elementAt(0);
+    // currentViewDataInstance = widget.hourlyDataInstance.elementAt(0);
+    
+    //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
+    currentViewDataInstanceIndex =  widget.selectedIndex;
+    currentViewDataInstance =
+            widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
   }
 
   @override
@@ -75,7 +83,7 @@ class graphDialogPage extends State<GraphDialog> {
                 CloseButton(
                   onPressed: () {
                     //print(openDialog);
-                    widget.openCallback(false, widget.hourlyDataInstance);
+                    widget.openCallback(false, widget.hourlyDataInstance,0);
                   },
                 )
               ],
@@ -174,27 +182,29 @@ class graphDialogPage extends State<GraphDialog> {
             Row(
 
               children: [
-                Spacer(flex: 2,),
+                const Spacer(flex: 2,),
+                if(currentViewDataInstanceIndex!=0)
                 IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new,
-                      size: 25, color: Colors.black),
+                      size: 28, color: Colors.black),
                   onPressed: () {
                      int index = currentViewDataInstanceIndex-1;
                                         changeView(index);
 
                   },
                 ),
+              
                                 Spacer(flex: 3,),
-
+if(currentViewDataInstanceIndex!=widget.hourlyDataInstance.length-1)
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios,
-                      size: 25, color: Colors.black),
+                      size: 28, color: Colors.black),
                   onPressed: () {
                     int index = currentViewDataInstanceIndex+1;
                                         changeView(index);
 
                   },
-                ),                Spacer(flex: 2,),
+                ),                const Spacer(flex: 2,),
 
               ],
             )
@@ -214,6 +224,7 @@ class graphDialogPage extends State<GraphDialog> {
     userStoreID = state.state.selectedIndex;
 
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
+      userStore: selectedDataInstance.userStore,
         dataInstanceID: selectedDataInstance.dataInstanceID,
         itemMasterID: selectedDataInstance.itemMasterID,
         dataInstances: selectedDataInstance.dataInstances,
@@ -222,6 +233,8 @@ class graphDialogPage extends State<GraphDialog> {
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
+                userStore: selectedDataInstance.userStore,
+
       dataInstanceID: selectedDataInstance.dataInstanceID,
       itemMasterID: selectedDataInstance.itemMasterID,
       dataInstances: selectedDataInstance.dataInstances,
@@ -239,6 +252,8 @@ class graphDialogPage extends State<GraphDialog> {
       print(error);
       ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
           ClassDataInstanceMaterDuplicate(
+                  userStore: selectedDataInstance.userStore,
+
               dataInstanceID: selectedDataInstance.dataInstanceID,
               itemMasterID: selectedDataInstance.itemMasterID,
               dataInstances: selectedDataInstance.dataInstances,

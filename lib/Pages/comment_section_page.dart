@@ -8,6 +8,7 @@ import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
 
@@ -99,10 +100,18 @@ class CommentSection extends State<CommentSectionPage> {
                         height: 5,
                       ),
 
-                      const Text(
-                        "          Comment",
+                      Text(
+                        " created by "+widget.classMaster!.userStore.userName,
+                        style:  TextStyle(
+                          fontSize: 14,
+                           color: darkMode?Colors.white:Colors.black
+                        ),
+                      ),
+                       Text(
+                        " created on "+ DateTime.fromMillisecondsSinceEpoch(widget.classMaster!.createdDate).toString(),
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 14,
+                           color: darkMode?Colors.white:Colors.black
                         ),
                       ),
                       // Column(children: )
@@ -213,11 +222,12 @@ class CommentSection extends State<CommentSectionPage> {
       //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
       // final dataInstanceMasterDao = database.dataInstanceMasterDao;
       var state = StoreProvider.of<AppStore>(context);
-      userStoreID = state.state.selectedIndex;
+      userStoreID = state.state.userStoreID;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
+          userStore: UserStore(userStoreID: userStoreID,userName: "",linkedEmail: "",linkedPhone: "",themeID: 1,timeViewPreference: 1,dateViewPreference: 1,photoURL: ""),
           instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
 

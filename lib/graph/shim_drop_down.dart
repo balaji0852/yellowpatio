@@ -28,12 +28,19 @@ class ShimDropDown extends StatefulWidget {
 
 class ShimDropDownWidget extends State<ShimDropDown> {
   String shimDropDownTitle = "loading";
-  List<String> viewCategory = ["done", "to-do", "working"];
+  List<String> viewCategory = ["working", "to-do", "done"];
   late int userStoreID;
 
   @override
   void initState() {
     super.initState();
+    shimDropDownTitle = widget.dropdownTitle;
+  }
+
+  @override
+  void didUpdateWidget(covariant ShimDropDown oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
     shimDropDownTitle = widget.dropdownTitle;
   }
 
@@ -55,6 +62,7 @@ class ShimDropDownWidget extends State<ShimDropDown> {
     userStoreID = state.state.selectedIndex;
     print(selectedCategory);
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
+      userStore: widget.classDataInstanceMaterDuplicate.userStore,
       dataInstanceID: widget.classDataInstanceMaterDuplicate.dataInstanceID,
       itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
       dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
@@ -65,16 +73,18 @@ class ShimDropDownWidget extends State<ShimDropDown> {
     await DataInstanceMasterCloud()
         .putDataInstanceMaster(dataInstancesMaster)
         .then((value) {
-      if (value == 200) {
+      if (value == 200 && mounted) {
         setState(() {
           shimDropDownTitle = selectedCategory;
         });
         print("inserted");
       }
     }).onError((error, stackTrace) {
-      setState(() {
-        shimDropDownTitle = widget.dropdownTitle;
-      });
+      if (mounted) {
+        setState(() {
+          shimDropDownTitle = shimDropDownTitle;
+        });
+      }
     });
   }
 }

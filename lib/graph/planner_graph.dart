@@ -45,8 +45,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
   //dates List and Row uses and manipulates the date integers - 5
   late int day1, day2, day3, day4, day5;
   double planner_graph_height = 625;
-  List<String> viewCategory = ["all", "done", "to-do", "working"];
+  List<String> viewCategory = ["all", "working", "to-do", "done"];
   int selectedViewCategoryID = 0;
+  //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
+  int selectedIndex = 0;
 
   static List<String> time = List.generate(
       24,
@@ -54,7 +56,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ? (index + 1).toString() 
           : (index + 1).toString() );
   late List<String>? dates = [];
-  final itemSize = 2402.0;
+  final itemSize = 2642.0;
   bool openDialog = false;
   List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild = [];
   int viewType = 1;
@@ -90,13 +92,15 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
   }
 
+  //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
   openDialogCallback(bool openDialog,
-      List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild) {
+      List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild, int selectedIndex) {
     //adding List to callback for now, this is to populate the List<HourlyDataInstance>
     //to graph_dialog, finding central state management...
     setState(() {
       this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
       this.openDialog = openDialog;
+      this.selectedIndex = selectedIndex;
     });
   }
 
@@ -257,7 +261,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                       MainAxisAlignment.spaceAround,
                                   children: time
                                       .map((e) => SizedBox(
-                                            height: 100,
+                                            height: 110,
                                             child: Text(
                                               e,
                                               style: TextStyle(
@@ -525,7 +529,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
             )),
         if (openDialog)
         GestureDetector(
-          onTap: () => openDialogCallback(false,[]),
+          onTap: () => openDialogCallback(false,[],0),
           child:  Container(
             height: 670,
             width: MediaQuery.of(context).size.width,
@@ -539,6 +543,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
             openCallback: openDialogCallback,
             hourlyDataInstance: hourlyDataInstanceFromChild,
             classMaster: widget.classMaster,
+            selectedIndex: selectedIndex,
           ),
         
       ],

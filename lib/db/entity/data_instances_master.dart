@@ -2,6 +2,8 @@ import 'package:floor/floor.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'dart:convert';
 
+import 'package:yellowpatioapp/db/entity/user_store.dart';
+
 @Entity(
   tableName: 'DataInstancesMaster',
   foreignKeys: [
@@ -24,15 +26,15 @@ class DataInstancesMaster {
 
   final int instancesStatus;
 
-  // final int userStoreID;
+  final UserStore userStore;
 
   DataInstancesMaster(
       {this.dataInstanceID,
       required this.itemMasterID,
       required this.dataInstances,
       required this.instancesTime,
-      required this.instancesStatus
-      // required this.userStoreID
+      required this.instancesStatus,
+      required this.userStore
   });
 
 
@@ -53,7 +55,10 @@ class DataInstancesMaster {
       },
       "dataInstances": dataInstances,
       "instanceTime": instancesTime,
-      "instancesStatus": instancesStatus
+      "instancesStatus": instancesStatus,
+      "userStore":{
+        "userStoreID":userStore.userStoreID
+      }
   };
 
   String toJsonString() {

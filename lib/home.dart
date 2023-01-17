@@ -58,7 +58,7 @@ class HomePage extends State<Home> {
     setState(() {
       _selectedIndex = index;
       this.classMaster = classMaster;
-      if (_selectedIndex == 1) {
+     if (_selectedIndex == 1) {
         _widgetOptions[_selectedIndex] = editable
             ? InsightsPage(
                 editable: editable,
@@ -68,7 +68,7 @@ class HomePage extends State<Home> {
             : InsightsPage(
                 editable: false,
               );
-      }
+     }
     });
   }
 

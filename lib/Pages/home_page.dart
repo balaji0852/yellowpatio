@@ -15,6 +15,7 @@ import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/db/repository/data_instance_master_dao.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
@@ -159,10 +160,13 @@ class HomePageActivity extends State<homePage> {
                         classMaster: ClassMaster(
                             itemName: "dummy",
                             categoryID: 1,
+                            createdDate: 1,
+                            userStore: UserStore(linkedEmail:"dummy", userName: "dummy", linkedPhone: "dummy", photoURL:"dummy"),
                             subCategoryID: 2,
                             itemClassColorID: 1,
                             itemPriority: 1,
                             isItemCommentable: 1,
+                            carryForwardMyWork: false,
                             description: "dummy",
                             //TODO : 696969696969696969696 adding dummy prjid
                             projectStoreID: 1),

@@ -5,13 +5,14 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yellowpatioapp/Pages/projectPage.dart';
 import 'package:yellowpatioapp/SupportSystem/user_management.dart';
-import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
+import 'package:yellowpatioapp/cloud/UserStoreCloud.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/userStoreReducer.dart';
-
 import 'home.dart';
 
+//balaji : 1/17/2021 , bug 5 - modifying putUserStore usage, validating userStoreID - 0
 class MyHomePage extends StatefulWidget {
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -38,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _googleSignIn.onCurrentUserChanged
         .listen((GoogleSignInAccount? account) async {
-      
       print(account);
       //account!=null take user into the app
       //Now the state is 1, app has a user;
@@ -129,34 +129,53 @@ class _MyHomePageState extends State<MyHomePage> {
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+      UserStore userStore = UserStore(
+          linkedEmail: googleSignInAccount.email,
+          userName: "empty",
+          linkedPhone: "empty",
+          photoURL: googleSignInAccount.photoUrl!);
+
+      await UserStoreCloud().postUserStore(userStore);
     } catch (Exception) {
       //set the state to 0;
       setState(() {
         state = 0;
       });
-
-      print(Exception);
     }
   }
 
   Future<void> checkUser() async {
     //write logic to check presence of user;
     if (await _googleSignIn.isSignedIn()) {
-
-
       //cloud migration
       // var userManagement = UserManagement();
       // int _userStoreID = await userManagement.userRegisterationShim(context);
       // while (_userStoreID==-1){
       //   _userStoreID = await userManagement.userRegisterationShim(context);
-      // } 
-      var state = StoreProvider.of<AppStore>(context);
-      state.dispatch(ChangeUserStoreID(2519));
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProjectPage()),
-      );
+      // }
+      UserStore userStore = UserStore(
+          linkedEmail: FirebaseAuth.instance.currentUser!.email!,
+          userName: FirebaseAuth.instance.currentUser!.displayName!,
+          linkedPhone: FirebaseAuth.instance.currentUser!.phoneNumber == null
+              ? "empty"
+              : FirebaseAuth.instance.currentUser!.phoneNumber!,
+          photoURL: FirebaseAuth.instance.currentUser!.photoURL!,
+          themeID: -1,
+          timeViewPreference: -1,
+          dateViewPreference: -1);
+
+      userStore = await UserStoreCloud().putUserStore(userStore);
+
+      if (userStore.userStoreID != 0) {
+        var state = StoreProvider.of<AppStore>(context);
+        state.dispatch(ChangeUserStoreID(userStore.userStoreID!));
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProjectPage()),
+        );
+      }
       print("!@#~%^&*(");
     }
   }

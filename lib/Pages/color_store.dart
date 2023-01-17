@@ -19,13 +19,18 @@ class ColorStore{
 
   get getColorStore => _selectedColor;
 
-  get getColor => _colorsList.where((element) => element.colorName==_selectedColor);
+  get getColor => _colorsList.where((element) => element.colorName==_selectedColor).first;
 
   get getColorStoreList => _colorsList;
 
   Color getColorByID(int colorID) {
      return _colorsList.elementAt(colorID).color;
   }
+
+   Color getColorByName(String selectedColor ) {
+     return _colorsList.where((element) => element.colorName==selectedColor).first.color;
+  }
+
 
 }
 

@@ -169,7 +169,8 @@ class ProjectPageState extends State<ProjectPage> {
                     IconButton(
                         onPressed: () {
                           setState(() {
-                            isCreateProject = true;
+                            //balaji : 1/16/2023 : bug 7, fix in ,below line 
+                            isCreateProject = servicePlans.isEmpty ? false : true;
                           });
                         },
                         icon: Icon(
@@ -446,7 +447,7 @@ class ProjectPageState extends State<ProjectPage> {
     // final database =
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final projectStoreDao = database.projectStoreDao;
-    projectStoreCloud().postProjectStore(projectStore, 2519).then((value) {
+    projectStoreCloud().postProjectStore(projectStore, projectStore.userStoreID).then((value) {
       print(value);
       setState(() {
         loaded = loaded;

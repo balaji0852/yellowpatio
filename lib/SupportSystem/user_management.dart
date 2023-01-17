@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:yellowpatioapp/db/entity/unused/user_store.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/db/repository/unused/user_store_dao.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
@@ -73,7 +73,7 @@ class UserManagement {
         timeViewPreference: 1,
         themeID: 1,
         linkedPhone: _currentUser.phoneNumber,
-        projectStoreID: 999);
+        photoURL: "");
     int _userStoreID = await registerUser(userStore);
 
     return _userStoreID;
