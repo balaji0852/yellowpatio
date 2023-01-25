@@ -21,6 +21,7 @@ import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
+import '../SupportSystem/syncher.dart';
 import '../redux_state_store/appStore.dart';
 
 class homePage extends StatefulWidget {
@@ -49,6 +50,8 @@ class HomePageActivity extends State<homePage> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  var services = ReSyncher(interval: 20);
+
 
   getInstance() async {
     //singleton wrong implementation
@@ -78,6 +81,16 @@ class HomePageActivity extends State<homePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     getNotes();
+    services.serverConnector(() => getNotes(),mounted);
+
+    // getNotes();
+  }
+
+   @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
   }
 
   Future getNotes() async {
@@ -286,6 +299,8 @@ class HomePageActivity extends State<homePage> {
                                           child: GestureDetector(
                                             onTap: () {
                                               commentButton(e);
+                                                  services.isUIMounted = false;
+
                                             },
                                             child: Container(
                                               decoration: BoxDecoration(

@@ -11,7 +11,9 @@ import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/time_view_widget.dart';
+import 'package:collection/collection.dart';
 
+import '../SupportSystem/syncher.dart';
 import '../redux_state_store/appStore.dart';
 
 // didChangeDependencies is called exactly after initstate for the first time
@@ -60,6 +62,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   bool darkMode = false;
   var state;
   CancelableOperation? _cancelableOperation;
+  var services = ReSyncher(interval: 15);
+  Function eq = const DeepCollectionEquality().equals;
 
   @override
   void initState() {
@@ -89,6 +93,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       todayInstance = List.generate(24, (index) => []);
       _cancelableOperation!.cancel();
       getTodayInstance(widget.today);
+
+      services.isUIMounted = false;
+      services = ReSyncher(interval: 15);
+      services.serverConnector(() => getTodayInstance(widget.today), mounted);
     }
   }
 
@@ -98,6 +106,14 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     super.didChangeDependencies();
     // updateStoreValue();
     getTodayInstance(widget.today);
+    services.serverConnector(() => getTodayInstance(widget.today), mounted);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
   }
 
   @override
@@ -328,9 +344,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     }
 
     final value = await _cancelableOperation?.value;
-    commentCopy = value as List<ClassDataInstanceMaterDuplicate>?;
-
+    // if (!eq(commentCopy, value as List<ClassDataInstanceMaterDuplicate>?)) {
+    commentCopy = value;
     processTodayData();
+    // } else {
+    //   print("same data");
+    // }
   }
 
   processTodayData() {

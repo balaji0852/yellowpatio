@@ -27,6 +27,7 @@ class AllProjectPageState extends State<AllProjectPage> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  var services = ReSyncher(interval: 5);
 
   getProjects() async {
     var state = StoreProvider.of<AppStore>(context);
@@ -72,12 +73,23 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      if (mounted) {
-        getProjects();
-      }
-    });
-    // ReSyncher(interval: 1).serverConnector(getProjects(),mounted);
+    // Timer.periodic(Duration(seconds: 3), (timer) {
+    //   print(mounted);
+    //   print("TEST");
+    //   if (mounted) {
+    //     // getProjects();
+    //   }
+    // });
+    getProjects();
+     services.serverConnector(() => getProjects(),mounted);
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
   }
 
   @override
