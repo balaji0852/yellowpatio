@@ -64,6 +64,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   bool darkMode = false;
   //11/30/2022 : balaji, adding below list for implementing quick view
   List<List<test>>? quickViewData = List.generate(5, (index) => List.empty(growable: true));
+  int reKey = 0;
 
   @override
   void initState() {
@@ -76,6 +77,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
       viewType = Config.dateViewPreference;
       print(viewType);
     });
+
+    reKey = widget.reKey;
 
     //TODO removal - used to call for 3 view previously
     initializeDate(DateTime.now().millisecondsSinceEpoch);
@@ -98,6 +101,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
     //adding List to callback for now, this is to populate the List<HourlyDataInstance>
     //to graph_dialog, finding central state management...
     setState(() {
+      if(!openDialog){
+        quickViewDataCleanUp();
+        reKey++;
+      }
       this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
       this.openDialog = openDialog;
       this.selectedIndex = selectedIndex;
@@ -201,6 +208,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
     if (_viewType != viewType || widget.reKey != oldWidget.reKey) {
       initializeDate(DateTime.parse(dates!.last).millisecondsSinceEpoch);
       viewType = _viewType;
+
+      reKey = widget.reKey;
+
       quickViewDataCleanUp();
       addDateToList();
       //dateSetter(false, true);
@@ -288,7 +298,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               TimeInstanceWidget(
                                 //1 day view
                                 //today:day1
-                                reKey: widget.reKey,
+                                reKey: reKey,
                                 columnName: 4,
                                 today: day5,
                                 classMaster: widget.classMaster,
@@ -302,7 +312,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               TimeInstanceWidget(
                                 //1 day view
                                 //today:day1
-                                reKey: widget.reKey,
+                                reKey: reKey,
 
                                 columnName: 3,
                                 today: day4,
@@ -319,7 +329,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               TimeInstanceWidget(
                                 //1 day view
                                 //today:day1
-                                reKey: widget.reKey,
+                                reKey: reKey,
 
                                 columnName: 2,
                                 today: day3,
@@ -336,7 +346,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               TimeInstanceWidget(
                                 //1 day view
                                 //today:day1
-                                reKey: widget.reKey,
+                                reKey: reKey,
 
                                 columnName: 1,
                                 today: day2,
@@ -352,7 +362,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
                             if (viewType >= 1)
                               TimeInstanceWidget(
-                                reKey: widget.reKey,
+                                reKey: reKey,
                                 columnName: 0,
                                 today: day1,
                                 key: _key3,

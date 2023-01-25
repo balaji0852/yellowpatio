@@ -18,7 +18,7 @@ class AppStore {
   AppStore({
     this.isLoading = false,
     this.state = const {'state':'initialized/by constructor'},
-    this.dateViewPreference = 2,
+    this.dateViewPreference = 1,
     this.selectedIndex = 0,
     this.darkMode  = true,
     this.projectStoreID = 999,

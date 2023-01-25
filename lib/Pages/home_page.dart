@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/Pages/comment_section_page.dart';
@@ -21,8 +23,11 @@ import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
+import '../SupportSystem/syncher.dart';
 import '../redux_state_store/appStore.dart';
 
+//1/21/2023 : add services object for ReSyncher
+//1/25/2023 : adding mixin WidgetsBindingObserver and its observers,object, for ReSyncher use.
 class homePage extends StatefulWidget {
   const homePage({Key? key, required this.changePage}) : super(key: key);
 
@@ -31,7 +36,7 @@ class homePage extends StatefulWidget {
   HomePageActivity createState() => HomePageActivity();
 }
 
-class HomePageActivity extends State<homePage> {
+class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
   // HomePageActivity({Key? key,this.changePage});
 
   // final void Function(int,ClassMaster)? changePage;
@@ -49,6 +54,8 @@ class HomePageActivity extends State<homePage> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  var services = ReSyncher(interval: 20);
+  AppLifecycleState? _notification;
 
   getInstance() async {
     //singleton wrong implementation
@@ -63,6 +70,7 @@ class HomePageActivity extends State<homePage> {
   @override
   void initState() {
     super.initState();
+
     //getNotes();
   }
 
@@ -78,6 +86,16 @@ class HomePageActivity extends State<homePage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     getNotes();
+    services.serverConnector(() => getNotes(), mounted);
+
+    // getNotes();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
   }
 
   Future getNotes() async {
@@ -114,7 +132,15 @@ class HomePageActivity extends State<homePage> {
     }
   }
 
-
+  handleService(event) {
+    print("***************hp*************");
+    if (FGBGType.background == event) {
+      print("***************hp-background*************");
+      services.isUIMounted = false;
+    } else if (FGBGType.foreground == event) {
+      print("***************hp-foreground*************");
+    }
+  }
 
   Future<void> findLastComment(int itemMasterID) async {
     lastCommentsMap.putIfAbsent(itemMasterID, () => 'loading...');
@@ -141,218 +167,235 @@ class HomePageActivity extends State<homePage> {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    return StoreConnector<AppStore, bool>(
-      converter: (store) => store.state.darkMode,
-      builder: (context, _darkMode) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          child: Scaffold(
-            backgroundColor: _darkMode ? Colors.black : Colors.white,
-            body: CustomScrollView(
-              controller: mainWidgetScrollController,
-              slivers: [
-                //container is not sLiver, so use sliverToBoxAdapter..
-                SliverToBoxAdapter(
-                    child: PlannerGraph(
-                      reKey: 1,
-                        MainWidgetScrollView: mainWidgetScrollController,
-                        key: plannerGraphKey,
-                        classMaster: ClassMaster(
-                            itemName: "dummy",
-                            categoryID: 1,
-                            createdDate: 1,
-                            userStore: UserStore(linkedEmail:"dummy", userName: "dummy", linkedPhone: "dummy", photoURL:"dummy"),
-                            subCategoryID: 2,
-                            itemClassColorID: 1,
-                            itemPriority: 1,
-                            isItemCommentable: 1,
-                            carryForwardMyWork: false,
-                            description: "dummy",
-                            //TODO : 696969696969696969696 adding dummy prjid
-                            projectStoreID: 1),
-                        graphType: 2)
-                    // Container(
-                    //   height: 500,
-                    //   //placeholder for map component...
-                    //   decoration: BoxDecoration(
-                    //       color: Colors.blue,
-                    //       borderRadius: BorderRadius.circular(10)),
-                    // ),
-                    ),
+    return FGBGNotifier(
+      onEvent: (event) {
+        handleService(event);
+      },
+      child: StoreConnector<AppStore, bool>(
+        converter: (store) => store.state.darkMode,
+        builder: (context, _darkMode) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+            child: Scaffold(
+              backgroundColor: _darkMode ? Colors.black : Colors.white,
+              body: CustomScrollView(
+                controller: mainWidgetScrollController,
+                slivers: [
+                  //container is not sLiver, so use sliverToBoxAdapter..
+                  SliverToBoxAdapter(
+                      child: PlannerGraph(
+                          reKey: 1,
+                          MainWidgetScrollView: mainWidgetScrollController,
+                          key: plannerGraphKey,
+                          classMaster: ClassMaster(
+                              itemName: "dummy",
+                              categoryID: 1,
+                              createdDate: 1,
+                              userStore: UserStore(
+                                  linkedEmail: "dummy",
+                                  userName: "dummy",
+                                  linkedPhone: "dummy",
+                                  photoURL: "dummy"),
+                              subCategoryID: 2,
+                              itemClassColorID: 1,
+                              itemPriority: 1,
+                              isItemCommentable: 1,
+                              carryForwardMyWork: false,
+                              description: "dummy",
+                              //TODO : 696969696969696969696 adding dummy prjid
+                              projectStoreID: 1),
+                          graphType: 2)
+                      // Container(
+                      //   height: 500,
+                      //   //placeholder for map component...
+                      //   decoration: BoxDecoration(
+                      //       color: Colors.blue,
+                      //       borderRadius: BorderRadius.circular(10)),
+                      // ),
+                      ),
 
-                data.isNotEmpty
-                    ? SliverPadding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        sliver: SliverGrid.count(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 10.0,
-                          childAspectRatio: 1,
-                          children: data.map(
-                            (e) {
-                              // findLastComment(e.itemMasterID!);
-                              // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
-                              return SizedBox(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 7),
-                                  decoration: BoxDecoration(
-                                      color: colorStore
-                                          .getColorByID(e.itemClassColorID),
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(25),
-                                          topRight: Radius.circular(25))),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          //adding text inside expanded makes the text to spread out, otherwise it will overflow
-                                          Expanded(
-                                            child: Text(
-                                              e.itemName,
-                                              maxLines: 2,
-                                              style: const TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 28,
-                                            child: PopupMenuButton(
-                                              color: _darkMode
-                                                  ? Colors.grey[900]
-                                                  : Colors.white,
-                                              icon: const Icon(Icons.more_vert),
-                                              itemBuilder:
-                                                  (BuildContext context) =>
-                                                      <PopupMenuEntry>[
-                                                PopupMenuItem(
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      'edit',
-                                                      style: TextStyle(
-                                                          color: _darkMode
-                                                              ? Colors.white
-                                                              : Colors.black),
-                                                    ),
-                                                    onTap: () {
-                                                      widget.changePage(
-                                                          1, e, true);
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                    child: ListTile(
-                                                  title: Text('delete',
-                                                      style: TextStyle(
-                                                          color: _darkMode
-                                                              ? Colors.white
-                                                              : Colors.black)),
-                                                  onTap: () {
-                                                    deleteClass(e);
-                                                    Navigator.pop(context);
-                                                  },
-                                                )),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(e.description,
-                                          style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold),
-                                          softWrap: false,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis // new
-                                          ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              commentButton(e);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: _darkMode
-                                                      ? Colors.grey[850]
-                                                      : Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              padding: const EdgeInsets.all(3),
+                  data.isNotEmpty
+                      ? SliverPadding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          sliver: SliverGrid.count(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 10.0,
+                            crossAxisSpacing: 10.0,
+                            childAspectRatio: 1,
+                            children: data.map(
+                              (e) {
+                                // findLastComment(e.itemMasterID!);
+                                // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
+                                return SizedBox(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 7),
+                                    decoration: BoxDecoration(
+                                        color: colorStore
+                                            .getColorByID(e.itemClassColorID),
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(25),
+                                            topRight: Radius.circular(25))),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            //adding text inside expanded makes the text to spread out, otherwise it will overflow
+                                            Expanded(
                                               child: Text(
-                                                lastCommentsMap[e.itemMasterID],
-                                                maxLines: 6,
-                                                style: TextStyle(
+                                                e.itemName,
+                                                maxLines: 2,
+                                                style: const TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    fontSize: 10,
-                                                    color: _darkMode
-                                                        ? Colors.white
-                                                        : Colors.black,
+                                                    fontSize: 30,
                                                     fontWeight:
-                                                        FontWeight.w600),
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 28,
+                                              child: PopupMenuButton(
+                                                color: _darkMode
+                                                    ? Colors.grey[900]
+                                                    : Colors.white,
+                                                icon:
+                                                    const Icon(Icons.more_vert),
+                                                itemBuilder:
+                                                    (BuildContext context) =>
+                                                        <PopupMenuEntry>[
+                                                  PopupMenuItem(
+                                                    child: ListTile(
+                                                      title: Text(
+                                                        'edit',
+                                                        style: TextStyle(
+                                                            color: _darkMode
+                                                                ? Colors.white
+                                                                : Colors.black),
+                                                      ),
+                                                      onTap: () {
+                                                        widget.changePage(
+                                                            1, e, true);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                      child: ListTile(
+                                                    title: Text('delete',
+                                                        style: TextStyle(
+                                                            color: _darkMode
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .black)),
+                                                    onTap: () {
+                                                      deleteClass(e);
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(e.description,
+                                            style: const TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold),
+                                            softWrap: false,
+                                            maxLines: 3,
+                                            overflow:
+                                                TextOverflow.ellipsis // new
+                                            ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                commentButton(e);
+                                                services.isUIMounted = false;
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: _darkMode
+                                                        ? Colors.grey[850]
+                                                        : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5)),
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                child: Text(
+                                                  lastCommentsMap[
+                                                      e.itemMasterID],
+                                                  maxLines: 6,
+                                                  style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontSize: 10,
+                                                      color: _darkMode
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                          ).toList(),
-                        ))
-                    : SliverToBoxAdapter(
-                        child: Container(
-                          alignment: Alignment.center,
-                          child: Column(children: [
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Image.asset(
-                              "assets/women_working_on_task.jpg",
-                              scale: 0.9,
-                              width: 300,
-                              height: 250,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "post you're task and work efficiently...",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color:
-                                      darkMode ? Colors.white : Colors.black),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            )
-                          ]),
+                                );
+                              },
+                            ).toList(),
+                          ))
+                      : SliverToBoxAdapter(
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Column(children: [
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Image.asset(
+                                "assets/women_working_on_task.jpg",
+                                scale: 0.9,
+                                width: 300,
+                                height: 250,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "post you're task and work efficiently...",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color:
+                                        darkMode ? Colors.white : Colors.black),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              )
+                            ]),
+                          ),
                         ),
-                      ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
