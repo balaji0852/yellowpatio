@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:async/async.dart';
@@ -12,6 +13,7 @@ import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/time_view_widget.dart';
 
+import '../SupportSystem/syncher.dart';
 import '../redux_state_store/appStore.dart';
 
 // didChangeDependencies is called exactly after initstate for the first time
@@ -89,6 +91,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       todayInstance = List.generate(24, (index) => []);
       _cancelableOperation!.cancel();
       getTodayInstance(widget.today);
+       Timer.periodic(Duration(minutes: 1), (timer) {
+      if (mounted) {
+        print("yup");
+        // getTodayInstance(widget.today);
+      }
+    });
     }
   }
 
@@ -97,6 +105,14 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     // updateStoreValue();
+    Timer.periodic(Duration(minutes: 1), (timer) {
+      if (mounted) {
+        print("yup");
+        // getTodayInstance(widget.today);
+      }
+    });
+    //  ReSyncher(interval: 1).serverConnector(() => getTodayInstance(widget.today),mounted);
+
     getTodayInstance(widget.today);
   }
 

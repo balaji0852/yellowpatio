@@ -72,12 +72,12 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      if (mounted) {
-        getProjects();
-      }
-    });
-    // ReSyncher(interval: 1).serverConnector(getProjects(),mounted);
+    // Timer.periodic(Duration(minutes: 1), (timer) {
+    //   if (mounted) {
+         getProjects();
+    //   }
+    // });
+    // ReSyncher(interval: 1).serverConnector(() => getProjects(),mounted);
   }
 
   @override
