@@ -61,8 +61,11 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     print("............");
-
+    services.isUIMounted = false;
+    services = ReSyncher(interval: 15);
     getProjects();
+    services.serverConnector(() => getProjects(), mounted);
+
   }
 
   @override

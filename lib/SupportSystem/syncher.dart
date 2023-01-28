@@ -16,7 +16,7 @@ class ReSyncher{
 
 
   Timer.periodic(
-    Duration(days: 0,seconds: interval,hours: 0,minutes: 0),
+    Duration(days: 0,seconds: 0,hours: interval,minutes: 0),
     (timer){ 
       print(viewMounted);
       print('from the setter ui mounted? $mounted');

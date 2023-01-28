@@ -71,7 +71,8 @@ class graphDialogPage extends State<GraphDialog> {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black87),
-            color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
+            color: Colors.white,
+            // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
             borderRadius: BorderRadius.circular(0)),
         height: 575,
         width: MediaQuery.of(context).size.width,
@@ -152,8 +153,8 @@ class graphDialogPage extends State<GraphDialog> {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                      color: colorStore
-                                          .getColorByID(currentViewDataInstance.itemClassColorID),
+                                      // color: colorStore
+                                      //     .getColorByID(currentViewDataInstance.itemClassColorID),
                                       borderRadius: BorderRadius.circular(10)),
                                   child: Text(currentViewDataInstance.dataInstances),
                                 ),

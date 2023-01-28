@@ -102,7 +102,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
     //to graph_dialog, finding central state management...
     setState(() {
       if(!openDialog){
-        quickViewDataCleanUp();
         reKey++;
       }
       this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
@@ -199,21 +198,24 @@ class PlannerGraphPage extends State<PlannerGraph> {
     });
   }
 
+
+  //1/28/2023-Balaji : added implementation of reKey-1000, to add initializeDate(1000==widget.reKey?DateTime.now().millisecondsSinceEpoch
+  //-------------------for sale - 20
   @override
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
 
   
     int _viewType = state.state.dateViewPreference;
-    if (_viewType != viewType || widget.reKey != oldWidget.reKey) {
-      initializeDate(DateTime.parse(dates!.last).millisecondsSinceEpoch);
+    if (_viewType != viewType || widget.reKey != oldWidget.reKey ) {
+
+      initializeDate(1000==widget.reKey?DateTime.now().millisecondsSinceEpoch
+      :DateTime.parse(dates!.last).millisecondsSinceEpoch);
+
       viewType = _viewType;
-
       reKey = widget.reKey;
-
-      quickViewDataCleanUp();
-      addDateToList();
-      //dateSetter(false, true);
+      
+      dateSetter(false, true);
     }
   }
 

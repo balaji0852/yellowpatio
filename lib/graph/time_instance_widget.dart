@@ -83,20 +83,23 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   //   viewType = state.state.dateViewPreference;
   // }
 
+  //balaji : 11/30/2022 adding this if case for quick view impl
+  //balaji : 12/4/2022, adding below todayInstance cleanup, as per pg.1.1
+  //-----------------------changes under(cu) - balaji : 1/27/2023 cleanup only for changes in
+  //------------------------------------------ widget.today and widget.viewType
   @override
   void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    //balaji : 11/30/2022 adding this if case for quick view impl
+    
     if (oldWidget.today != widget.today ||
         oldWidget.filter != widget.filter ||
         oldWidget.viewType != widget.viewType ||
-        oldWidget.reKey != widget.reKey) {
-      print(oldWidget.today.toString() + " " + widget.today.toString());
-      //balaji : 12/4/2022, adding below cleanup, as per pg.1.1
-
-      if(oldWidget.reKey != widget.reKey){
-      todayInstance = List.generate(24, (index) => []);
+        oldWidget.reKey != widget.reKey ) {
+     
+      if (oldWidget.today != widget.today ||
+          oldWidget.viewType != widget.viewType) {
+        todayInstance = List.generate(24, (index) => []);
       }
       _cancelableOperation!.cancel();
       getTodayInstance(widget.today);
@@ -115,13 +118,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     services.serverConnector(() => getTodayInstance(widget.today), mounted);
   }
 
-
   handleService(event) {
     print("***************tiw*************");
     if (FGBGType.background == event) {
       print("***************tiw-background*************");
       services.isUIMounted = false;
-    }else if(FGBGType.foreground == event){
+    } else if (FGBGType.foreground == event) {
       print("***************tiw-foreground*************");
     }
   }
@@ -139,7 +141,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     darkMode = state.state.darkMode;
 
     return FGBGNotifier(
-       onEvent: (event) {
+      onEvent: (event) {
         handleService(event);
       },
       child: Container(
@@ -378,6 +380,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     // }
   }
 
+  //1/28/2023 : Balaji: adding getDataCallBack for quick view cleanup on commentCopy.isEmpty
   processTodayData() {
     //added mounted for cloud migration
     if (mounted) {
@@ -386,7 +389,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
             commentCopy!.isNotEmpty &&
             _cancelableOperation!.isCompleted) {
           widget.getDataCallBack(widget.columnName, commentCopy!);
-            todayInstance = List.generate(24, (index) => []);
+          todayInstance = List.generate(24, (index) => []);
           for (var element in commentCopy!) {
             var timeInstance =
                 DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
@@ -395,7 +398,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
                 .add(element);
           }
-        } else {
+        } else {         
+          widget.getDataCallBack(widget.columnName, []);
           todayInstance = List.generate(24, (index) => []);
         }
       });

@@ -77,7 +77,10 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
   @override
   void didUpdateWidget(covariant homePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-
+    services.isUIMounted = false;
+    services = ReSyncher(interval: 20);
+    getNotes();
+    services.serverConnector(() => getNotes(), mounted);
     print("oop");
   }
 
