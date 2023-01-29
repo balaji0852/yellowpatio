@@ -91,12 +91,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    
     if (oldWidget.today != widget.today ||
         oldWidget.filter != widget.filter ||
         oldWidget.viewType != widget.viewType ||
-        oldWidget.reKey != widget.reKey ) {
-     
+        oldWidget.reKey != widget.reKey) {
       if (oldWidget.today != widget.today ||
           oldWidget.viewType != widget.viewType) {
         todayInstance = List.generate(24, (index) => []);
@@ -160,7 +158,10 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               key: UniqueKey(),
               direction: Axis.horizontal,
-              children: element.map((e) {
+              children: element
+                  .whereIndexed((index, element) =>
+                      index < ViewChangesHelper().limiter(widget.filter))
+                  .map((e) {
                 int viewSetterValues =
                     ViewChangesHelper().viewSetterForType(widget.filter);
                 double fontSize = viewSetterValues == 1
@@ -175,6 +176,26 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                 .minute /
                             60) *
                         20;
+
+                if (index == ViewChangesHelper().limiter(widget.filter) ||
+                    ((widget.filter == 3 || widget.filter == 5) &&
+                        index == ViewChangesHelper().limiter(widget.filter))) {
+                  return SizedBox(
+                    width: 8,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "+",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  colorStore.getColorByID(e.itemClassColorID)),
+                        )
+                      ],
+                    ),
+                  );
+                }
                 if (index >
                     ViewChangesHelper().viewSetterForType(widget.filter)) {
                   return SizedBox(
@@ -208,7 +229,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                         // SizedBox(
                         //   height: height,
                         // ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Expanded(
@@ -258,15 +279,16 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                          CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: 9,
-                                            child: CircleAvatar(
-                                              radius: 8,
-                                              backgroundImage: NetworkImage(
-                                                  e.userStore.photoURL),
-                                            ),
-                                          )
+                                          if (widget.filter <3)
+                                            CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 9,
+                                              child: CircleAvatar(
+                                                radius: 8,
+                                                backgroundImage: NetworkImage(
+                                                    e.userStore.photoURL),
+                                              ),
+                                            )
                                         ],
                                       ),
                                     )
@@ -398,7 +420,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
                 .add(element);
           }
-        } else {         
+        } else {
           widget.getDataCallBack(widget.columnName, []);
           todayInstance = List.generate(24, (index) => []);
         }

@@ -56,6 +56,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
   var state;
   var services = ReSyncher(interval: 20);
   AppLifecycleState? _notification;
+  int reKey = 0;
 
   getInstance() async {
     //singleton wrong implementation
@@ -187,7 +188,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                   //container is not sLiver, so use sliverToBoxAdapter..
                   SliverToBoxAdapter(
                       child: PlannerGraph(
-                          reKey: 1,
+                          reKey: reKey,
                           MainWidgetScrollView: mainWidgetScrollController,
                           key: plannerGraphKey,
                           classMaster: ClassMaster(
@@ -426,7 +427,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
         .then((value) {
       setState(() {
         data.remove(classMasterItem);
-        //data = data;
+        reKey++;
       });
       print("delete successfully");
     }).onError((error, stackTrace) {

@@ -244,7 +244,7 @@ class CommentSection extends State<CommentSectionPage> {
           setState(() {
             heightManagement = 100;
             maxLinesManagement = 1;
-            reKey = 1000;
+            reKey = reKey*1000;
           });
 
           commentEditController.clear();

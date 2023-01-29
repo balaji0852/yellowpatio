@@ -209,7 +209,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
     int _viewType = state.state.dateViewPreference;
     if (_viewType != viewType || widget.reKey != oldWidget.reKey ) {
 
-      initializeDate(1000==widget.reKey?DateTime.now().millisecondsSinceEpoch
+      initializeDate(widget.reKey%1000==0?DateTime.now().millisecondsSinceEpoch
       :DateTime.parse(dates!.last).millisecondsSinceEpoch);
 
       viewType = _viewType;
