@@ -487,6 +487,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                         color: darkMode ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold)),
                 DropDown(
+                  color: darkMode?Colors.black:Colors.white,
                   callBack: (selected) {
                     setState(() {
                       selectedViewCategoryID = viewCategory.indexOf(selected!);

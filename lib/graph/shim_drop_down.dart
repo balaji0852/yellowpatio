@@ -13,13 +13,17 @@ class ShimDropDown extends StatefulWidget {
   final Function(String?)? callBack;
   final String dropdownTitle;
   final ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicate;
+  final bool darkMode;
+  final Color color;
 
   const ShimDropDown(
       {Key? key,
       required this.viewCategory,
       this.callBack,
       required this.dropdownTitle,
-      required this.classDataInstanceMaterDuplicate})
+      required this.classDataInstanceMaterDuplicate,
+      required this.darkMode,
+      required this.color})
       : super(key: key);
 
   @override
@@ -47,7 +51,8 @@ class ShimDropDownWidget extends State<ShimDropDown> {
   @override
   Widget build(BuildContext context) {
     return DropDown(
-        darkMode: false,
+        color: widget.color,
+        darkMode: widget.darkMode,
         callBack: updateCommentStatus,
         dropdownTitle: shimDropDownTitle,
         viewCategory: widget.viewCategory);
