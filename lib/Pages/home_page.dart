@@ -171,8 +171,9 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    print(MediaQuery.of(context).size.height);
+
+    reKey++;
+
 
     return FGBGNotifier(
       onEvent: (event) {

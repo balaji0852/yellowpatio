@@ -55,9 +55,7 @@ class CommentSection extends State<CommentSectionPage> {
         state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    print(MediaQuery.of(context).size.height);
-    
+
     return Scaffold(
       body: Stack(
         children: [
