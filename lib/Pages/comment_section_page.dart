@@ -180,7 +180,8 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
   backButton() {
-    // Navigator.pop(context);
+
+    Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Home()),
@@ -215,6 +216,8 @@ class CommentSection extends State<CommentSectionPage> {
     commentsLengthManager = value.length;
   }
 
+
+  //1/28/2023 : Balaji- adding specific reKey(reKey = 1000;) for sale - 20
   postComment() async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (commentEditController.text.isNotEmpty) {
@@ -241,7 +244,7 @@ class CommentSection extends State<CommentSectionPage> {
           setState(() {
             heightManagement = 100;
             maxLinesManagement = 1;
-            reKey++;
+            reKey = reKey*1000;
           });
 
           commentEditController.clear();

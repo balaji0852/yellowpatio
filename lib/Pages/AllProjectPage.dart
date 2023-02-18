@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/SupportSystem/syncher.dart';
 import 'package:yellowpatioapp/cloud/projectStoreCloud.dart';
@@ -12,6 +13,8 @@ import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import '../db/database.dart';
 import '../redux_state_store/appStore.dart';
 
+//1/21/2023 : add services object for ReSyncher
+//1/25/2023 : adding mixin WidgetsBindingObserver and its observers,object, for ReSyncher use.
 class AllProjectPage extends StatefulWidget {
   final bool loaded;
 
@@ -27,6 +30,7 @@ class AllProjectPageState extends State<AllProjectPage> {
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
+  var services = ReSyncher(interval: 5);
 
   getProjects() async {
     var state = StoreProvider.of<AppStore>(context);
@@ -57,13 +61,15 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     print("............");
-
+    services.isUIMounted = false;
+    services = ReSyncher(interval: 15);
     getProjects();
+    services.serverConnector(() => getProjects(), mounted);
+
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -72,12 +78,25 @@ class AllProjectPageState extends State<AllProjectPage> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      if (mounted) {
-        getProjects();
-      }
-    });
-    // ReSyncher(interval: 1).serverConnector(getProjects(),mounted);
+    getProjects();
+    services.serverConnector(() => getProjects(), mounted);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
+  }
+
+  handleService(event) {
+    print("***************project page*************");
+    if (FGBGType.background == event) {
+      print("***************project page-background*************");
+      services.isUIMounted = false;
+    }else if(FGBGType.foreground == event){
+      print("***************project page-foreground*************");
+    }
   }
 
   @override
@@ -85,93 +104,98 @@ class AllProjectPageState extends State<AllProjectPage> {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    return ListView(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
+    return FGBGNotifier(
+      onEvent: (event) {
+        handleService(event);
+      },
+      child: ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
 
-      // itemCount: projectStoreList.length,
-      // itemBuilder: (BuildContext context, int index) {
-      //   return GestureDetector(
-      //     key: UniqueKey(),
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(3),
-      //       child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             Text(
-      //               projectStoreList.elementAt(index).projectName,
-      //               style: const TextStyle(
-      //                   decoration: TextDecoration.underline,
-      //                   color: Colors.blue,
-      //                   fontSize: 20),
-      //             ),
-      //             Text(projectStoreList.elementAt(index).projectDescription)
-      //           ]),
-      //     ),
-      //     onTap: () {
-      //       print("jj");
-      //       navigateProject(projectStoreList.elementAt(index).projectStoreID!);
-      //     },
-      //   );
-      // }
-      //sig42: balaji:adding loading description for the page
-      children: projectStoreList.isEmpty
-          ? [
-              Container(
-                alignment: Alignment.center,
-                child: Column(children: [
-                  Image.asset(
-                    "assets/project5.png",
-                    scale: 2,
-                    width: 400,
-                    height: 350,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    "we're fetching you're mission critical business...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: darkMode ? Colors.white : Colors.black),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  )
-                ]),
-              )
-            ]
-          : projectStoreList
-              .map((e) => GestureDetector(
-                    key: UniqueKey(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              e.projectName,
-                              style: const TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 19),
-                            ),
-                            Text(
-                              e.projectDescription,
-                              style: TextStyle(
-                                  color:
-                                      darkMode ? Colors.white : Colors.black),
-                            )
-                          ]),
+        // itemCount: projectStoreList.length,
+        // itemBuilder: (BuildContext context, int index) {
+        //   return GestureDetector(
+        //     key: UniqueKey(),
+        //     child: Padding(
+        //       padding: const EdgeInsets.all(3),
+        //       child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Text(
+        //               projectStoreList.elementAt(index).projectName,
+        //               style: const TextStyle(
+        //                   decoration: TextDecoration.underline,
+        //                   color: Colors.blue,
+        //                   fontSize: 20),
+        //             ),
+        //             Text(projectStoreList.elementAt(index).projectDescription)
+        //           ]),
+        //     ),
+        //     onTap: () {
+        //       print("jj");
+        //       navigateProject(projectStoreList.elementAt(index).projectStoreID!);
+        //     },
+        //   );
+        // }
+        //sig42: balaji:adding loading description for the page
+        children: projectStoreList.isEmpty
+            ? [
+                Container(
+                  alignment: Alignment.center,
+                  child: Column(children: [
+                    Image.asset(
+                      "assets/project5.png",
+                      scale: 2,
+                      width: 400,
+                      height: 350,
                     ),
-                    onTap: () {
-                      print("jj");
-                      navigateProject(e.projectStoreID!);
-                    },
-                  ))
-              .toList(),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "we're fetching you're mission critical business...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: darkMode ? Colors.white : Colors.black),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ]),
+                )
+              ]
+            : projectStoreList
+                .map((e) => GestureDetector(
+                      key: UniqueKey(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                e.projectName,
+                                style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 19),
+                              ),
+                              Text(
+                                e.projectDescription,
+                                style: TextStyle(
+                                    color:
+                                        darkMode ? Colors.white : Colors.black),
+                              )
+                            ]),
+                      ),
+                      onTap: () {
+                        print("jj");
+                        navigateProject(e.projectStoreID!);
+                      },
+                    ))
+                .toList(),
+      ),
     );
   }
 

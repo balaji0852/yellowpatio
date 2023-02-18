@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/color_store.dart';
 import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
@@ -11,7 +13,9 @@ import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/time_view_widget.dart';
+import 'package:collection/collection.dart';
 
+import '../SupportSystem/syncher.dart';
 import '../redux_state_store/appStore.dart';
 
 // didChangeDependencies is called exactly after initstate for the first time
@@ -60,12 +64,16 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   bool darkMode = false;
   var state;
   CancelableOperation? _cancelableOperation;
+  var services = ReSyncher(interval: 15);
+  int reKey = 0;
+  Function eq = const DeepCollectionEquality().equals;
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    reKey = widget.reKey;
     //updateStoreValue();
     //getTodayInstance(widget.today);
   }
@@ -76,29 +84,54 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   //   viewType = state.state.dateViewPreference;
   // }
 
+  //balaji : 11/30/2022 adding this if case for quick view impl
+  //balaji : 12/4/2022, adding below todayInstance cleanup, as per pg.1.1
+  //-----------------------changes under(cu) - balaji : 1/27/2023 cleanup only for changes in
+  //------------------------------------------ widget.today and widget.viewType
   @override
   void didUpdateWidget(covariant TimeInstanceWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    //balaji : 11/30/2022 adding this if case for quick view impl
     if (oldWidget.today != widget.today ||
         oldWidget.filter != widget.filter ||
         oldWidget.viewType != widget.viewType ||
         oldWidget.reKey != widget.reKey) {
-      print(oldWidget.today.toString() + " " + widget.today.toString());
-      //balaji : 12/4/2022, adding below cleanup, as per pg.1.1
-      todayInstance = List.generate(24, (index) => []);
+      if (oldWidget.today != widget.today ||
+          oldWidget.viewType != widget.viewType) {
+        todayInstance = List.generate(24, (index) => []);
+      }
       _cancelableOperation!.cancel();
       getTodayInstance(widget.today);
+
+      services.isUIMounted = false;
+      services = ReSyncher(interval: 15);
+      services.serverConnector(() => getTodayInstance(widget.today), mounted);
     }
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    // updateStoreValue();
+
     getTodayInstance(widget.today);
+    services.serverConnector(() => getTodayInstance(widget.today), mounted);
+  }
+
+  handleService(event) {
+    print("***************tiw*************");
+    if (FGBGType.background == event) {
+      print("***************tiw-background*************");
+      services.isUIMounted = false;
+    } else if (FGBGType.foreground == event) {
+      print("***************tiw-foreground*************");
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    services.isUIMounted = false;
   }
 
   @override
@@ -106,139 +139,172 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    return Container(
-      height: 2642,
-      width: (MediaQuery.of(context).size.width - 20) / widget.filter,
-      color: darkMode ? Colors.black : Colors.white,
-      child: Column(
-          children: todayInstance.map((element) {
-        int index = 0;
-        // print(element.length > 5);
-        // print(element.map((e) => e));
-        //element = element.length>=5?element.sublist(0,3):element;
-        return SizedBox(
-          height: 110,
-          child: Flex(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            key: UniqueKey(),
-            direction: Axis.horizontal,
-            children: element.map((e) {
-              int viewSetterValues =
-                  ViewChangesHelper().viewSetterForType(widget.filter);
-              double fontSize = viewSetterValues == 1
-                  ? 9
-                  : viewSetterValues == 2
-                      ? 10
-                      : 11;
-              index++;
+    return FGBGNotifier(
+      onEvent: (event) {
+        handleService(event);
+      },
+      child: Container(
+        height: 2642,
+        width: (MediaQuery.of(context).size.width - 20) / widget.filter,
+        color: darkMode ? Colors.black : Colors.white,
+        child: Column(
+            children: todayInstance.map((element) {
+          int index = 0;
+          // print(element.length > 5);
+          // print(element.map((e) => e));
+          //element = element.length>=5?element.sublist(0,3):element;
+          return SizedBox(
+            height: 110,
+            child: Flex(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              key: UniqueKey(),
+              direction: Axis.horizontal,
+              children: element
+                  .whereIndexed((index, element) =>
+                      index < ViewChangesHelper().limiter(widget.filter))
+                  .map((e) {
+                int viewSetterValues =
+                    ViewChangesHelper().viewSetterForType(widget.filter);
+                double fontSize = viewSetterValues == 1
+                    ? 9
+                    : viewSetterValues == 2
+                        ? 10
+                        : 11;
+                index++;
 
-              double height =
-                  (DateTime.fromMillisecondsSinceEpoch(e.instancesTime).minute /
-                          60) *
-                      20;
-              if (index >
-                  ViewChangesHelper().viewSetterForType(widget.filter)) {
-                return SizedBox(
-                  width: 3,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: height,
-                      ),
-                      Expanded(
-                        child: Container(
-                          color: e.itemClassColorID == 999
-                              ? colorStore.getColorByID(
-                                  widget.classMaster.itemClassColorID)
-                              : colorStore.getColorByID(e.itemClassColorID),
+                double height =
+                    (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
+                                .minute /
+                            60) *
+                        20;
+
+                if (index == ViewChangesHelper().limiter(widget.filter) ||
+                    ((widget.filter == 3 || widget.filter == 5) &&
+                        index == ViewChangesHelper().limiter(widget.filter))) {
+                  return SizedBox(
+                    width: 8,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "+",
+                          style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  colorStore.getColorByID(e.itemClassColorID)),
+                        )
+                      ],
+                    ),
+                  );
+                }
+                if (index >
+                    ViewChangesHelper().viewSetterForType(widget.filter)) {
+                  return SizedBox(
+                    width: 3,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: height,
                         ),
-                      )
-                    ],
+                        Expanded(
+                          child: Container(
+                            color: e.itemClassColorID == 999
+                                ? colorStore.getColorByID(
+                                    widget.classMaster.itemClassColorID)
+                                : colorStore.getColorByID(e.itemClassColorID),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+                return Flexible(
+                  key: UniqueKey(),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.openCallback(true, element, element.indexOf(e));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // SizedBox(
+                        //   height: height,
+                        // ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    topRight: Radius.circular(5)),
+                                color: e.itemClassColorID == 999
+                                    ? colorStore.getColorByID(
+                                        widget.classMaster.itemClassColorID)
+                                    : colorStore
+                                        .getColorByID(e.itemClassColorID),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                      top: 16,
+                                      left: 0,
+                                      right: 0,
+                                      child: Text(
+                                        e.dataInstances,
+                                        maxLines: 8,
+                                        style: TextStyle(fontSize: fontSize),
+                                      )),
+                                  if (e.userStore.photoURL.isNotEmpty)
+                                    Positioned(
+                                      right: 4,
+                                      top: 1,
+                                      left: 0,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          if (e.instancesTime <
+                                              DateTime.parse(
+                                                      DateTime.fromMillisecondsSinceEpoch(
+                                                                  widget.today)
+                                                              .toString()
+                                                              .substring(
+                                                                  0, 10) +
+                                                          " 00:00:00.000")
+                                                  .millisecondsSinceEpoch)
+                                            const Text(
+                                              "#unfinished  ",
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          if (widget.filter <3)
+                                            CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 9,
+                                              child: CircleAvatar(
+                                                radius: 8,
+                                                backgroundImage: NetworkImage(
+                                                    e.userStore.photoURL),
+                                              ),
+                                            )
+                                        ],
+                                      ),
+                                    )
+                                ],
+                              )),
+                        )
+                      ],
+                    ),
                   ),
                 );
-              }
-              return Flexible(
-                key: UniqueKey(),
-                child: GestureDetector(
-                  onTap: () {
-                    widget.openCallback(true, element, element.indexOf(e));
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // SizedBox(
-                      //   height: height,
-                      // ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  topRight: Radius.circular(5)),
-                              color: e.itemClassColorID == 999
-                                  ? colorStore.getColorByID(
-                                      widget.classMaster.itemClassColorID)
-                                  : colorStore.getColorByID(e.itemClassColorID),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                    top: 16,
-                                    left: 0,
-                                    right: 0,
-                                    child: Text(
-                                      e.dataInstances,
-                                      maxLines: 8,
-                                      style: TextStyle(fontSize: fontSize),
-                                    )),
-                                if (e.userStore.photoURL.isNotEmpty)
-                                  Positioned(
-                                    right: 4,
-                                    top: 1,
-                                    left: 0,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        if (e.instancesTime <
-                                            DateTime.parse(
-                                                    DateTime.fromMillisecondsSinceEpoch(
-                                                                widget.today)
-                                                            .toString()
-                                                            .substring(0, 10) +
-                                                        " 00:00:00.000")
-                                                .millisecondsSinceEpoch)
-                                          const Text(
-                                            "#unfinished  ",
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        CircleAvatar(
-                                          backgroundColor: Colors.white,
-                                          radius: 9,
-                                          child: CircleAvatar(
-                                            radius: 8,
-                                            backgroundImage: NetworkImage(
-                                                e.userStore.photoURL),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              ],
-                            )),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        );
-      }).toList()),
+              }).toList(),
+            ),
+          );
+        }).toList()),
+      ),
     );
   }
 
@@ -329,11 +395,15 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
     }
 
     final value = await _cancelableOperation?.value;
-    commentCopy = value as List<ClassDataInstanceMaterDuplicate>?;
-
+    // if (!eq(commentCopy, value as List<ClassDataInstanceMaterDuplicate>?)) {
+    commentCopy = value;
     processTodayData();
+    // } else {
+    //   print("same data");
+    // }
   }
 
+  //1/28/2023 : Balaji: adding getDataCallBack for quick view cleanup on commentCopy.isEmpty
   processTodayData() {
     //added mounted for cloud migration
     if (mounted) {
@@ -352,6 +422,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 .add(element);
           }
         } else {
+          widget.getDataCallBack(widget.columnName, []);
           todayInstance = List.generate(24, (index) => []);
         }
       });

@@ -69,13 +69,16 @@ class HomeDraweWidget extends State<HomeDrawer> {
         padding: const EdgeInsets.all(5),
         child: ListView(
           children: [
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text("planB",
                     style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black,fontSize: 20)),
+                        color: darkMode ? Colors.white : Colors.black,
+                        fontSize: 20)),
               ],
             ),
             const SizedBox(
@@ -118,6 +121,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   height: 50,
                   color: darkMode ? Colors.grey[850] : Colors.white,
                   onPressed: () {
+                    Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -138,6 +142,8 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   height: 50,
                   color: darkMode ? Colors.grey[850] : Colors.white,
                   onPressed: () {
+                    Navigator.pop(context);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(

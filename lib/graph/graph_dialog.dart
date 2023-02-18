@@ -21,11 +21,11 @@ class GraphDialog extends StatefulWidget {
       required this.classMaster})
       : super(key: key);
 
-
-  //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
+  //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence
   final int selectedIndex;
   final ClassMaster classMaster;
-  final Function(bool, List<ClassDataInstanceMaterDuplicate>,int selectedIndex) openCallback;
+  final Function(bool, List<ClassDataInstanceMaterDuplicate>, int selectedIndex)
+      openCallback;
   final List<ClassDataInstanceMaterDuplicate> hourlyDataInstance;
   @override
   graphDialogPage createState() {
@@ -34,12 +34,12 @@ class GraphDialog extends StatefulWidget {
 }
 
 class graphDialogPage extends State<GraphDialog> {
-  List<String> viewCategory = [ "working","to-do","done" ];
+  List<String> viewCategory = ["working", "to-do", "done"];
   int selectedViewCategoryID = 0;
   late ClassDataInstanceMaterDuplicate selectedDataInstance;
   late int userStoreID;
   var currentViewDataInstance;
-  var currentViewDataInstanceIndex = 0 ;
+  var currentViewDataInstanceIndex = 0;
   ColorStore colorStore = ColorStore();
 
   changeView(int _currentViewDataInstanceIndex) {
@@ -57,161 +57,223 @@ class graphDialogPage extends State<GraphDialog> {
   void initState() {
     super.initState();
     // currentViewDataInstance = widget.hourlyDataInstance.elementAt(0);
-    
-    //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence 
-    currentViewDataInstanceIndex =  widget.selectedIndex;
+
+    //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence
+    currentViewDataInstanceIndex = widget.selectedIndex;
     currentViewDataInstance =
-            widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
+        widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black87),
-            color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
-            borderRadius: BorderRadius.circular(0)),
-        height: 575,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CloseButton(
-                  onPressed: () {
-                    //print(openDialog);
-                    widget.openCallback(false, widget.hourlyDataInstance,0);
-                  },
-                )
-              ],
-            ),
-            SizedBox(
-              height: 450,
-              child:
-
-                  //  ListView(
-                  //   scrollDirection: Axis.horizontal,
-                  //   children: widget.hourlyDataInstance.map((e) {
-                  //     var classDataInstanceMaterDuplicateClone = e;
-                  //     return
-                  Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width - 70,
-                        child: ListView(
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'comments',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    const Text("status"),
-                                    ShimDropDown(
-                                      classDataInstanceMaterDuplicate: currentViewDataInstance,
-                                      callBack: (selected) {
-                                        // setState(() {
-                                        //   selectedDataInstance =
-                                        //       classDataInstanceMaterDuplicateClone;
-                                        //   selectedViewCategoryID =
-                                        //       viewCategory.indexOf(selected!) + 1;
-                                        //   updateCommentStatus(
-                                        //           classDataInstanceMaterDuplicateClone)
-                                        //       .then((value) {
-                                        //     classDataInstanceMaterDuplicateClone =
-                                        //         value;
-                                        //   });
-                                        // });
-                                      },
-                                      dropdownTitle: viewCategory
-                                          .elementAt(currentViewDataInstance.instancesStatus - 1),
-                                      viewCategory: viewCategory,
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  currentViewDataInstance.itemName!,
-                                  style: const TextStyle(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(currentViewDataInstance.description!),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: colorStore
-                                          .getColorByID(currentViewDataInstance.itemClassColorID),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(currentViewDataInstance.dataInstances),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(DateTime.fromMillisecondsSinceEpoch(
-                                            currentViewDataInstance.instancesTime)
-                                        .toString()
-                                        .substring(0, 16))
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
+    return StoreConnector<AppStore, bool>(
+        converter: (store) => store.state.darkMode,
+        builder: (context, darkMode) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black87),
+                  color: darkMode ? Colors.grey[900] : Colors.white,
+                  // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
+                  borderRadius: BorderRadius.circular(0)),
+              height: 575,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CloseButton(
+                        onPressed: () {
+                          //print(openDialog);
+                          widget.openCallback(
+                              false, widget.hourlyDataInstance, 0);
+                        },
+                        color: darkMode ? Colors.white : Colors.black,
                       )
-                      //     );
-                      //   }).toList(),
-                      // ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 450,
+                    child:
+
+                        //  ListView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   children: widget.hourlyDataInstance.map((e) {
+                        //     var classDataInstanceMaterDuplicateClone = e;
+                        //     return
+                        Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 70,
+                              child: ListView(
+                                scrollDirection: Axis.vertical,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'comments',
+                                        style: TextStyle(
+                                            color: darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            "status",
+                                            style: TextStyle(
+                                                color: darkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          ShimDropDown(
+                                            classDataInstanceMaterDuplicate:
+                                                currentViewDataInstance,
+                                            callBack: (selected) {
+                                              // setState(() {
+                                              //   selectedDataInstance =
+                                              //       classDataInstanceMaterDuplicateClone;
+                                              //   selectedViewCategoryID =
+                                              //       viewCategory.indexOf(selected!) + 1;
+                                              //   updateCommentStatus(
+                                              //           classDataInstanceMaterDuplicateClone)
+                                              //       .then((value) {
+                                              //     classDataInstanceMaterDuplicateClone =
+                                              //         value;
+                                              //   });
+                                              // });
+                                            },
+                                            dropdownTitle:
+                                                viewCategory.elementAt(
+                                                    currentViewDataInstance
+                                                            .instancesStatus -
+                                                        1),
+                                            darkMode: darkMode,
+                                            color: Colors.grey[900]!,
+                                            viewCategory: viewCategory,
+                                          )
+                                        ],
+                                      ),
+                                      Text(
+                                        currentViewDataInstance.itemName!,
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            color: darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        currentViewDataInstance.description!,
+                                        style: TextStyle(
+                                          color: darkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            // color: colorStore
+                                            //     .getColorByID(currentViewDataInstance.itemClassColorID),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Text(
+                                          currentViewDataInstance.dataInstances,
+                                          style: TextStyle(
+                                            color: darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                    currentViewDataInstance
+                                                        .instancesTime)
+                                                .toString()
+                                                .substring(0, 16),
+                                            style: TextStyle(
+                                              color: darkMode
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                            //     );
+                            //   }).toList(),
+                            // ),
+                            ),
+                  ),
+                  Row(
+                    children: [
+                      const Spacer(
+                        flex: 2,
                       ),
+                      if (currentViewDataInstanceIndex != 0)
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 28,
+                            color: darkMode ? Colors.white : Colors.black,
+                          ),
+                          onPressed: () {
+                            int index = currentViewDataInstanceIndex - 1;
+                            changeView(index);
+                          },
+                        ),
+                      const Spacer(
+                        flex: 3,
+                      ),
+                      if (currentViewDataInstanceIndex !=
+                          widget.hourlyDataInstance.length - 1)
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 28,
+                            color: darkMode ? Colors.white : Colors.black,
+                          ),
+                          onPressed: () {
+                            int index = currentViewDataInstanceIndex + 1;
+                            changeView(index);
+                          },
+                        ),
+                      const Spacer(
+                        flex: 2,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-            Row(
-
-              children: [
-                const Spacer(flex: 2,),
-                if(currentViewDataInstanceIndex!=0)
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new,
-                      size: 28, color: Colors.black),
-                  onPressed: () {
-                     int index = currentViewDataInstanceIndex-1;
-                                        changeView(index);
-
-                  },
-                ),
-              
-                                Spacer(flex: 3,),
-if(currentViewDataInstanceIndex!=widget.hourlyDataInstance.length-1)
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios,
-                      size: 28, color: Colors.black),
-                  onPressed: () {
-                    int index = currentViewDataInstanceIndex+1;
-                                        changeView(index);
-
-                  },
-                ),                const Spacer(flex: 2,),
-
-              ],
-            )
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
   Future<ClassDataInstanceMaterDuplicate> updateCommentStatus(
@@ -224,7 +286,7 @@ if(currentViewDataInstanceIndex!=widget.hourlyDataInstance.length-1)
     userStoreID = state.state.selectedIndex;
 
     DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
-      userStore: selectedDataInstance.userStore,
+        userStore: selectedDataInstance.userStore,
         dataInstanceID: selectedDataInstance.dataInstanceID,
         itemMasterID: selectedDataInstance.itemMasterID,
         dataInstances: selectedDataInstance.dataInstances,
@@ -233,8 +295,7 @@ if(currentViewDataInstanceIndex!=widget.hourlyDataInstance.length-1)
 
     ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
         ClassDataInstanceMaterDuplicate(
-                userStore: selectedDataInstance.userStore,
-
+      userStore: selectedDataInstance.userStore,
       dataInstanceID: selectedDataInstance.dataInstanceID,
       itemMasterID: selectedDataInstance.itemMasterID,
       dataInstances: selectedDataInstance.dataInstances,
@@ -252,8 +313,7 @@ if(currentViewDataInstanceIndex!=widget.hourlyDataInstance.length-1)
       print(error);
       ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicateClone =
           ClassDataInstanceMaterDuplicate(
-                  userStore: selectedDataInstance.userStore,
-
+              userStore: selectedDataInstance.userStore,
               dataInstanceID: selectedDataInstance.dataInstanceID,
               itemMasterID: selectedDataInstance.itemMasterID,
               dataInstances: selectedDataInstance.dataInstances,

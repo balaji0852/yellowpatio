@@ -5,6 +5,7 @@ class DropDown extends StatelessWidget {
   final Function(String?)? callBack;
   final String dropdownTitle;
   final bool darkMode;
+  final Color color;
   List<DropdownMenuItem<String>> dropdownItems = [];
 
   DropDown(
@@ -12,7 +13,8 @@ class DropDown extends StatelessWidget {
       required this.callBack,
       required this.dropdownTitle,
       required this.viewCategory,
-      required this.darkMode
+      required this.darkMode,
+      required this.color
       })
       : super(key: key) {
     for (String item in viewCategory) {
@@ -25,20 +27,22 @@ class DropDown extends StatelessWidget {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: darkMode?Colors.black:Colors.white
+        color: darkMode?color:Colors.white
       ),
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
       child: DropdownButton<String>(
-        dropdownColor:darkMode?Colors.grey[900]:Colors.white ,
+        dropdownColor:darkMode?color:Colors.white ,
         hint: Text(
           dropdownTitle,
           style: TextStyle(
-              color: darkMode?Colors.white:Colors.black, fontSize: 13, fontWeight: FontWeight.w500),
+              color: darkMode?Colors.white:color, fontSize: 13, fontWeight: FontWeight.w500),
         ),
         items: dropdownItems,
         borderRadius: BorderRadius.circular(25),

@@ -55,4 +55,8 @@ class ViewChangesHelper{
   int viewSetterForType(int type){
     return type==2?2:type==1?4:1;
   }
+
+  int limiter(int type){
+    return type==1?8:type==2?4:type==3?2:2;
+  }
 }
