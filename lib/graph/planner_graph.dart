@@ -201,6 +201,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   //1/28/2023-Balaji : added implementation of reKey-1000, to add initializeDate(1000==widget.reKey?DateTime.now().millisecondsSinceEpoch
   //-------------------for sale - 20
+  //2/18/2023-Balaji : adding    openDialog = false; for sale 21
   @override
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -212,6 +213,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
       initializeDate(widget.reKey%1000==0?DateTime.now().millisecondsSinceEpoch
       :DateTime.parse(dates!.last).millisecondsSinceEpoch);
 
+      openDialog = false;
       viewType = _viewType;
       reKey = widget.reKey;
       
@@ -249,6 +251,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+
+     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    print(MediaQuery.of(context).size.height);
+    
     return Stack(
       children: [
         Column(

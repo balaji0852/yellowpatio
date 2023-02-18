@@ -54,6 +54,10 @@ class CommentSection extends State<CommentSectionPage> {
   Widget build(BuildContext context) {
         state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+
+     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    print(MediaQuery.of(context).size.height);
+    
     return Scaffold(
       body: Stack(
         children: [
