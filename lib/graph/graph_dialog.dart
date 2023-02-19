@@ -101,7 +101,7 @@ class graphDialogPage extends State<GraphDialog> {
                     ],
                   ),
                   SizedBox(
-                    height: 450,
+                    height: MediaQuery.of(context).size.height*0.7*0.8,
                     child:
 
                         //  ListView(
