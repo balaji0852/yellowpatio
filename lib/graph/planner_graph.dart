@@ -214,7 +214,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
       viewType = _viewType;
       reKey = widget.reKey;
-      
+      openDialog = false;
       dateSetter(false, true);
     }
   }

@@ -217,7 +217,7 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
 
-  //1/28/2023 : Balaji- adding specific reKey(reKey = 1000;) for sale - 20
+  //1/28/2023 : Balaji- adding specific reKey(reKey = n*1000;) for sale - 20
   postComment() async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (commentEditController.text.isNotEmpty) {
