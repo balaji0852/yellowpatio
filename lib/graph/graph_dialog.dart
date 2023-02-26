@@ -64,11 +64,11 @@ class graphDialogPage extends State<GraphDialog> {
         widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
   }
 
+  //balaji: 2/18/2023 adaptable pg dev-bug 3
   @override
   Widget build(BuildContext context) {
 
-        print("^^^^^^^^^^^^^gd^^^^^^^^^^^^^^^^^");
-    print(MediaQuery.of(context).size.height);
+     
 
 
     return StoreConnector<AppStore, bool>(
@@ -82,7 +82,6 @@ class graphDialogPage extends State<GraphDialog> {
                   color: darkMode ? Colors.grey[900] : Colors.white,
                   // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
                   borderRadius: BorderRadius.circular(0)),
-              //balaji: 2/18/2023 adaptable pg dev    
               height: MediaQuery.of(context).size.height*0.7,
               width: MediaQuery.of(context).size.width,
               child: Column(
