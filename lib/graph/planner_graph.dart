@@ -247,6 +247,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
         curve: Curves.linear, duration: const Duration(milliseconds: 100));
   }
 
+
+  //balaji: 2/18/2023 adaptable pg dev-bug 3
   @override
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
@@ -259,7 +261,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
         Column(
           children: [
             Container(
-              //balaji: 2/18/2023 adaptable pg dev    
               height: MediaQuery.of(context).orientation==Orientation.portrait?MediaQuery.of(context).size.height*0.7:MediaQuery.of(context).size.height*0.35,
               color: darkMode ? Colors.black : Colors.white,
               child: ListView(
