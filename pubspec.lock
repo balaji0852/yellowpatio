@@ -279,6 +279,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.2"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.7.2+3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -688,4 +695,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.17.0-0 <3.0.0"
-  flutter: ">=2.8.0"
+  flutter: ">=3.0.0"

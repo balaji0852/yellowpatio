@@ -66,6 +66,11 @@ class graphDialogPage extends State<GraphDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+        print("^^^^^^^^^^^^^gd^^^^^^^^^^^^^^^^^");
+    print(MediaQuery.of(context).size.height);
+
+
     return StoreConnector<AppStore, bool>(
         converter: (store) => store.state.darkMode,
         builder: (context, darkMode) {
@@ -77,7 +82,8 @@ class graphDialogPage extends State<GraphDialog> {
                   color: darkMode ? Colors.grey[900] : Colors.white,
                   // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
                   borderRadius: BorderRadius.circular(0)),
-              height: 575,
+              //balaji: 2/18/2023 adaptable pg dev    
+              height: MediaQuery.of(context).size.height*0.7,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -95,7 +101,7 @@ class graphDialogPage extends State<GraphDialog> {
                     ],
                   ),
                   SizedBox(
-                    height: 450,
+                    height: MediaQuery.of(context).size.height*0.7*0.8,
                     child:
 
                         //  ListView(

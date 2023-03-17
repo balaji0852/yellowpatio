@@ -116,6 +116,8 @@ class ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+ 
+
 
     return Scaffold(
       backgroundColor: darkMode ? Colors.black : Colors.white,

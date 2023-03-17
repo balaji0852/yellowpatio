@@ -201,6 +201,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   //1/28/2023-Balaji : added implementation of reKey-1000, to add initializeDate(1000==widget.reKey?DateTime.now().millisecondsSinceEpoch
   //-------------------for sale - 20
+  //2/18/2023-Balaji : adding    openDialog = false; for sale 21
   @override
   void didUpdateWidget(covariant PlannerGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -212,6 +213,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
       initializeDate(widget.reKey%1000==0?DateTime.now().millisecondsSinceEpoch
       :DateTime.parse(dates!.last).millisecondsSinceEpoch);
 
+      openDialog = false;
       viewType = _viewType;
       reKey = widget.reKey;
       openDialog = false;
@@ -249,12 +251,16 @@ class PlannerGraphPage extends State<PlannerGraph> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+
+   
+
     return Stack(
       children: [
         Column(
           children: [
             Container(
-              height: 575,
+              //balaji: 2/18/2023 adaptable pg dev    
+              height: MediaQuery.of(context).orientation==Orientation.portrait?MediaQuery.of(context).size.height*0.7:MediaQuery.of(context).size.height*0.35,
               color: darkMode ? Colors.black : Colors.white,
               child: ListView(
                 itemExtent: itemSize,
@@ -523,7 +529,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
           ],
         ),
         Positioned(
-            bottom: 550,
+            top: 20,
             child: CircleAvatar(
               radius: 21,
              
@@ -544,7 +550,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
         GestureDetector(
           onTap: () => openDialogCallback(false,[],0),
           child:  Container(
-            height: 670,
+            height: MediaQuery.of(context).size.height*0.8,
             width: MediaQuery.of(context).size.width,
             color: Colors.transparent,
             child: Text(''),

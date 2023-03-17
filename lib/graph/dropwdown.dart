@@ -42,7 +42,7 @@ class DropDown extends StatelessWidget {
         hint: Text(
           dropdownTitle,
           style: TextStyle(
-              color: darkMode?Colors.white:color, fontSize: 13, fontWeight: FontWeight.w500),
+              color: darkMode?Colors.white:Colors.black, fontSize: 13, fontWeight: FontWeight.w500),
         ),
         items: dropdownItems,
         borderRadius: BorderRadius.circular(25),
