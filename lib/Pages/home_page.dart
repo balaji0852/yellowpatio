@@ -321,7 +321,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                                 : Colors
                                                                     .black)),
                                                     onTap: () {
-                                                      deleteClass(e.classMaster);
+                                                      deleteClass(e);
                                                       Navigator.pop(context);
                                                     },
                                                   )),
@@ -446,7 +446,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     }
   }
 
-  void deleteClass(ClassMaster classMasterItem) async {
+  void deleteClass(DataInstanceMasterVO dataInstanceMasterVO) async {
     //need validations
 
     //cloud migration
@@ -455,10 +455,10 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     // final classMaster = database.classMasterDao;
 
     await ClassMasterCloud()
-        .deleteItemById(classMasterItem.itemMasterID!)
+        .deleteItemById(dataInstanceMasterVO.classMaster.itemMasterID!)
         .then((value) {
       setState(() {
-        data.remove(classMasterItem);
+        data.remove(dataInstanceMasterVO);
         reKey++;
       });
       print("delete successfully");
