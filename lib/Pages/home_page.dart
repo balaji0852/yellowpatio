@@ -35,6 +35,8 @@ import '../redux_state_store/appStore.dart';
 class homePage extends StatefulWidget {
   const homePage({Key? key, required this.changePage}) : super(key: key);
 
+  //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
+  //                        bugs-4 and ui enhancement, 
   final void Function(int, ClassMaster, bool) changePage;
 
   HomePageActivity createState() => HomePageActivity();
@@ -291,9 +293,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                                 : Colors.black),
                                                       ),
                                                       onTap: () {
-                                                        widget.changePage(
-                                                            1, e.classMaster, true);
-                                                        Navigator.pop(context);
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>InsightsPage(classMaster: e.classMaster,editable: true)));
                                                       },
                                                     ),
                                                   ),

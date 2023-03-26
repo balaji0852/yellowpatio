@@ -50,6 +50,9 @@ class HomePage extends State<Home> {
   bool darkMode = false;
   var reduxState;
 
+
+  //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
+  //                        bugs-4 and ui enhancement
   void changePageIndex(int index, ClassMaster classMaster, bool editable) {
     //editable true, then set index to 1, and set the InsightsPage
     //editable false, then set index to 0, and set the
@@ -72,6 +75,8 @@ class HomePage extends State<Home> {
     });
   }
 
+  //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
+  //                        bugs-4 and ui enhancement
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -86,18 +91,12 @@ class HomePage extends State<Home> {
     });
   }
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    //getting user profile picture url;
-    //******************************************************* */
-    //speechry method
-    //getNotes();
-    ////////////////////////////////////////////////////////////5
-    ///
-    ///
     print('initState');
     getUser();
   }
@@ -171,32 +170,42 @@ class HomePage extends State<Home> {
             ],
           ),
           body: _widgetOptions.elementAt(_selectedIndex),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: _darkMode ? Colors.black : Colors.white,
-            unselectedLabelStyle:
-                TextStyle(color: _darkMode ? Colors.white : Colors.black),
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: _darkMode ? Colors.white : Colors.black,
-                ),
-                label: 'home',
+
+          //Balaji : 26/03/2023 - removing bottomNavigationBar 
+          // bottomNavigationBar: BottomNavigationBar(
+          //   backgroundColor: _darkMode ? Colors.black : Colors.white,
+          //   unselectedLabelStyle:
+          //       TextStyle(color: _darkMode ? Colors.white : Colors.black),
+          //   items: <BottomNavigationBarItem>[
+          //     BottomNavigationBarItem(
+          //       icon: Icon(
+          //         Icons.home,
+          //         color: _darkMode ? Colors.white : Colors.black,
+          //       ),
+          //       label: 'home',
+          //     ),
+          //     BottomNavigationBarItem(
+          //       icon: Icon(
+          //         Icons.insights,
+          //         color: _darkMode ? Colors.white : Colors.black,
+          //       ),
+          //       label: 'add',
+          //     ),
+          //   ],
+          //   currentIndex: _selectedIndex,
+          //   selectedItemColor: _darkMode ? Colors.white : Colors.black,
+          //   onTap: (index) {
+          //     _onItemTapped(index);
+          //   },
+          // ),
+          //Balaji : 26/03/2023 - removing bottomNavigationBar 
+
+           floatingActionButton: FloatingActionButton(
+                child: const Icon(Icons.add,color: Colors.white,),
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>InsightsPage(editable: false)));
+                },
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.insights,
-                  color: _darkMode ? Colors.white : Colors.black,
-                ),
-                label: 'add',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: _darkMode ? Colors.white : Colors.black,
-            onTap: (index) {
-              _onItemTapped(index);
-            },
-          ),
         );
       },
     );
