@@ -28,7 +28,7 @@ class CommentSectionPage extends StatefulWidget {
 }
 
 class CommentSection extends State<CommentSectionPage> {
-  double heightManagement = 100;
+  double heightManagement = 60;
   int maxLinesManagement = 1;
   String? comment;
   TextEditingController commentEditController = TextEditingController();
@@ -203,12 +203,16 @@ class CommentSection extends State<CommentSectionPage> {
           maxLinesManagement++;
         }
       } else {
-        print('dec');
+        print("--=${value.length%45}");
 
-        if ((value.length <= 45 || value.length < (lineCounter - 1) * 45) &&
-            heightManagement > 100) {
+        if ((value.length >= 45 || value.length%45==0) &&
+            heightManagement > 60) {
+               print('dec1');
           lineCounter--;
           heightManagement = heightManagement - 10;
+          if(value.isEmpty){
+            heightManagement = 60;
+          }
           if (maxLinesManagement != 1) {
             maxLinesManagement--;
           }
