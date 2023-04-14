@@ -116,8 +116,6 @@ class ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
- 
-
 
     return Scaffold(
       backgroundColor: darkMode ? Colors.black : Colors.white,
@@ -171,8 +169,9 @@ class ProjectPageState extends State<ProjectPage> {
                     IconButton(
                         onPressed: () {
                           setState(() {
-                            //balaji : 1/16/2023 : bug 7, fix in ,below line 
-                            isCreateProject = servicePlans.isEmpty ? false : true;
+                            //balaji : 1/16/2023 : bug 7, fix in ,below line
+                            isCreateProject =
+                                servicePlans.isEmpty ? false : true;
                           });
                         },
                         icon: Icon(
@@ -267,18 +266,19 @@ class ProjectPageState extends State<ProjectPage> {
                               color: darkMode ? Colors.white : Colors.black)),
                     ),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: Text(
-                            'Server region  ',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: darkMode ? Colors.white : Colors.black),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            child: Text(
+                              'Server region  ',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            ),
                           ),
-                        ),
-                        Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               androidDropdown(
@@ -314,22 +314,22 @@ class ProjectPageState extends State<ProjectPage> {
                                   //     .regionStore
                                   //     .regionName
                                   servicePlanStore.regionStore.regionName),
-                              if (servicePlanStore
-                                      .regionStore.regionDescription !=
-                                  null)
-                                Text(
-                                    "Note \n" +
-                                        servicePlanStore
-                                            .regionStore.regionDescription!,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: darkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w500))
-                            ])
-                      ],
-                    ),
+                            ],
+                          ),
+                        ]),
+                    if (servicePlanStore.regionStore.regionDescription != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          "Note \n" +
+                              servicePlanStore.regionStore.regionDescription!,
+                          maxLines: 15,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: darkMode ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -361,20 +361,20 @@ class ProjectPageState extends State<ProjectPage> {
                                         })
                                       },
                                   servicePlanStore.serviceName),
-                              if (servicePlanStore.serviceDescription != null)
-                                Text(
-                                  "Note \n" +
-                                      servicePlanStore.serviceDescription!,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: darkMode
-                                          ? Colors.white
-                                          : Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                )
                             ],
                           )
                         ]),
+                    if (servicePlanStore.serviceDescription != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          "Note \n" + servicePlanStore.serviceDescription!,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: darkMode ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -382,7 +382,7 @@ class ProjectPageState extends State<ProjectPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          color: darkMode?Colors.white:Colors.black,
+                            color: darkMode ? Colors.white : Colors.black,
                             onPressed: () {
                               setState(() {
                                 isCreateProject = false;
@@ -431,7 +431,7 @@ class ProjectPageState extends State<ProjectPage> {
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
-                          color:  darkMode ? Colors.white : Colors.black),
+                          color: darkMode ? Colors.white : Colors.black),
                     ),
                     AllProjectPage(loaded: loaded)
                   ]),
@@ -449,7 +449,9 @@ class ProjectPageState extends State<ProjectPage> {
     // final database =
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final projectStoreDao = database.projectStoreDao;
-    projectStoreCloud().postProjectStore(projectStore, projectStore.userStoreID).then((value) {
+    projectStoreCloud()
+        .postProjectStore(projectStore, projectStore.userStoreID)
+        .then((value) {
       print(value);
       setState(() {
         loaded = loaded;

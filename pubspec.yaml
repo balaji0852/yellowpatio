@@ -48,6 +48,7 @@ dependencies:
   flutter_switch: ^0.3.2
   collection: any
   flutter_fgbg: ^0.2.2
+  flutter_inappwebview: ^5.7.2+3
   
   # flutter_guid: ^0.2.0
 

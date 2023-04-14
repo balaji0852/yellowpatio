@@ -64,6 +64,12 @@ class graphDialogPage extends State<GraphDialog> {
         widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
   }
 
+  @override
+  void didUpdateWidget(covariant GraphDialog oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+  }
+
   //balaji: 2/18/2023 adaptable pg dev-bug 3
   @override
   Widget build(BuildContext context) {
@@ -143,6 +149,8 @@ class graphDialogPage extends State<GraphDialog> {
                                             classDataInstanceMaterDuplicate:
                                                 currentViewDataInstance,
                                             callBack: (selected) {
+                                             
+                                                updateStatusToUI(selected);
                                               // setState(() {
                                               //   selectedDataInstance =
                                               //       classDataInstanceMaterDuplicateClone;
@@ -330,5 +338,26 @@ class graphDialogPage extends State<GraphDialog> {
     });
 
     return classDataInstanceMaterDuplicateClone;
+  }
+
+
+
+  updateStatusToUI(int status){
+     var localCurrentViewDataInstance =
+        widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
+     ClassDataInstanceMaterDuplicate temp = 
+     ClassDataInstanceMaterDuplicate(itemMasterID:localCurrentViewDataInstance.itemMasterID, 
+     dataInstances: localCurrentViewDataInstance.dataInstances, 
+     instancesTime: localCurrentViewDataInstance.instancesTime, 
+     itemClassColorID: localCurrentViewDataInstance.itemClassColorID, 
+     dataInstanceID: localCurrentViewDataInstance.dataInstanceID,
+     itemName: localCurrentViewDataInstance.itemName,
+     description: localCurrentViewDataInstance.description,
+     instancesStatus: status, 
+     userStore: localCurrentViewDataInstance.userStore);
+     
+     widget.hourlyDataInstance.replaceRange(currentViewDataInstanceIndex,currentViewDataInstanceIndex+1,[temp]);
+     
+     
   }
 }

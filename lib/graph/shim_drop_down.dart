@@ -10,7 +10,7 @@ import '../redux_state_store/appStore.dart';
 
 class ShimDropDown extends StatefulWidget {
   final List<String> viewCategory;
-  final Function(String?)? callBack;
+  final Function(int)? callBack;
   final String dropdownTitle;
   final ClassDataInstanceMaterDuplicate classDataInstanceMaterDuplicate;
   final bool darkMode;
@@ -79,6 +79,8 @@ class ShimDropDownWidget extends State<ShimDropDown> {
         .putDataInstanceMaster(dataInstancesMaster)
         .then((value) {
       if (value == 200 && mounted) {
+        //22/03/2023 : balaji -  bug 24, using exisitng callback to update the parent with status change
+        widget.callBack!(viewCategory.indexOf(selectedCategory) + 1);
         setState(() {
           shimDropDownTitle = selectedCategory;
         });

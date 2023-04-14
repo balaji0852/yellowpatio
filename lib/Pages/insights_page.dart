@@ -15,6 +15,7 @@ import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:yellowpatioapp/home.dart';
 
 import '../redux_state_store/appStore.dart';
 
@@ -156,6 +157,26 @@ class Insights extends State<InsightsPage> {
         converter: (store) => store.state.darkMode,
         builder: (context, _darkMode) {
           return Scaffold(
+            appBar: AppBar(
+              backgroundColor: _darkMode ? Colors.black : Colors.white,
+              leading: BackButton(
+                color: _darkMode ? Colors.white : Colors.black,
+                onPressed: (() {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                }),
+              ),
+              title: Text(
+                'new space',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: _darkMode ? Colors.white : Colors.black),
+              ),
+            ),
             backgroundColor: _darkMode ? Colors.black : Colors.white,
             body: SingleChildScrollView(
               child: Padding(
@@ -218,7 +239,9 @@ class Insights extends State<InsightsPage> {
                       height: 50,
                       child: colorPicker(),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       children: [
                         FlutterSwitch(
@@ -227,7 +250,8 @@ class Insights extends State<InsightsPage> {
                             height: 27,
                             showOnOff: true,
                             valueFontSize: 9,
-                            activeColor:colorStore.getColorByName(selectedColor),
+                            activeColor:
+                                colorStore.getColorByName(selectedColor),
                             value: isCFMW,
                             onToggle: (cfmw_Value) => {
                                   setState(() {
@@ -338,7 +362,12 @@ class Insights extends State<InsightsPage> {
         carryForwardMyWork: isCFMW,
         isItemCommentable: 1,
         createdDate: DateTime.now().millisecondsSinceEpoch,
-        userStore: UserStore(userStoreID: userStoreID,linkedEmail: "dummy",linkedPhone: "dummy",userName: "dummy",photoURL:"dummy" ),
+        userStore: UserStore(
+            userStoreID: userStoreID,
+            linkedEmail: "dummy",
+            linkedPhone: "dummy",
+            userName: "dummy",
+            photoURL: "dummy"),
         description: descriptionController.text,
         projectStoreID: projectStoreID);
 
@@ -356,6 +385,9 @@ class Insights extends State<InsightsPage> {
           selectedCategory = 'default';
           selectedSubCategory = 'default';
           selectedColor = 'red';
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home()));
         });
       }
     }).onError((error, stackTrace) {
@@ -464,7 +496,12 @@ class Insights extends State<InsightsPage> {
           selectedSubCategory = 'default';
           selectedColor = 'red';
           updateButtonName = 'add';
-          widget.changePage!(0, widget.classMaster!, false);
+          //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
+          //                        bugs-4 and ui enhancement
+          //                        widget.changePage!(0, widget.classMaster!, false);
+          Navigator.pop(context);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Home()));
         });
       }
     }).onError((error, stackTrace) {

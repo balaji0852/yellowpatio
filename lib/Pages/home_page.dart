@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -13,10 +14,13 @@ import 'package:yellowpatioapp/Pages/comment_section_page.dart';
 import 'package:yellowpatioapp/Pages/insights_page.dart';
 import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
 import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
+import 'package:yellowpatioapp/cloud/directoryController.dart';
 import 'package:yellowpatioapp/db/database.dart';
+import 'package:yellowpatioapp/db/entity/VO/DataInstanceMasterVO.dart';
 import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:yellowpatioapp/db/entity/pinnedClass.dart';
 import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/db/repository/data_instance_master_dao.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
@@ -31,6 +35,8 @@ import '../redux_state_store/appStore.dart';
 class homePage extends StatefulWidget {
   const homePage({Key? key, required this.changePage}) : super(key: key);
 
+  //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
+  //                        bugs-4 and ui enhancement, 
   final void Function(int, ClassMaster, bool) changePage;
 
   HomePageActivity createState() => HomePageActivity();
@@ -45,7 +51,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
   var lastCommentsMap = {};
 
   static const text = "your tasks";
-  late List<ClassMaster> data = [];
+  late List<DataInstanceMasterVO> data = [];
   ColorStore colorStore = ColorStore();
   //singleTon
   static late var database;
@@ -110,19 +116,19 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
         "***************************************************************************");
     var state = StoreProvider.of<AppStore>(context);
     int projectStoreID = state.state.projectStoreID;
-
+    int userStoreID = state.state.userStoreID;
     //cloud migration
     //List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
-    List<ClassMaster> dataCopy =
-        await ClassMasterCloud().findItemById(projectStoreID);
+    List<DataInstanceMasterVO> dataCopy =
+        await ClassMasterCloud().getAllByProjectStoreID(projectStoreID,userStoreID);
     //dataInstanceMaster = database.dataInstanceMasterDao;
-    dataCopy.forEach((classMaster) async {
-      lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
-      // Future.delayed(Duration(microseconds: 10000000),
-      //     (() async =>
-      await findLastComment(classMaster.itemMasterID!);
-      // ));
-    });
+    // dataCopy.forEach((classMaster) async {
+    //   lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
+    //   // Future.delayed(Duration(microseconds: 10000000),
+    //   //     (() async =>
+    //   await findLastComment(classMaster.itemMasterID!);
+    //   // ));
+    // });
     // TODO done- FOR MIGRATION
     //List<DataInstancesMaster> datas = await database.dataInstanceMasterDao.findAllDataInstance();
     //datas.forEach((DataInstancesMaster) async{
@@ -241,7 +247,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                         vertical: 10, horizontal: 7),
                                     decoration: BoxDecoration(
                                         color: colorStore
-                                            .getColorByID(e.itemClassColorID),
+                                            .getColorByID(e.classMaster.itemClassColorID),
                                         borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(25),
                                             topRight: Radius.circular(25))),
@@ -256,7 +262,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                             //adding text inside expanded makes the text to spread out, otherwise it will overflow
                                             Expanded(
                                               child: Text(
-                                                e.itemName,
+                                                e.classMaster.itemName,
                                                 maxLines: 2,
                                                 style: const TextStyle(
                                                     overflow:
@@ -287,9 +293,22 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                                 : Colors.black),
                                                       ),
                                                       onTap: () {
-                                                        widget.changePage(
-                                                            1, e, true);
-                                                        Navigator.pop(context);
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>InsightsPage(classMaster: e.classMaster,editable: true)));
+                                                      },
+                                                    ),
+                                                  ),
+                                                   PopupMenuItem(
+                                                    child: ListTile(
+                                                      title: Text(
+                                                        e.pinnedForCurrentUser?'unpin':'pin',
+                                                        style: TextStyle(
+                                                            color: _darkMode
+                                                                ? Colors.white
+                                                                : Colors.black),
+                                                      ),
+                                                      onTap: () {
+                                                        handlePin(e,!e.pinnedForCurrentUser );
+                                                          Navigator.pop(context);
                                                       },
                                                     ),
                                                   ),
@@ -314,7 +333,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                         const SizedBox(
                                           height: 10,
                                         ),
-                                        Text(e.description,
+                                        Text(e.classMaster.description,
                                             style: const TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.bold),
@@ -331,7 +350,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                             padding: const EdgeInsets.all(2),
                                             child: GestureDetector(
                                               onTap: () {
-                                                commentButton(e);
+                                                commentButton(e.classMaster);
                                                 services.isUIMounted = false;
                                               },
                                               child: Container(
@@ -345,8 +364,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                 padding:
                                                     const EdgeInsets.all(3),
                                                 child: Text(
-                                                  lastCommentsMap[
-                                                      e.itemMasterID],
+                                                  e.classDataInstanceMaterDuplicate.dataInstances,
                                                   maxLines: 6,
                                                   style: TextStyle(
                                                       overflow:
@@ -418,7 +436,17 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     );
   }
 
-  void deleteClass(ClassMaster classMasterItem) async {
+
+  handlePin(DataInstanceMasterVO dataInstanceMasterVO,bool isPinned) async{
+     var state = StoreProvider.of<AppStore>(context);
+    int userStoreID = state.state.userStoreID;
+    pinnedClass pin = pinnedClass(isPinned: isPinned, folderID: 2, userStoreID: userStoreID, classMaster: dataInstanceMasterVO.classMaster,pinID: 999);
+    if(await directoryController(). putPinClassMaster(pin)==200){
+       getNotes();
+    }
+  }
+
+  void deleteClass(DataInstanceMasterVO dataInstanceMasterVO) async {
     //need validations
 
     //cloud migration
@@ -427,10 +455,10 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     // final classMaster = database.classMasterDao;
 
     await ClassMasterCloud()
-        .deleteItemById(classMasterItem.itemMasterID!)
+        .deleteItemById(dataInstanceMasterVO.classMaster.itemMasterID!)
         .then((value) {
       setState(() {
-        data.remove(classMasterItem);
+        data.remove(dataInstanceMasterVO);
         reKey++;
       });
       print("delete successfully");

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/projectPage.dart';
 import 'package:yellowpatioapp/Pages/project_setting.dart';
+import 'package:yellowpatioapp/Pages_SR/projectManagement_page.dart';
 import 'package:yellowpatioapp/db/entity/project_setting.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
@@ -152,6 +153,28 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   },
                   child: Text(
                     "Projects Management",
+                    style: TextStyle(
+                        color: darkMode ? Colors.white : Colors.black),
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                MaterialButton(
+                  key: UniqueKey(),
+                  height: 50,
+                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProjectManagement()),
+                    );
+                  },
+                  child: Text(
+                    "Projects Management-server",
                     style: TextStyle(
                         color: darkMode ? Colors.white : Colors.black),
                   ),
