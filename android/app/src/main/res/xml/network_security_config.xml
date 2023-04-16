@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">34.93.95.144</domain>
+        <domain includeSubdomains="true">35.200.133.236</domain>
+        <domain includeSubdomains="true">edmsadmin.azurewebsites.net</domain>
+        <domain includeSubdomains="true">wark.fun</domain>
+
+    </domain-config>
+    <!-- <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
-    </base-config>
+    </base-config> -->
 </network-security-config>

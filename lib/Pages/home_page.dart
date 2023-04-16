@@ -36,7 +36,7 @@ class homePage extends StatefulWidget {
   const homePage({Key? key, required this.changePage}) : super(key: key);
 
   //Balaji : 26/03/2023 - removing bottomNavigationBar, this method is abandoned for
-  //                        bugs-4 and ui enhancement, 
+  //                        bugs-4 and ui enhancement,
   final void Function(int, ClassMaster, bool) changePage;
 
   HomePageActivity createState() => HomePageActivity();
@@ -119,8 +119,8 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     int userStoreID = state.state.userStoreID;
     //cloud migration
     //List<ClassMaster> dataCopy = await database.classMasterDao.findItemById(projectStoreID);
-    List<DataInstanceMasterVO> dataCopy =
-        await ClassMasterCloud().getAllByProjectStoreID(projectStoreID,userStoreID);
+    List<DataInstanceMasterVO> dataCopy = await ClassMasterCloud()
+        .getAllByProjectStoreID(projectStoreID, userStoreID);
     //dataInstanceMaster = database.dataInstanceMasterDao;
     // dataCopy.forEach((classMaster) async {
     //   lastCommentsMap.putIfAbsent(classMaster.itemMasterID, () => 'loading...');
@@ -177,9 +177,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-
     reKey++;
-
 
     return FGBGNotifier(
       onEvent: (event) {
@@ -241,149 +239,182 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                               (e) {
                                 // findLastComment(e.itemMasterID!);
                                 // DataInstancesMaster comment = findLastComment(e.itemMasterID!);
-                                return SizedBox(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10, horizontal: 7),
-                                    decoration: BoxDecoration(
-                                        color: colorStore
-                                            .getColorByID(e.classMaster.itemClassColorID),
-                                        borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(25),
-                                            topRight: Radius.circular(25))),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            //adding text inside expanded makes the text to spread out, otherwise it will overflow
-                                            Expanded(
-                                              child: Text(
-                                                e.classMaster.itemName,
-                                                maxLines: 2,
-                                                style: const TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    fontSize: 30,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 28,
-                                              child: PopupMenuButton(
-                                                color: _darkMode
-                                                    ? Colors.grey[900]
-                                                    : Colors.white,
-                                                icon:
-                                                    const Icon(Icons.more_vert),
-                                                itemBuilder:
-                                                    (BuildContext context) =>
-                                                        <PopupMenuEntry>[
-                                                  PopupMenuItem(
-                                                    child: ListTile(
-                                                      title: Text(
-                                                        'edit',
-                                                        style: TextStyle(
-                                                            color: _darkMode
-                                                                ? Colors.white
-                                                                : Colors.black),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>InsightsPage(classMaster: e.classMaster,editable: true)));
-                                                      },
-                                                    ),
-                                                  ),
-                                                   PopupMenuItem(
-                                                    child: ListTile(
-                                                      title: Text(
-                                                        e.pinnedForCurrentUser?'unpin':'pin',
-                                                        style: TextStyle(
-                                                            color: _darkMode
-                                                                ? Colors.white
-                                                                : Colors.black),
-                                                      ),
-                                                      onTap: () {
-                                                        handlePin(e,!e.pinnedForCurrentUser );
-                                                          Navigator.pop(context);
-                                                      },
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem(
-                                                      child: ListTile(
-                                                    title: Text('delete',
-                                                        style: TextStyle(
-                                                            color: _darkMode
-                                                                ? Colors.white
-                                                                : Colors
-                                                                    .black)),
-                                                    onTap: () {
-                                                      deleteClass(e);
-                                                      Navigator.pop(context);
-                                                    },
-                                                  )),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(e.classMaster.description,
-                                            style: const TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold),
-                                            softWrap: false,
-                                            maxLines: 3,
-                                            overflow:
-                                                TextOverflow.ellipsis // new
-                                            ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                commentButton(e.classMaster);
-                                                services.isUIMounted = false;
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: _darkMode
-                                                        ? Colors.grey[850]
-                                                        : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5)),
-                                                padding:
-                                                    const EdgeInsets.all(3),
+                                return Stack(children: [
+                                  SizedBox(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 7),
+                                      decoration: BoxDecoration(
+                                          color: colorStore.getColorByID(
+                                              e.classMaster.itemClassColorID),
+                                          borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(25),
+                                              topRight: Radius.circular(25))),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              //adding text inside expanded makes the text to spread out, otherwise it will overflow
+                                              Expanded(
                                                 child: Text(
-                                                  e.classDataInstanceMaterDuplicate.dataInstances,
-                                                  maxLines: 6,
-                                                  style: TextStyle(
+                                                  e.classMaster.itemName,
+                                                  maxLines: 2,
+                                                  style: const TextStyle(
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      fontSize: 10,
-                                                      color: _darkMode
-                                                          ? Colors.white
-                                                          : Colors.black,
+                                                      fontSize: 30,
                                                       fontWeight:
-                                                          FontWeight.w600),
+                                                          FontWeight.w400),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 28,
+                                                child: PopupMenuButton(
+                                                  color: _darkMode
+                                                      ? Colors.grey[900]
+                                                      : Colors.white,
+                                                  icon: const Icon(
+                                                      Icons.more_vert),
+                                                  itemBuilder:
+                                                      (BuildContext context) =>
+                                                          <PopupMenuEntry>[
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                        title: Text(
+                                                          'edit',
+                                                          style: TextStyle(
+                                                              color: _darkMode
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => InsightsPage(
+                                                                      classMaster: e
+                                                                          .classMaster,
+                                                                      editable:
+                                                                          true)));
+                                                        },
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                      child: ListTile(
+                                                        title: Text(
+                                                          e.pinnedForCurrentUser
+                                                              ? 'unpin'
+                                                              : 'pin',
+                                                          style: TextStyle(
+                                                              color: _darkMode
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black),
+                                                        ),
+                                                        onTap: () {
+                                                          handlePin(e,
+                                                              !e.pinnedForCurrentUser);
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                    PopupMenuItem(
+                                                        child: ListTile(
+                                                      title: Text('delete',
+                                                          style: TextStyle(
+                                                              color: _darkMode
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black)),
+                                                      onTap: () {
+                                                        deleteClass(e);
+                                                        Navigator.pop(context);
+                                                      },
+                                                    )),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(e.classMaster.description,
+                                              style: const TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold),
+                                              softWrap: false,
+                                              maxLines: 3,
+                                              overflow:
+                                                  TextOverflow.ellipsis // new
+                                              ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(1),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  commentButton(e.classMaster);
+                                                  services.isUIMounted = false;
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: _darkMode
+                                                          ? Colors.grey[850]
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  child: Text(
+                                                    e.classDataInstanceMaterDuplicate
+                                                        .dataInstances,
+                                                    maxLines: 6,
+                                                    style: TextStyle(
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        fontSize: 10,
+                                                        color: _darkMode
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                );
+                                  if (e.classDataInstanceMaterDuplicate
+                                      .userStore.photoURL.isNotEmpty)
+                                    Positioned(
+                                        bottom: 0,
+                                        right: 0.5,
+                                        child: CircleAvatar(
+                                          radius: 10.5,
+                                          backgroundColor: Colors.white,
+                                          child: CircleAvatar(
+                                            radius: 9,
+                                            backgroundImage: NetworkImage(e
+                                                .classDataInstanceMaterDuplicate
+                                                .userStore
+                                                .photoURL),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        )),
+                                ]);
                               },
                             ).toList(),
                           ))
@@ -436,13 +467,17 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
     );
   }
 
-
-  handlePin(DataInstanceMasterVO dataInstanceMasterVO,bool isPinned) async{
-     var state = StoreProvider.of<AppStore>(context);
+  handlePin(DataInstanceMasterVO dataInstanceMasterVO, bool isPinned) async {
+    var state = StoreProvider.of<AppStore>(context);
     int userStoreID = state.state.userStoreID;
-    pinnedClass pin = pinnedClass(isPinned: isPinned, folderID: 2, userStoreID: userStoreID, classMaster: dataInstanceMasterVO.classMaster,pinID: 999);
-    if(await directoryController(). putPinClassMaster(pin)==200){
-       getNotes();
+    pinnedClass pin = pinnedClass(
+        isPinned: isPinned,
+        folderID: 2,
+        userStoreID: userStoreID,
+        classMaster: dataInstanceMasterVO.classMaster,
+        pinID: 999);
+    if (await directoryController().putPinClassMaster(pin) == 200) {
+      getNotes();
     }
   }
 

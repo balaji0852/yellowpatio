@@ -74,7 +74,7 @@ class Insights extends State<InsightsPage> {
   TextEditingController classTitleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   CategoryStore categorystore = CategoryStore();
-  String updateButtonName = "add";
+  String updateButtonName = "add space";
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   var state;
@@ -120,7 +120,7 @@ class Insights extends State<InsightsPage> {
     );
   }
 
-  ListView colorPicker() {
+  ListView colorPicker(bool mode) {
     return ListView(
       scrollDirection: Axis.horizontal,
       children: colorsList
@@ -138,8 +138,8 @@ class Insights extends State<InsightsPage> {
                   style: TextStyle(color: Colors.transparent),
                 ),
                 shape: ele.colorName == selectedColor
-                    ? const StadiumBorder(
-                        side: BorderSide(width: 3, color: Colors.black))
+                    ? StadiumBorder(
+                        side: BorderSide(width: 3, color:mode?Colors.white: Colors.black))
                     : const StadiumBorder(),
                 backgroundColor: ele.color,
                 selected: false,
@@ -189,55 +189,57 @@ class Insights extends State<InsightsPage> {
                   //height is the key : if height is present container fills to body parent width..
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(
+                     Container(
+                      height: 55,
                       decoration: BoxDecoration(
-                          color: Colors.lightBlueAccent,
-                          borderRadius: BorderRadius.circular(25)),
-                      // width: MediaQuery.of(context).size.width-20,
-                      height: 100,
-                      child: Align(
-                        child: TextField(
-                          controller: classTitleController,
-                          onChanged: (value) {
-                            setState(() {
-                              classTitle = value;
-                            });
-                          },
-                          maxLength: 15,
-                          decoration: const InputDecoration(
-                              counterText: ' ',
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 7, horizontal: 7),
-                              border: InputBorder.none),
-                          style: const TextStyle(fontSize: 47),
-                        ),
+                          color: _darkMode ? Colors.grey[900] : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              width: 1,
+                              color: _darkMode ? Colors.white : Colors.black)),
+                      child: TextField(
+                        controller: classTitleController,
+                        maxLength: 15,
+                        onChanged: (value) {},
+                        decoration: InputDecoration(
+                            counterText: ' ',
+                            hintText: "space title",
+                            hintStyle: TextStyle(
+                                color: _darkMode ? Colors.white : Colors.black),
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                            border: InputBorder.none),
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: _darkMode ? Colors.white : Colors.black),
                       ),
                     ),
+                    
                     const SizedBox(
                       height: 10,
                     ),
-                    androidDropdown(categorystore.getCategoryList, (value) {
-                      setState(() {
-                        selectedCategory = value!;
-                        categorystore.setSubCategoryList = selectedCategory;
-                        selectedSubCategory =
-                            categorystore.getSubCategoryList.elementAt(0);
-                      });
-                    }, selectedCategory),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    androidDropdown(categorystore.getSubCategoryList, (value) {
-                      setState(() {
-                        selectedSubCategory = value!;
-                      });
-                    }, selectedSubCategory),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    // androidDropdown(categorystore.getCategoryList, (value) {
+                    //   setState(() {
+                    //     selectedCategory = value!;
+                    //     categorystore.setSubCategoryList = selectedCategory;
+                    //     selectedSubCategory =
+                    //         categorystore.getSubCategoryList.elementAt(0);
+                    //   });
+                    // }, selectedCategory),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    // androidDropdown(categorystore.getSubCategoryList, (value) {
+                    //   setState(() {
+                    //     selectedSubCategory = value!;
+                    //   });
+                    // }, selectedSubCategory),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
                     SizedBox(
                       height: 50,
-                      child: colorPicker(),
+                      child: colorPicker(_darkMode),
                     ),
                     const SizedBox(
                       height: 10,
@@ -275,27 +277,31 @@ class Insights extends State<InsightsPage> {
                       height: 15,
                     ),
                     Container(
-                      decoration: BoxDecoration(
-                          color: Colors.lightBlueAccent,
-                          borderRadius: BorderRadius.circular(25)),
-                      // width: MediaQuery.of(context).size.width-20,
                       height: 150,
+                      decoration: BoxDecoration(
+                          color: _darkMode ? Colors.grey[900] : Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                              color: _darkMode ? Colors.white : Colors.black,
+                              width: 1)),
                       child: TextField(
-                        maxLength: 255,
-                        maxLines: 9,
-                        onChanged: (value) {
-                          setState(() {
-                            descriptionString = value;
-                          });
-                        },
-                        controller: descriptionController,
-                        decoration: const InputDecoration(
-                            counterText: ' ',
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 9, horizontal: 9),
-                            border: InputBorder.none),
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                          controller: descriptionController,
+                          maxLength: 255,
+                          maxLines: 7,
+                          onChanged: (value) {},
+                          decoration: InputDecoration(
+                              counterText: ' ',
+                              fillColor: Colors.green,
+                              hintStyle: TextStyle(
+                                  color:
+                                      _darkMode ? Colors.white : Colors.black),
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(4, 10, 0, 0),
+                              hintText: "description",
+                              border: InputBorder.none),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: _darkMode ? Colors.white : Colors.black)),
                     ),
                     const SizedBox(
                       height: 50,
@@ -316,11 +322,11 @@ class Insights extends State<InsightsPage> {
                       },
                       height: 45,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(2)),
                       color: Colors.lightBlueAccent,
                       child: Text(
                         updateButtonName,
-                        style: const TextStyle(fontSize: 19),
+                        style: const TextStyle(fontSize: 15),
                       ),
                     ),
                   ],

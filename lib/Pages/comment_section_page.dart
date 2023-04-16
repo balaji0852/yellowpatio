@@ -40,6 +40,7 @@ class CommentSection extends State<CommentSectionPage> {
   bool callingServer = false;
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
+  bool showDescription = false;
   var state;
   int lineCounter = 1;
   int reKey = 1;
@@ -52,11 +53,23 @@ class CommentSection extends State<CommentSectionPage> {
 
   @override
   Widget build(BuildContext context) {
-        state = StoreProvider.of<AppStore>(context);
+    state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: !darkMode ? Colors.white : Colors.black,
+        centerTitle: true,
+        leading: BackButton(
+          color: darkMode ? Colors.white : Colors.black,
+          onPressed: backButton,
+        ),
+        title: Text(
+          widget.classMaster!.itemName,
+          style: TextStyle(
+              fontSize: 30, color: darkMode ? Colors.white : Colors.black),
+        ),
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -64,33 +77,73 @@ class CommentSection extends State<CommentSectionPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height - heightManagement,
-                  color: darkMode?Colors.black:Colors.white,
+                  height: (MediaQuery.of(context).size.height - 100) -
+                      heightManagement,
+                  color: darkMode ? Colors.black : Colors.white,
                   child: ListView(
                     controller: mainWidgetScrollController,
                     children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          widget.classMaster!.itemName,
-                          style:  TextStyle(
-                            fontSize: 30,
-                            color: darkMode?Colors.white:Colors.black
-                          ),
-                        ),
-                      ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   child: Text(
+                      //     widget.classMaster!.itemName,
+                      //     style:  TextStyle(
+                      //       fontSize: 30,
+                      //       color: darkMode?Colors.white:Colors.black
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        child: Text(
-                          widget.classMaster!.description,
-                          style: TextStyle(
-                              fontSize: 14, color: darkMode?Colors.white:Colors.black ,fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (showDescription)
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        widget.classMaster!.description,
+                                        maxLines: 5,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: darkMode
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showDescription = !showDescription;
+                                  });
+                                },
+                                child: SizedBox(
+                                  width: 40,
+                                  height: 20,
+                                  child: Text(
+                                    !showDescription ? "<" : "v",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: darkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
                       PlannerGraph(
                         MainWidgetScrollView: mainWidgetScrollController,
                         key: _key,
@@ -103,18 +156,19 @@ class CommentSection extends State<CommentSectionPage> {
                       ),
 
                       Text(
-                        " created by "+widget.classMaster!.userStore.userName,
-                        style:  TextStyle(
-                          fontSize: 14,
-                           color: darkMode?Colors.white:Colors.black
-                        ),
-                      ),
-                       Text(
-                        " created on "+ DateTime.fromMillisecondsSinceEpoch(widget.classMaster!.createdDate).toString(),
+                        " created by " + widget.classMaster!.userStore.userName,
                         style: TextStyle(
-                          fontSize: 14,
-                           color: darkMode?Colors.white:Colors.black
-                        ),
+                            fontSize: 14,
+                            color: darkMode ? Colors.white : Colors.black),
+                      ),
+                      Text(
+                        " created on " +
+                            DateTime.fromMillisecondsSinceEpoch(
+                                    widget.classMaster!.createdDate)
+                                .toString(),
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: darkMode ? Colors.white : Colors.black),
                       ),
                       // Column(children: )
                     ],
@@ -122,7 +176,7 @@ class CommentSection extends State<CommentSectionPage> {
                 ),
                 Container(
                   height: heightManagement,
-                  color: darkMode?Colors.grey[900]:Colors.grey,
+                  color: darkMode ? Colors.grey[900] : Colors.grey,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -134,14 +188,12 @@ class CommentSection extends State<CommentSectionPage> {
                             hintText: "comment",
                             hintStyle: TextStyle(
                                 color: darkMode ? Colors.white : Colors.black),
-                           
-                            ),
+                          ),
                           controller: commentEditController,
                           maxLines: maxLinesManagement,
                           onChanged: textFieldheighManager,
                           style: TextStyle(
-                            color: darkMode?Colors.white:Colors.black
-                          ),
+                              color: darkMode ? Colors.white : Colors.black),
                         ),
                       ),
                       const Spacer(
@@ -166,23 +218,22 @@ class CommentSection extends State<CommentSectionPage> {
             ),
             // ]),
           ),
-          Positioned(
-              height: 125,
-              left: 25,
-              child: CircleAvatar(
-                backgroundColor:  darkMode?Colors.black:Colors.white,
-                child: BackButton(
-                  color:  darkMode?Colors.white:Colors.black,
-                  onPressed: backButton,
-                ),
-              )),
+          // Positioned(
+          //     height: 125,
+          //     left: 25,
+          //     child: CircleAvatar(
+          //       backgroundColor:  darkMode?Colors.black:Colors.white,
+          //       child: BackButton(
+          //         color:  darkMode?Colors.white:Colors.black,
+          //         onPressed: backButton,
+          //       ),
+          //     )),
         ],
       ),
     );
   }
 
   backButton() {
-
     Navigator.pop(context);
     Navigator.push(
       context,
@@ -203,14 +254,14 @@ class CommentSection extends State<CommentSectionPage> {
           maxLinesManagement++;
         }
       } else {
-        print("--=${value.length%45}");
+        print("--=${value.length % 45}");
 
-        if ((value.length >= 45 || value.length%45==0) &&
+        if ((value.length >= 45 || value.length % 45 == 0) &&
             heightManagement > 60) {
-               print('dec1');
+          print('dec1');
           lineCounter--;
           heightManagement = heightManagement - 10;
-          if(value.isEmpty){
+          if (value.isEmpty) {
             heightManagement = 60;
           }
           if (maxLinesManagement != 1) {
@@ -221,7 +272,6 @@ class CommentSection extends State<CommentSectionPage> {
     });
     commentsLengthManager = value.length;
   }
-
 
   //1/28/2023 : Balaji- adding specific reKey(reKey = n*1000;) for sale - 20
   postComment() async {
@@ -236,7 +286,15 @@ class CommentSection extends State<CommentSectionPage> {
           itemMasterID: widget.classMaster!.itemMasterID!,
           dataInstances: commentEditController.text,
           instancesStatus: 2,
-          userStore: UserStore(userStoreID: userStoreID,userName: "",linkedEmail: "",linkedPhone: "",themeID: 1,timeViewPreference: 1,dateViewPreference: 1,photoURL: ""),
+          userStore: UserStore(
+              userStoreID: userStoreID,
+              userName: "",
+              linkedEmail: "",
+              linkedPhone: "",
+              themeID: 1,
+              timeViewPreference: 1,
+              dateViewPreference: 1,
+              photoURL: ""),
           instancesTime: DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
 
@@ -250,7 +308,7 @@ class CommentSection extends State<CommentSectionPage> {
           setState(() {
             heightManagement = 100;
             maxLinesManagement = 1;
-            reKey = reKey*1000;
+            reKey = reKey * 1000;
           });
 
           commentEditController.clear();

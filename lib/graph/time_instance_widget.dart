@@ -68,7 +68,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   int reKey = 0;
   Function eq = const DeepCollectionEquality().equals;
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -144,7 +143,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
         handleService(event);
       },
       child: Container(
-        height: 2642,
+        height: 2640,
         width: (MediaQuery.of(context).size.width - 20) / widget.filter,
         color: darkMode ? Colors.black : Colors.white,
         child: Column(
@@ -153,155 +152,173 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
           // print(element.length > 5);
           // print(element.map((e) => e));
           //element = element.length>=5?element.sublist(0,3):element;
-          return SizedBox(
-            height: 110,
-            child: Flex(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              key: UniqueKey(),
-              direction: Axis.horizontal,
-              children: element
-                  .whereIndexed((index, element) =>
-                      index < ViewChangesHelper().limiter(widget.filter))
-                  .map((e) {
-                int viewSetterValues =
-                    ViewChangesHelper().viewSetterForType(widget.filter);
-                double fontSize = viewSetterValues == 1
-                    ? 9
-                    : viewSetterValues == 2
-                        ? 10
-                        : 11;
-                index++;
-
-                double height =
-                    (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
-                                .minute /
-                            60) *
-                        20;
-
-                if (index == ViewChangesHelper().limiter(widget.filter) ||
-                    ((widget.filter == 3 || widget.filter == 5) &&
-                        index == ViewChangesHelper().limiter(widget.filter))) {
-                  return SizedBox(
-                    width: 8,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "+",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color:
-                                  colorStore.getColorByID(e.itemClassColorID)),
-                        )
-                      ],
-                    ),
-                  );
-                }
-                if (index >
-                    ViewChangesHelper().viewSetterForType(widget.filter)) {
-                  return SizedBox(
-                    width: 3,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: height,
-                        ),
-                        Expanded(
-                          child: Container(
-                            color: e.itemClassColorID == 999
-                                ? colorStore.getColorByID(
-                                    widget.classMaster.itemClassColorID)
-                                : colorStore.getColorByID(e.itemClassColorID),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }
-                return Flexible(
+          return Column(
+            children: [
+              SizedBox(
+                  height: 0.1,
+                  width: MediaQuery.of(context).size.width - 20,
+                  child: Container(
+                    color: darkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+              SizedBox(
+                height: 109,
+                child: Flex(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   key: UniqueKey(),
-                  child: GestureDetector(
-                    onTap: () {
-                      widget.openCallback(true, element, element.indexOf(e));
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // SizedBox(
-                        //   height: height,
-                        // ),
-                        const SizedBox(
-                          height: 10,
+                  direction: Axis.horizontal,
+                  children: element
+                      .whereIndexed((index, element) =>
+                          index < ViewChangesHelper().limiter(widget.filter))
+                      .map((e) {
+                    int viewSetterValues =
+                        ViewChangesHelper().viewSetterForType(widget.filter);
+                    double fontSize = viewSetterValues == 1
+                        ? 9
+                        : viewSetterValues == 2
+                            ? 10
+                            : 11;
+                    index++;
+
+                    double height =
+                        (DateTime.fromMillisecondsSinceEpoch(e.instancesTime)
+                                    .minute /
+                                60) *
+                            20;
+
+                    if (index == ViewChangesHelper().limiter(widget.filter) ||
+                        ((widget.filter == 3 || widget.filter == 5) &&
+                            index ==
+                                ViewChangesHelper().limiter(widget.filter))) {
+                      return SizedBox(
+                        width: 8,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "+",
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: colorStore
+                                      .getColorByID(e.itemClassColorID)),
+                            )
+                          ],
                         ),
-                        Expanded(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    topRight: Radius.circular(5)),
+                      );
+                    }
+                    if (index >
+                        ViewChangesHelper().viewSetterForType(widget.filter)) {
+                      return SizedBox(
+                        width: 3,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: height,
+                            ),
+                            Expanded(
+                              child: Container(
                                 color: e.itemClassColorID == 999
                                     ? colorStore.getColorByID(
                                         widget.classMaster.itemClassColorID)
                                     : colorStore
                                         .getColorByID(e.itemClassColorID),
                               ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                      top: 16,
-                                      left: 0,
-                                      right: 0,
-                                      child: Text(
-                                        e.dataInstances,
-                                        maxLines: 8,
-                                        style: TextStyle(fontSize: fontSize),
-                                      )),
-                                  if (e.userStore.photoURL.isNotEmpty)
-                                    Positioned(
-                                      right: 4,
-                                      top: 1,
-                                      left: 0,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          if (e.instancesTime <
-                                              DateTime.parse(
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                                  widget.today)
-                                                              .toString()
-                                                              .substring(
-                                                                  0, 10) +
-                                                          " 00:00:00.000")
-                                                  .millisecondsSinceEpoch)
-                                            const Text(
-                                              "#unfinished  ",
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          if (widget.filter <3)
-                                            CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 9,
-                                              child: CircleAvatar(
-                                                radius: 8,
-                                                backgroundImage: NetworkImage(
-                                                    e.userStore.photoURL),
-                                              ),
-                                            )
-                                        ],
-                                      ),
-                                    )
-                                ],
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    return Flexible(
+                      key: UniqueKey(),
+                      child: GestureDetector(
+                        onTap: () {
+                          widget.openCallback(
+                              true, element, element.indexOf(e));
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // SizedBox(
+                            //   height: height,
+                            // ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(5),
+                                        topRight: Radius.circular(5)),
+                                    color: e.itemClassColorID == 999
+                                        ? colorStore.getColorByID(
+                                            widget.classMaster.itemClassColorID)
+                                        : colorStore
+                                            .getColorByID(e.itemClassColorID),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                          top: 16,
+                                          left: 0,
+                                          right: 0,
+                                          child: Text(
+                                            e.dataInstances,
+                                            maxLines: 8,
+                                            style:
+                                                TextStyle(fontSize: fontSize),
+                                          )),
+                                      if (e.userStore.photoURL.isNotEmpty)
+                                        Positioned(
+                                          right: 4,
+                                          top: 1,
+                                          left: 0,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              if (e.instancesTime <
+                                                  DateTime.parse(
+                                                          DateTime.fromMillisecondsSinceEpoch(
+                                                                      widget
+                                                                          .today)
+                                                                  .toString()
+                                                                  .substring(
+                                                                      0, 10) +
+                                                              " 00:00:00.000")
+                                                      .millisecondsSinceEpoch)
+                                                const Text(
+                                                  "#unfinished  ",
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              if (widget.filter < 3)
+                                                CircleAvatar(
+                                                  backgroundColor: Colors.white,
+                                                  radius: 9,
+                                                  child: CircleAvatar(
+                                                    radius: 8,
+                                                    backgroundImage:
+                                                        NetworkImage(e.userStore
+                                                            .photoURL),
+                                                  ),
+                                                )
+                                            ],
+                                          ),
+                                        )
+                                    ],
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
           );
         }).toList()),
       ),
