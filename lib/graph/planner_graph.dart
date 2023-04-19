@@ -269,7 +269,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
     return SizedBox(
       height: MediaQuery.of(context).orientation == Orientation.portrait
-          ? MediaQuery.of(context).size.height * 0.78
+          ? MediaQuery.of(context).size.height * 0.75
           : MediaQuery.of(context).size.height * 0.4,
       child: Stack(
         children: [
@@ -278,8 +278,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
               Container(
                 height:
                     MediaQuery.of(context).orientation == Orientation.portrait
-                        ? MediaQuery.of(context).size.height * 0.65
-                        : MediaQuery.of(context).size.height * 0.35,
+                        ? (MediaQuery.of(context).size.height * 0.75)*0.80
+                        : (MediaQuery.of(context).size.height * 0.4)*0.6,
                 color: darkMode ? Colors.black : Colors.white,
                 child: ListView(
                   itemExtent: itemSize,

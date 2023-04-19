@@ -398,7 +398,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                     ),
                                   ),
                                   if (e.classDataInstanceMaterDuplicate
-                                      .userStore.photoURL.isNotEmpty)
+                                      .userStore.photoURL!="empty")
                                     Positioned(
                                         bottom: 0,
                                         right: 0.5,
