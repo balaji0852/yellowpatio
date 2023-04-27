@@ -138,25 +138,25 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 const SizedBox(
                   height: 5,
                 ),
-                MaterialButton(
-                  key: UniqueKey(),
-                  height: 50,
-                  color: darkMode ? Colors.grey[850] : Colors.white,
-                  onPressed: () {
-                    Navigator.pop(context);
+                // MaterialButton(
+                //   key: UniqueKey(),
+                //   height: 50,
+                //   color: darkMode ? Colors.grey[850] : Colors.white,
+                //   onPressed: () {
+                //     Navigator.pop(context);
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProjectSettingW()),
-                    );
-                  },
-                  child: Text(
-                    "Projects Management",
-                    style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black),
-                  ),
-                ),
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (context) => const ProjectSettingW()),
+                //     );
+                //   },
+                //   child: Text(
+                //     "Projects Management",
+                //     style: TextStyle(
+                //         color: darkMode ? Colors.white : Colors.black),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 5,
                 ),

@@ -81,7 +81,7 @@ class graphDialogPage extends State<GraphDialog> {
         converter: (store) => store.state.darkMode,
         builder: (context, darkMode) {
           return Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(10,10,10,8),
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black87),
@@ -107,7 +107,7 @@ class graphDialogPage extends State<GraphDialog> {
                   ),
                   SizedBox(
                     //height:(MediaQuery.of(context).size.height*0.7)*0.8,
-                    height: (MediaQuery.of(context).size.height * 0.7)*0.8,
+                    height: (MediaQuery.of(context).size.height * 0.7)*0.75,
                     child:
 
                         //  ListView(
@@ -116,7 +116,7 @@ class graphDialogPage extends State<GraphDialog> {
                         //     var classDataInstanceMaterDuplicateClone = e;
                         //     return
                         Padding(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.fromLTRB(0,3,0,5),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width - 70,
                               child: ListView(

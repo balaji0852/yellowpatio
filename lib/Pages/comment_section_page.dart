@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -28,8 +29,8 @@ class CommentSectionPage extends StatefulWidget {
 }
 
 class CommentSection extends State<CommentSectionPage> {
-  double heightManagement = 60;
-  int maxLinesManagement = 1;
+  double heightManagement = 70;
+  int maxLinesManagement = 2;
   String? comment;
   TextEditingController commentEditController = TextEditingController();
   ScrollController mainWidgetScrollController = ScrollController();
@@ -38,6 +39,7 @@ class CommentSection extends State<CommentSectionPage> {
   late int userStoreID;
   //sig -30, sep 22
   bool callingServer = false;
+  var focusNode = FocusNode();
   //11/28/2022 : balaji , using local variable to set darkMode
   bool darkMode = false;
   bool showDescription = false;
@@ -55,6 +57,10 @@ class CommentSection extends State<CommentSectionPage> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
+    
+    focusNode.removeListener((){
+      print("removed");
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -77,8 +83,8 @@ class CommentSection extends State<CommentSectionPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  height: (MediaQuery.of(context).size.height - 100) -
-                      heightManagement,
+                  height:
+                      (MediaQuery.of(context).size.height) - heightManagement,
                   color: darkMode ? Colors.black : Colors.white,
                   child: ListView(
                     controller: mainWidgetScrollController,
@@ -158,7 +164,7 @@ class CommentSection extends State<CommentSectionPage> {
                       Text(
                         " created by " + widget.classMaster!.userStore.userName,
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: darkMode ? Colors.white : Colors.black),
                       ),
                       Text(
@@ -167,56 +173,106 @@ class CommentSection extends State<CommentSectionPage> {
                                     widget.classMaster!.createdDate)
                                 .toString(),
                         style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: darkMode ? Colors.white : Colors.black),
                       ),
                       // Column(children: )
                     ],
                   ),
                 ),
-                Container(
-                  height: heightManagement,
-                  color: darkMode ? Colors.grey[900] : Colors.grey,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 100,
-                        child: TextField(
-                          decoration: InputDecoration(
-                            counterText: ' ',
-                            hintText: "comment",
-                            hintStyle: TextStyle(
-                                color: darkMode ? Colors.white : Colors.black),
-                          ),
-                          controller: commentEditController,
-                          maxLines: maxLinesManagement,
-                          onChanged: textFieldheighManager,
-                          style: TextStyle(
-                              color: darkMode ? Colors.white : Colors.black),
-                        ),
-                      ),
-                      const Spacer(
-                        flex: 1,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (!callingServer) {
-                              callingServer = true;
-                              postComment();
-                            }
-                          },
-                          child: const Text('post')),
-                      const Spacer(
-                        flex: 2,
-                      ),
-                      // TextField()
-                    ],
-                  ),
-                ),
+                // Container(
+                //   height: heightManagement,
+                //   color: darkMode ? Colors.grey[900] : Colors.grey,
+                //   child: Row(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       SizedBox(
+                //         width: MediaQuery.of(context).size.width - 100,
+                //         child: TextField(
+                //           decoration: InputDecoration(
+                //             counterText: ' ',
+                //             hintText: "comment",
+                //             hintStyle: TextStyle(
+                //                 color: darkMode ? Colors.white : Colors.black),
+                //           ),
+                //           controller: commentEditController,
+                //           maxLines: maxLinesManagement,
+                //           onChanged: textFieldheighManager,
+                //           style: TextStyle(
+                //               color: darkMode ? Colors.white : Colors.black),
+                //         ),
+                //       ),
+                //       const Spacer(
+                //         flex: 1,
+                //       ),
+                //       ElevatedButton(
+                //           onPressed: () {
+                //             if (!callingServer) {
+                //               callingServer = true;
+                //               postComment();
+                //             }
+                //           },
+                //           child: const Text('post')),
+                //       const Spacer(
+                //         flex: 2,
+                //       ),
+                //       // TextField()
+                //     ],
+                //   ),
+                // ),
               ],
             ),
             // ]),
+          ),
+          //Balaji - 20/4/2023-moving the textfield from column to stack, small screen issues.
+          Positioned(
+            bottom: -10,
+            child: Container(
+              
+              width: MediaQuery.of(context).size.width,
+              height: heightManagement,
+              color: darkMode ? Colors.grey[900] : Colors.grey,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: TextField(
+                      // expands: true,
+                      // maxLines: null,
+                      // minLines: null,
+                      // focusNode: focusNode,
+                      decoration: InputDecoration(
+                        counterText: ' ',
+                        hintText: "comment",
+                        hintStyle: TextStyle(
+                            color: darkMode ? Colors.white : Colors.black),
+                      ),
+                      controller: commentEditController,
+                      maxLines: maxLinesManagement,
+                      onChanged: textFieldheighManager,
+                      style: TextStyle(
+                          color: darkMode ? Colors.white : Colors.black),
+                    ),
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        if (!callingServer) {
+                          callingServer = true;
+                          postComment();
+                        }
+                      },
+                      child: const Text('post')),
+                  const Spacer(
+                    flex: 2,
+                  ),
+                  // TextField()
+                ],
+              ),
+            ),
           ),
           // Positioned(
           //     height: 125,
@@ -242,33 +298,109 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
   textFieldheighManager(String value) {
+    //next line - \n : handle nextLine, get by last char
+    //need 5 lines text field
+    //height should be adaptive
+
+    FocusScope.of(context).addListener(() => {
+      print("add ")
+    });
+
+    FocusScope.of(context).removeListener(() => {
+      print("remove")
+    });
+
     setState(() {
-      print(value.length);
-      if (commentsLengthManager < value.length) {
-        print('inc');
-        if (value.length > lineCounter * 45 && lineCounter < 5) {
-          print('incr');
-
-          lineCounter++;
-          heightManagement = heightManagement + 10;
-          maxLinesManagement++;
-        }
-      } else {
-        print("--=${value.length % 45}");
-
-        if ((value.length >= 45 || value.length % 45 == 0) &&
-            heightManagement > 60) {
-          print('dec1');
-          lineCounter--;
-          heightManagement = heightManagement - 10;
-          if (value.isEmpty) {
-            heightManagement = 60;
-          }
-          if (maxLinesManagement != 1) {
-            maxLinesManagement--;
-          }
-        }
+      if (value.length >= 0 && value.length < 30) {
+        maxLinesManagement = 2;
+        heightManagement = 70;
       }
+      else if (value.length > 30 && value.length < 40 && maxLinesManagement != 3) {
+        maxLinesManagement = 3;
+        heightManagement = 80;
+      }
+      else if (value.length > 70 && value.length < 80 && maxLinesManagement != 4) {
+        maxLinesManagement = 4;
+        heightManagement = 95;
+      }
+      else if (value.length > 110  && value.length < 120 && maxLinesManagement != 5) {
+        print("stage3");
+        maxLinesManagement = 5;
+        heightManagement = 110;
+      }
+      else if (value.length > 150 && value.length < 160 && maxLinesManagement != 6) {
+        print("stage4");
+        maxLinesManagement = 6;
+        heightManagement = 125;
+      }
+      else if (value.length > 180 && value.length < 200 && maxLinesManagement != 7) {
+        print("stage5");
+        maxLinesManagement = 7;
+        heightManagement = 140;
+      }
+      // if ((value.length >= 40 && value.length < 80)) {
+      //    if(value.length<commentsLengthManager && value.length>=40 && value.length<=50 && maxLinesManagement==3){
+      //     maxLinesManagement = 2;
+      //     heightManagement -= 13;
+      //   }
+      //   if (maxLinesManagement != 3) {
+      //     maxLinesManagement = 3;
+      //     heightManagement += 13;
+      //   }
+
+      // }
+      //if ((value.length >= 80 && value.length < 120)) {
+      //   if (maxLinesManagement != 4) {
+      //     maxLinesManagement = 4;
+      //     heightManagement += 13;
+      //   }
+      // }if ((value.length >=120  && value.length < 160)) {
+      //   if (maxLinesManagement != 5) {
+      //     maxLinesManagement = 5;
+      //     heightManagement += 13;
+      //   }
+      // }
+      // if ((value.length >=160  && value.length < 200)) {
+      //   if (maxLinesManagement != 6) {
+      //     maxLinesManagement = 6;
+      //     heightManagement += 13;
+      //   }
+      // }
+      // else if (commentEditController.text.length>90 && maxLinesManagement==3) {
+      //   maxLinesManagement = 4;
+      //   heightManagement += 10;
+      // } else if (commentEditController.text.length>135 && maxLinesManagement==4) {
+      //   maxLinesManagement = 5;
+      //   heightManagement += 10;
+      // } else if (commentEditController.text.length<140 && maxLinesManagement==5) {
+      //   heightManagement += 15;
+      // }
+      print("000000000000000000000000"+value.length.toString());
+      // if (commentsLengthManager < value.length) {
+      //   print('inc');
+      //   if (value.length > lineCounter * 45 && lineCounter < 5) {
+      //     print('incr');
+
+      //     lineCounter++;
+      //     heightManagement = heightManagement + 10;
+      //     maxLinesManagement++;
+      //   }
+      // } else {
+      //   print("--=${value.length % 45}");
+
+      //   if (( value.length % 45 >= 0 && value.length % 45 < 10) &&
+      //       heightManagement > 60) {
+      //     print('dec1');
+      //     lineCounter--;
+      //     heightManagement = heightManagement - 10;
+      //     if (value.isEmpty) {
+      //       heightManagement = 60;
+      //     }
+      //     if (maxLinesManagement != 1) {
+      //       maxLinesManagement--;
+      //     }
+      //   }
+      // }
     });
     commentsLengthManager = value.length;
   }
@@ -306,7 +438,7 @@ class CommentSection extends State<CommentSectionPage> {
           print("inser");
           callingServer = false;
           setState(() {
-            heightManagement = 100;
+            heightManagement = 60;
             maxLinesManagement = 1;
             reKey = reKey * 1000;
           });

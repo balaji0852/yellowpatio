@@ -19,10 +19,15 @@ class ProjectManagementState extends State<ProjectManagement> {
     return StoreConnector<AppStore,AppStore>(
         converter: (store) => store.state,
         builder: (context, state) {
+              print("http://35.200.133.236/#/pm?themeid=${state.darkMode==true?1:0}&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}");
+
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.black,
-              title: const Text("project management"),
+              backgroundColor:state.darkMode? Colors.black:Colors.white,
+              title:  Text("project management",
+              style: TextStyle(
+                color: !state.darkMode? Colors.black:Colors.white
+              ),),
               leading: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -31,7 +36,7 @@ class ProjectManagementState extends State<ProjectManagement> {
                       MaterialPageRoute(builder: (context) => Home()),
                     );
                   },
-                  icon: const Icon(Icons.arrow_back_sharp)),
+                  icon: Icon(Icons.arrow_back_sharp,color: !state.darkMode? Colors.black:Colors.white,)),
             ),
             body: InAppWebView(
               initialOptions: InAppWebViewGroupOptions(
@@ -39,7 +44,7 @@ class ProjectManagementState extends State<ProjectManagement> {
                   crossPlatform: InAppWebViewOptions(supportZoom: false)),
               initialUrlRequest: URLRequest(
                   url: Uri.parse(
-                      "http://35.200.133.236/#/pm?themeid=1&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}")),
+                      "http://wark.fun/#/pm?themeid=${state.darkMode==true?1:0}&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}")),
             ),
           );
         });
