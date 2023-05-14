@@ -29,17 +29,27 @@ class ProjectManagementState extends State<ProjectManagement> {
                 color: !state.darkMode? Colors.black:Colors.white
               ),),
               actions: [
-                // GestureDetector(
-                //   onTap: (() {
-                //     Navigator.pop(context);
-                //     Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
-                //   }),
-                //   child: const Text("skip",
-                //     style: TextStyle(
-                //       color: Colors.blue
-                //     ),
-                //   ),
-                // )
+                if(null!=widget.isProjectCreation && widget.isProjectCreation!)
+                Center(
+                  child:
+                GestureDetector(
+                  onTap: (() {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+                  }),
+                  child: Row(
+
+                    children: const [
+                      Text("skip",
+                    style: TextStyle(
+                    fontSize: 18,
+                      color: Colors.blue
+                    ),
+                  ),
+                 SizedBox(width: 30,)
+                    ],
+                  )
+                ),)
               ],
               leading: IconButton(
                   onPressed: () {

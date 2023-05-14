@@ -30,7 +30,7 @@ class CommentSectionPage extends StatefulWidget {
 
 class CommentSection extends State<CommentSectionPage> {
   double heightManagement = 65;
-  int maxLinesManagement = 1;
+  int maxLinesManagement = 2;
   String? comment;
   TextEditingController commentEditController = TextEditingController();
   ScrollController mainWidgetScrollController = ScrollController();
@@ -255,6 +255,7 @@ class CommentSection extends State<CommentSectionPage> {
 
   textFieldheighManager(String value) {
     setState(() {
+      print(value.substring(value.length-1)=='\n');
       if (value.length >= 240) {
         maxLinesManagement = 7;
         heightManagement = 160;

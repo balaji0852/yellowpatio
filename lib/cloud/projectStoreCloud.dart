@@ -13,7 +13,8 @@ class projectStoreCloud {
     request.body = projectStore.toJsonString();
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
-    return response.statusCode;
+    String jsonResponse = await response.stream.bytesToString();
+    return response.statusCode==200?int.parse(jsonResponse):-1;
   }
 
   Future<List<projectStore>> findAllProjectByUserStoreID(

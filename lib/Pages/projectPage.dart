@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/Pages/AllProjectPage.dart';
+import 'package:yellowpatioapp/Pages_SR/projectManagement_page.dart';
 import 'package:yellowpatioapp/cloud/projectStoreCloud.dart';
 import 'package:yellowpatioapp/cloud/service_plan_store_cloud.dart';
 import 'package:yellowpatioapp/db/entity/RegionStore.dart';
@@ -444,21 +445,28 @@ class ProjectPageState extends State<ProjectPage> {
 
   updateProjectEntity() async {
     var projectStore = createProjectEntity();
-
+    int projectStoreIDCreated = await projectStoreCloud()
+        .postProjectStore(projectStore, projectStore.userStoreID);
     //cloud migration
     // final database =
     //     await $FloorAppDatabase.databaseBuilder('app_database.db').build();
     // final projectStoreDao = database.projectStoreDao;
-    projectStoreCloud()
-        .postProjectStore(projectStore, projectStore.userStoreID)
-        .then((value) {
-      print(value);
+    // await projectStoreCloud()
+    //     .postProjectStore(projectStore, projectStore.userStoreID)
+    //     .then((value) async{
+    //       print(value);
+      if(projectStoreIDCreated !=-1){
+        state.dispatch(ChangeProjectStoreID(projectStoreIDCreated ));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProjectManagement(isProjectCreation: true,)));
+        projectTitleEditorController.clear();
+        projectDescriptionController.clear();
+      }
       setState(() {
         loaded = loaded;
       });
-      projectTitleEditorController.clear();
-      projectDescriptionController.clear();
-    }).catchError((error) {});
+    //   projectTitleEditorController.clear();
+    //   projectDescriptionController.clear();
+    // }).catchError((error) {});
   }
 
   createProjectEntity() {
