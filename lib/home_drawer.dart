@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,7 +10,9 @@ import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer.dart';
 
+import 'cloud/UserStoreCloud.dart';
 import 'config.dart';
+import 'db/entity/user_store.dart';
 import 'home.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -43,6 +46,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
   @override
   void didUpdateWidget(covariant HomeDrawer oldWidget) {
     super.didUpdateWidget(oldWidget);
+                        userSetting();
 
     //changing DB, through post ui change.
   }
@@ -103,19 +107,19 @@ class HomeDraweWidget extends State<HomeDrawer> {
               children: [
                 datePreferenceWidget(1, 'One day'),
                 const SizedBox(
-                  height: 2,
+                  height: 3,
                 ),
                 datePreferenceWidget(2, 'Two day'),
                 const SizedBox(
-                  height: 2,
+                  height: 4,
                 ),
                 datePreferenceWidget(3, 'Three day'),
                 const SizedBox(
-                  height: 2,
+                  height: 5,
                 ),
                 datePreferenceWidget(5, 'Five day'),
                 const SizedBox(
-                  height: 5,
+                  height: 6,
                 ),
                 MaterialButton(
                   key: UniqueKey(),
@@ -136,7 +140,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 7,
                 ),
                 // MaterialButton(
                 //   key: UniqueKey(),
@@ -157,9 +161,6 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 //         color: darkMode ? Colors.white : Colors.black),
                 //   ),
                 // ),
-                const SizedBox(
-                  height: 5,
-                ),
                 MaterialButton(
                   key: UniqueKey(),
                   height: 50,
@@ -180,7 +181,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                   ),
                 ),
                 const SizedBox(
-                  height: 5,
+                  height: 8,
                 ),
                 MaterialButton(
                   key: UniqueKey(),
@@ -193,7 +194,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                     });
                   },
                   child: Text(
-                    "Dark Mode",
+                    darkMode?"lite Mode":"Dark Mode",
                     style: TextStyle(
                         color: darkMode ? Colors.white : Colors.black),
                   ),
@@ -201,7 +202,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 9,
             ),
             Text(
               " uid " + uid.toString(),
@@ -240,10 +241,34 @@ class HomeDraweWidget extends State<HomeDrawer> {
             : darkMode
                 ? Colors.grey[850]
                 : Colors.white,
-        onPressed: callback,
+        onPressed:callback ,
         child: Text(text,
             style: TextStyle(color: darkMode ? Colors.white : Colors.black)),
       );
     });
   }
+
+  Future<void> userSetting() async {
+    var state = StoreProvider.of<AppStore>(context);
+
+    //write logic to check presence of user;
+      //cloud migration
+      // var userManagement = UserManagement();
+      // int _userStoreID = await userManagement.userRegisterationShim(context);
+      // while (_userStoreID==-1){
+      //   _userStoreID = await userManagement.userRegisterationShim(context);
+      // }
+      UserStore userStore = UserStore(
+          linkedEmail: FirebaseAuth.instance.currentUser!.email!,
+          userName: FirebaseAuth.instance.currentUser!.displayName!,
+          linkedPhone: FirebaseAuth.instance.currentUser!.phoneNumber == null
+              ? "empty"
+              : FirebaseAuth.instance.currentUser!.phoneNumber!,
+          photoURL: FirebaseAuth.instance.currentUser!.photoURL!,
+          themeID: state.state.darkMode?1:0,
+          timeViewPreference: -1,
+          dateViewPreference: state.state.dateViewPreference);
+
+      userStore = await UserStoreCloud().putUserStore(userStore);
+    }
 }

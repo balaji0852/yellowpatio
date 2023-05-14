@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
 import '../home.dart';
 import '../redux_state_store/appStore.dart';
 
 class ProjectManagement extends StatefulWidget {
   final MyInAppBrowser browser = MyInAppBrowser();
-
-  ProjectManagement({Key? key}) : super(key: key);
+  final bool? isProjectCreation;
+  ProjectManagement({Key? key,this.isProjectCreation}) : super(key: key);
   @override
   ProjectManagementState createState() => ProjectManagementState();
 }
@@ -19,7 +20,6 @@ class ProjectManagementState extends State<ProjectManagement> {
     return StoreConnector<AppStore,AppStore>(
         converter: (store) => store.state,
         builder: (context, state) {
-              print("http://35.200.133.236/#/pm?themeid=${state.darkMode==true?1:0}&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}");
 
           return Scaffold(
             appBar: AppBar(
@@ -28,6 +28,19 @@ class ProjectManagementState extends State<ProjectManagement> {
               style: TextStyle(
                 color: !state.darkMode? Colors.black:Colors.white
               ),),
+              actions: [
+                // GestureDetector(
+                //   onTap: (() {
+                //     Navigator.pop(context);
+                //     Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+                //   }),
+                //   child: const Text("skip",
+                //     style: TextStyle(
+                //       color: Colors.blue
+                //     ),
+                //   ),
+                // )
+              ],
               leading: IconButton(
                   onPressed: () {
                     Navigator.pop(context);
@@ -40,7 +53,10 @@ class ProjectManagementState extends State<ProjectManagement> {
             ),
             body: InAppWebView(
               initialOptions: InAppWebViewGroupOptions(
-                android: AndroidInAppWebViewOptions(builtInZoomControls: false),
+                
+                android: AndroidInAppWebViewOptions(builtInZoomControls: false,
+                forceDark: state.darkMode?AndroidForceDark.FORCE_DARK_ON:AndroidForceDark.FORCE_DARK_OFF,
+                textZoom: 100),
                   crossPlatform: InAppWebViewOptions(supportZoom: false)),
               initialUrlRequest: URLRequest(
                   url: Uri.parse(

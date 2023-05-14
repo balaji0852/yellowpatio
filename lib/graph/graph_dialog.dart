@@ -88,7 +88,7 @@ class graphDialogPage extends State<GraphDialog> {
                   color: darkMode ? Colors.grey[900] : Colors.white,
                   // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
                   borderRadius: BorderRadius.circular(0)),
-              height: (MediaQuery.of(context).size.height * 0.7),
+              height:  MediaQuery.of(context).orientation == Orientation.portrait?(MediaQuery.of(context).size.height * 0.7):(MediaQuery.of(context).size.height * 0.6)*0.9,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -107,7 +107,7 @@ class graphDialogPage extends State<GraphDialog> {
                   ),
                   SizedBox(
                     //height:(MediaQuery.of(context).size.height*0.7)*0.8,
-                    height: (MediaQuery.of(context).size.height * 0.7)*0.75,
+                    height: MediaQuery.of(context).orientation == Orientation.portrait?(MediaQuery.of(context).size.height * 0.7)*0.75:(MediaQuery.of(context).size.height * 0.3)*0.9,
                     child:
 
                         //  ListView(

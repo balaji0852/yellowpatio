@@ -10,8 +10,10 @@ import 'package:yellowpatioapp/config.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/home_drawer.dart';
 import 'package:yellowpatioapp/login_page.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 import 'package:yellowpatioapp/redux_state_store/appStore.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/selected_index_reducer.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/userStoreReducer.dart';
 import 'Pages/home_page.dart';
 import 'Pages/insights_page.dart';
 // import 'db/Person.dart';
@@ -109,6 +111,8 @@ class HomePage extends State<Home> {
   }
 
   Future<void> signOut() async {
+    var state = StoreProvider.of<AppStore>(context);
+    state.dispatch(ChangeUserStoreID(0));
     await _googleSignIn.signOut();
     Navigator.pop(context);
     Navigator.push(

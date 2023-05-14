@@ -134,6 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
           linkedEmail: googleSignInAccount.email,
           userName: "empty",
           linkedPhone: "empty",
+          themeID: -1,
+          dateViewPreference: -1,
           photoURL: googleSignInAccount.photoUrl!);
 
       await UserStoreCloud().postUserStore(userStore);
@@ -170,6 +172,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (userStore.userStoreID != 0) {
         var state = StoreProvider.of<AppStore>(context);
         state.dispatch(ChangeUserStoreID(userStore.userStoreID!));
+        state.dispatch(ChangeDateViewPreference(userStore.dateViewPreference!)); 
+        state.dispatch(ChangeDarkMode(userStore.themeID==1?true:false));
         Navigator.pop(context);
         Navigator.push(
           context,

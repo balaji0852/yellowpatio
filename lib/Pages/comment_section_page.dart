@@ -29,8 +29,8 @@ class CommentSectionPage extends StatefulWidget {
 }
 
 class CommentSection extends State<CommentSectionPage> {
-  double heightManagement = 70;
-  int maxLinesManagement = 2;
+  double heightManagement = 65;
+  int maxLinesManagement = 1;
   String? comment;
   TextEditingController commentEditController = TextEditingController();
   ScrollController mainWidgetScrollController = ScrollController();
@@ -77,8 +77,10 @@ class CommentSection extends State<CommentSectionPage> {
         ),
       ),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           SingleChildScrollView(
+            controller: mainWidgetScrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -135,12 +137,12 @@ class CommentSection extends State<CommentSectionPage> {
                                   });
                                 },
                                 child: SizedBox(
-                                  width: 40,
+                                  width: 20,
                                   height: 20,
                                   child: Text(
                                     !showDescription ? "<" : "v",
                                     style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 22,
                                         color: darkMode
                                             ? Colors.white
                                             : Colors.black,
@@ -176,50 +178,9 @@ class CommentSection extends State<CommentSectionPage> {
                             fontSize: 12,
                             color: darkMode ? Colors.white : Colors.black),
                       ),
-                      // Column(children: )
                     ],
                   ),
                 ),
-                // Container(
-                //   height: heightManagement,
-                //   color: darkMode ? Colors.grey[900] : Colors.grey,
-                //   child: Row(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       SizedBox(
-                //         width: MediaQuery.of(context).size.width - 100,
-                //         child: TextField(
-                //           decoration: InputDecoration(
-                //             counterText: ' ',
-                //             hintText: "comment",
-                //             hintStyle: TextStyle(
-                //                 color: darkMode ? Colors.white : Colors.black),
-                //           ),
-                //           controller: commentEditController,
-                //           maxLines: maxLinesManagement,
-                //           onChanged: textFieldheighManager,
-                //           style: TextStyle(
-                //               color: darkMode ? Colors.white : Colors.black),
-                //         ),
-                //       ),
-                //       const Spacer(
-                //         flex: 1,
-                //       ),
-                //       ElevatedButton(
-                //           onPressed: () {
-                //             if (!callingServer) {
-                //               callingServer = true;
-                //               postComment();
-                //             }
-                //           },
-                //           child: const Text('post')),
-                //       const Spacer(
-                //         flex: 2,
-                //       ),
-                //       // TextField()
-                //     ],
-                //   ),
-                // ),
               ],
             ),
             // ]),
@@ -238,10 +199,6 @@ class CommentSection extends State<CommentSectionPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
                     child: TextField(
-                      // expands: true,
-                      // maxLines: null,
-                      // minLines: null,
-                      // focusNode: focusNode,
                       decoration: InputDecoration(
                         counterText: ' ',
                         hintText: "comment",
@@ -288,7 +245,6 @@ class CommentSection extends State<CommentSectionPage> {
       ),
     );
   }
-
   backButton() {
     Navigator.pop(context);
     Navigator.push(
@@ -298,109 +254,29 @@ class CommentSection extends State<CommentSectionPage> {
   }
 
   textFieldheighManager(String value) {
-    //next line - \n : handle nextLine, get by last char
-    //need 5 lines text field
-    //height should be adaptive
-
-    FocusScope.of(context).addListener(() => {
-      print("add ")
-    });
-
-    FocusScope.of(context).removeListener(() => {
-      print("remove")
-    });
-
     setState(() {
-      if (value.length >= 0 && value.length < 30) {
-        maxLinesManagement = 2;
-        heightManagement = 70;
-      }
-      else if (value.length > 30 && value.length < 40 && maxLinesManagement != 3) {
-        maxLinesManagement = 3;
-        heightManagement = 80;
-      }
-      else if (value.length > 70 && value.length < 80 && maxLinesManagement != 4) {
-        maxLinesManagement = 4;
-        heightManagement = 95;
-      }
-      else if (value.length > 110  && value.length < 120 && maxLinesManagement != 5) {
-        print("stage3");
-        maxLinesManagement = 5;
-        heightManagement = 110;
-      }
-      else if (value.length > 150 && value.length < 160 && maxLinesManagement != 6) {
-        print("stage4");
-        maxLinesManagement = 6;
-        heightManagement = 125;
-      }
-      else if (value.length > 180 && value.length < 200 && maxLinesManagement != 7) {
-        print("stage5");
+      if (value.length >= 240) {
         maxLinesManagement = 7;
-        heightManagement = 140;
+        heightManagement = 160;
+      } if (value.isEmpty) {
+        maxLinesManagement = 2;
+        heightManagement = 65;
+      } else if (value.length > 40 && value.length < 80 ) {
+        maxLinesManagement = 2;
+        heightManagement = 85;
+      } else if (value.length > 80 && value.length < 120) {
+        maxLinesManagement = 3;
+        heightManagement = 100;
+      } else if ( value.length > 120 && value.length < 160) {
+        maxLinesManagement = 4;
+        heightManagement = 115;
+      } else if (value.length > 160 && value.length < 200) {
+        maxLinesManagement = 5;
+        heightManagement = 130;
+      } else if ( value.length > 200 && value.length < 240) {
+        maxLinesManagement = 6;
+        heightManagement = 145;
       }
-      // if ((value.length >= 40 && value.length < 80)) {
-      //    if(value.length<commentsLengthManager && value.length>=40 && value.length<=50 && maxLinesManagement==3){
-      //     maxLinesManagement = 2;
-      //     heightManagement -= 13;
-      //   }
-      //   if (maxLinesManagement != 3) {
-      //     maxLinesManagement = 3;
-      //     heightManagement += 13;
-      //   }
-
-      // }
-      //if ((value.length >= 80 && value.length < 120)) {
-      //   if (maxLinesManagement != 4) {
-      //     maxLinesManagement = 4;
-      //     heightManagement += 13;
-      //   }
-      // }if ((value.length >=120  && value.length < 160)) {
-      //   if (maxLinesManagement != 5) {
-      //     maxLinesManagement = 5;
-      //     heightManagement += 13;
-      //   }
-      // }
-      // if ((value.length >=160  && value.length < 200)) {
-      //   if (maxLinesManagement != 6) {
-      //     maxLinesManagement = 6;
-      //     heightManagement += 13;
-      //   }
-      // }
-      // else if (commentEditController.text.length>90 && maxLinesManagement==3) {
-      //   maxLinesManagement = 4;
-      //   heightManagement += 10;
-      // } else if (commentEditController.text.length>135 && maxLinesManagement==4) {
-      //   maxLinesManagement = 5;
-      //   heightManagement += 10;
-      // } else if (commentEditController.text.length<140 && maxLinesManagement==5) {
-      //   heightManagement += 15;
-      // }
-      print("000000000000000000000000"+value.length.toString());
-      // if (commentsLengthManager < value.length) {
-      //   print('inc');
-      //   if (value.length > lineCounter * 45 && lineCounter < 5) {
-      //     print('incr');
-
-      //     lineCounter++;
-      //     heightManagement = heightManagement + 10;
-      //     maxLinesManagement++;
-      //   }
-      // } else {
-      //   print("--=${value.length % 45}");
-
-      //   if (( value.length % 45 >= 0 && value.length % 45 < 10) &&
-      //       heightManagement > 60) {
-      //     print('dec1');
-      //     lineCounter--;
-      //     heightManagement = heightManagement - 10;
-      //     if (value.isEmpty) {
-      //       heightManagement = 60;
-      //     }
-      //     if (maxLinesManagement != 1) {
-      //       maxLinesManagement--;
-      //     }
-      //   }
-      // }
     });
     commentsLengthManager = value.length;
   }
