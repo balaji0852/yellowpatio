@@ -9,6 +9,8 @@ import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/graph/dropwdown.dart';
 import 'package:yellowpatioapp/graph/graph_dialog.dart';
 import 'package:yellowpatioapp/graph/time_instance_widget.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/showDialogReducer.dart';
 
 import '../config.dart';
 import '../redux_state_store/appStore.dart';
@@ -117,6 +119,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
     //adding List to callback for now, this is to populate the List<HourlyDataInstance>
     //to graph_dialog, finding central state management...
 
+    //balaji: adding this dispatch for global gd
+    state.dispatch(ChangeShowDialogState(openDialog));
+    
     ScrollController sc = widget.MainWidgetScrollView;
     sc.animateTo(0,
         curve: Curves.linear, duration: const Duration(milliseconds: 300));

@@ -33,3 +33,13 @@ class ChangeUserStoreID{
 
   ChangeUserStoreID(this.userStoreID);
 }
+
+
+
+class ChangeShowDialogState{
+  final bool showDialog;
+
+  ChangeShowDialogState(this.showDialog);
+}
+
+

@@ -5,6 +5,7 @@ import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer
 import 'package:yellowpatioapp/redux_state_store/reducer/dark_mode.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/projectStoreReducer.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/selected_index_reducer.dart';
+import 'package:yellowpatioapp/redux_state_store/reducer/showDialogReducer.dart';
 import 'package:yellowpatioapp/redux_state_store/reducer/userStoreReducer.dart';
 
 AppStore appReducer(AppStore state, action){
@@ -13,7 +14,8 @@ AppStore appReducer(AppStore state, action){
   selectedIndex: selectedIndexReducer(state.selectedIndex,action),
   projectStoreID: projectStoreReducer(state.projectStoreID,action),
   userStoreID: userStoreReducer(state.userStoreID,action),
-  darkMode: changeDarkModeReducer(state.darkMode,action)
+  darkMode: changeDarkModeReducer(state.darkMode,action),
+  showDialog: showDialogReducer(state.showDialog,action)
   );
 }
 

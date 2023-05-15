@@ -14,6 +14,8 @@ class AppStore {
   final bool darkMode;
   final int projectStoreID;
   final int userStoreID;
+  //Balaji: 16/05/2023 - adding this global gd flag
+  final bool showDialog;
 
   AppStore({
     this.isLoading = false,
@@ -21,6 +23,7 @@ class AppStore {
     this.dateViewPreference = 1,
     this.selectedIndex = 0,
     this.darkMode  = true,
+    this.showDialog = false,
     this.projectStoreID = 999,
     this.userStoreID = 999
   });

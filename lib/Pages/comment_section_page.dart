@@ -37,6 +37,7 @@ class CommentSection extends State<CommentSectionPage> {
   final GlobalKey<PlannerGraphPage> _key = GlobalKey();
   int commentsLengthManager = 0;
   late int userStoreID;
+  int nextLine = 0;
   //sig -30, sep 22
   bool callingServer = false;
   var focusNode = FocusNode();
@@ -57,194 +58,225 @@ class CommentSection extends State<CommentSectionPage> {
   Widget build(BuildContext context) {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
-    
-    focusNode.removeListener((){
+
+    focusNode.removeListener(() {
       print("removed");
     });
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: !darkMode ? Colors.white : Colors.black,
-        centerTitle: true,
-        leading: BackButton(
-          color: darkMode ? Colors.white : Colors.black,
-          onPressed: backButton,
-        ),
-        title: Text(
-          widget.classMaster!.itemName,
-          style: TextStyle(
-              fontSize: 30, color: darkMode ? Colors.white : Colors.black),
-        ),
-      ),
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          SingleChildScrollView(
-            controller: mainWidgetScrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return StoreConnector<AppStore, bool>(
+        converter: (store) => store.state.showDialog,
+        builder: (context, _showDialog) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: !darkMode ? Colors.white : Colors.black,
+              centerTitle: true,
+              leading: BackButton(
+                color: darkMode ? Colors.white : Colors.black,
+                onPressed: backButton,
+              ),
+              title: Text(
+                widget.classMaster!.itemName,
+                style: TextStyle(
+                    fontSize: 30,
+                    color: darkMode ? Colors.white : Colors.black),
+              ),
+            ),
+            body: Stack(
+              fit: StackFit.expand,
               children: [
-                Container(
-                  height:
-                      (MediaQuery.of(context).size.height) - heightManagement,
-                  color: darkMode ? Colors.black : Colors.white,
-                  child: ListView(
-                    controller: mainWidgetScrollController,
+                SingleChildScrollView(
+                  controller: mainWidgetScrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // const SizedBox(
-                      //   height: 20,
-                      // ),
-                      // Container(
-                      //   alignment: Alignment.center,
-                      //   child: Text(
-                      //     widget.classMaster!.itemName,
-                      //     style:  TextStyle(
-                      //       fontSize: 30,
-                      //       color: darkMode?Colors.white:Colors.black
-                      //     ),
-                      //   ),
-                      // ),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (showDescription)
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        widget.classMaster!.description,
-                                        maxLines: 5,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: darkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    showDescription = !showDescription;
-                                  });
-                                },
-                                child: SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: Text(
-                                    !showDescription ? "<" : "v",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: darkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                      PlannerGraph(
-                        MainWidgetScrollView: mainWidgetScrollController,
-                        key: _key,
-                        classMaster: widget.classMaster!,
-                        graphType: 1,
-                        reKey: reKey,
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
+                      Container(
+                        height: (MediaQuery.of(context).size.height) -
+                            heightManagement,
+                        color: darkMode ? Colors.black : Colors.white,
+                        child: ListView(
+                          controller: mainWidgetScrollController,
+                          children: [
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
+                            // Container(
+                            //   alignment: Alignment.center,
+                            //   child: Text(
+                            //     widget.classMaster!.itemName,
+                            //     style:  TextStyle(
+                            //       fontSize: 30,
+                            //       color: darkMode?Colors.white:Colors.black
+                            //     ),
+                            //   ),
+                            // ),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              showDescription =
+                                                  !showDescription;
+                                            });
+                                          },
+                                          child: Text(
+                                            showDescription && !_showDialog
+                                                ? widget
+                                                    .classMaster!.description
+                                                : widget.classMaster!
+                                                        .description
+                                                        .substring(
+                                                            0,
+                                                            widget
+                                                                        .classMaster!
+                                                                        .description
+                                                                        .length >
+                                                                    30
+                                                                ? 30
+                                                                : widget
+                                                                    .classMaster!
+                                                                    .description
+                                                                    .length) +
+                                                    " ...[more]",
+                                            maxLines: 5,
+                                            softWrap: true,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: darkMode
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          )),
+                                    ),
 
-                      Text(
-                        " created by " + widget.classMaster!.userStore.userName,
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: darkMode ? Colors.white : Colors.black),
-                      ),
-                      Text(
-                        " created on " +
-                            DateTime.fromMillisecondsSinceEpoch(
-                                    widget.classMaster!.createdDate)
-                                .toString(),
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: darkMode ? Colors.white : Colors.black),
+                                    // const SizedBox(
+                                    //   width: 15,
+                                    // ),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     setState(() {
+                                    //       showDescription = !showDescription;
+                                    //     });
+                                    //   },
+                                    //   child: SizedBox(
+                                    //     width: 20,
+                                    //     height: 20,
+                                    //     child: Text(
+                                    //       !showDescription || _showDialog ? "<" : "v",
+                                    //       style: TextStyle(
+                                    //           fontSize: 22,
+                                    //           color: darkMode
+                                    //               ? Colors.white
+                                    //               : Colors.black,
+                                    //           fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //   ),
+                                    // )
+                                  ],
+                                )),
+                            PlannerGraph(
+                              MainWidgetScrollView: mainWidgetScrollController,
+                              key: _key,
+                              classMaster: widget.classMaster!,
+                              graphType: 1,
+                              reKey: reKey,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+
+                            Text(
+                              " created by " +
+                                  widget.classMaster!.userStore.userName,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            ),
+                            Text(
+                              " created on " +
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                          widget.classMaster!.createdDate)
+                                      .toString(),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
+                  // ]),
                 ),
-              ],
-            ),
-            // ]),
-          ),
-          //Balaji - 20/4/2023-moving the textfield from column to stack, small screen issues.
-          Positioned(
-            bottom: -10,
-            child: Container(
-              
-              width: MediaQuery.of(context).size.width,
-              height: heightManagement,
-              color: darkMode ? Colors.grey[900] : Colors.grey,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width - 100,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        counterText: ' ',
-                        hintText: "comment",
-                        hintStyle: TextStyle(
-                            color: darkMode ? Colors.white : Colors.black),
-                      ),
-                      controller: commentEditController,
-                      maxLines: maxLinesManagement,
-                      onChanged: textFieldheighManager,
-                      style: TextStyle(
-                          color: darkMode ? Colors.white : Colors.black),
+                //Balaji - 20/4/2023-moving the textfield from column to stack, small screen issues.
+                Positioned(
+                  bottom: -10,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: heightManagement,
+                    color: darkMode ? Colors.grey[900] : Colors.grey,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 100,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              counterText: ' ',
+                              hintText: "comment",
+                              hintStyle: TextStyle(
+                                  color:
+                                      darkMode ? Colors.white : Colors.black),
+                            ),
+                            controller: commentEditController,
+                            maxLines: maxLinesManagement,
+                            onChanged: textFieldheighManager,
+                            style: TextStyle(
+                                color: darkMode ? Colors.white : Colors.black),
+                          ),
+                        ),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              if (!callingServer) {
+                                callingServer = true;
+                                postComment();
+                              }
+                            },
+                            child: const Text('post')),
+                        const Spacer(
+                          flex: 2,
+                        ),
+                        // TextField()
+                      ],
                     ),
                   ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (!callingServer) {
-                          callingServer = true;
-                          postComment();
-                        }
-                      },
-                      child: const Text('post')),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  // TextField()
-                ],
-              ),
+                ),
+                // Positioned(
+                //     height: 125,
+                //     left: 25,
+                //     child: CircleAvatar(
+                //       backgroundColor:  darkMode?Colors.black:Colors.white,
+                //       child: BackButton(
+                //         color:  darkMode?Colors.white:Colors.black,
+                //         onPressed: backButton,
+                //       ),
+                //     )),
+              ],
             ),
-          ),
-          // Positioned(
-          //     height: 125,
-          //     left: 25,
-          //     child: CircleAvatar(
-          //       backgroundColor:  darkMode?Colors.black:Colors.white,
-          //       child: BackButton(
-          //         color:  darkMode?Colors.white:Colors.black,
-          //         onPressed: backButton,
-          //       ),
-          //     )),
-        ],
-      ),
-    );
+          );
+        });
   }
+
   backButton() {
     Navigator.pop(context);
     Navigator.push(
@@ -255,26 +287,26 @@ class CommentSection extends State<CommentSectionPage> {
 
   textFieldheighManager(String value) {
     setState(() {
-      print(value.substring(value.length-1)=='\n');
       if (value.length >= 240) {
         maxLinesManagement = 7;
         heightManagement = 160;
-      } if (value.isEmpty) {
+      }
+      if (value.isEmpty) {
         maxLinesManagement = 2;
         heightManagement = 65;
-      } else if (value.length > 40 && value.length < 80 ) {
+      } else if (value.length > 40 && value.length < 80) {
         maxLinesManagement = 2;
         heightManagement = 85;
       } else if (value.length > 80 && value.length < 120) {
         maxLinesManagement = 3;
         heightManagement = 100;
-      } else if ( value.length > 120 && value.length < 160) {
+      } else if (value.length > 120 && value.length < 160) {
         maxLinesManagement = 4;
         heightManagement = 115;
       } else if (value.length > 160 && value.length < 200) {
         maxLinesManagement = 5;
         heightManagement = 130;
-      } else if ( value.length > 200 && value.length < 240) {
+      } else if (value.length > 200 && value.length < 240) {
         maxLinesManagement = 6;
         heightManagement = 145;
       }
