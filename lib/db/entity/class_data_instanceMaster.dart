@@ -68,7 +68,7 @@ class ClassDataInstanceMaterDuplicate{
       "dataInstances": dataInstances,
       "instanceTime": instancesTime,
       "instancesStatus": instancesStatus,
-       "userStore":{
+      "userStore":{
         "userStoreID":userStore.userStoreID
       }
   };

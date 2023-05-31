@@ -458,6 +458,9 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
 
   commentButton(ClassMaster classMaster) {
     // Navigator.pop(context);
+
+    state.dispatch(ChangeShowDialogState(false));
+
     Navigator.push(
       context,
       MaterialPageRoute(

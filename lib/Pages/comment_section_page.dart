@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -59,9 +58,7 @@ class CommentSection extends State<CommentSectionPage> {
     state = StoreProvider.of<AppStore>(context);
     darkMode = state.state.darkMode;
 
-    focusNode.removeListener(() {
-      print("removed");
-    });
+   
 
     return StoreConnector<AppStore, bool>(
         converter: (store) => store.state.showDialog,
@@ -96,9 +93,6 @@ class CommentSection extends State<CommentSectionPage> {
                         child: ListView(
                           controller: mainWidgetScrollController,
                           children: [
-                            // const SizedBox(
-                            //   height: 20,
-                            // ),
                             // Container(
                             //   alignment: Alignment.center,
                             //   child: Text(
@@ -111,12 +105,12 @@ class CommentSection extends State<CommentSectionPage> {
                             // ),
                             Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
+                                    horizontal: 15, vertical: 5),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Expanded(
-                                      child: GestureDetector(
+                                      child:
+                                       GestureDetector(
                                           onTap: () {
                                             setState(() {
                                               showDescription =
@@ -127,30 +121,31 @@ class CommentSection extends State<CommentSectionPage> {
                                             showDescription && !_showDialog
                                                 ? widget
                                                     .classMaster!.description
-                                                : widget.classMaster!
-                                                        .description
-                                                        .substring(
-                                                            0,
-                                                            widget
+                                                : widget
                                                                         .classMaster!
                                                                         .description
                                                                         .length >
-                                                                    30
-                                                                ? 30
-                                                                : widget
-                                                                    .classMaster!
-                                                                    .description
-                                                                    .length) +
-                                                    " ...[more]",
+                                                                    21?widget.classMaster!
+                                                        .description
+                                                        .substring(
+                                                            0,
+                                                           21) +
+                                                    "...[more]": widget.classMaster!
+                                                        .description
+                                                        .substring(
+                                                            0,
+                                                           widget
+                                                                        .classMaster!
+                                                                        .description
+                                                                        .length),
                                             maxLines: 5,
                                             softWrap: true,
-                                            textAlign: TextAlign.start,
                                             style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 13,
                                                 color: darkMode
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                                ),
                                           )),
                                     ),
 
@@ -208,6 +203,9 @@ class CommentSection extends State<CommentSectionPage> {
                                   color:
                                       darkMode ? Colors.white : Colors.black),
                             ),
+                            const SizedBox(
+                              height: 60,
+                            )
                           ],
                         ),
                       ),

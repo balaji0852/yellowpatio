@@ -73,22 +73,20 @@ class graphDialogPage extends State<GraphDialog> {
   //balaji: 2/18/2023 adaptable pg dev-bug 3
   @override
   Widget build(BuildContext context) {
-
-     
-
-
     return StoreConnector<AppStore, bool>(
         converter: (store) => store.state.darkMode,
         builder: (context, darkMode) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(10,10,10,8),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black87),
                   color: darkMode ? Colors.grey[900] : Colors.white,
                   // color: colorStore.getColorByID(currentViewDataInstance.itemClassColorID),
                   borderRadius: BorderRadius.circular(0)),
-              height:  MediaQuery.of(context).orientation == Orientation.portrait?(MediaQuery.of(context).size.height * 0.7):(MediaQuery.of(context).size.height * 0.6)*0.9,
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? (MediaQuery.of(context).size.height * 0.7)
+                  : (MediaQuery.of(context).size.height * 0.6) * 0.9,
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -107,7 +105,10 @@ class graphDialogPage extends State<GraphDialog> {
                   ),
                   SizedBox(
                     //height:(MediaQuery.of(context).size.height*0.7)*0.8,
-                    height: MediaQuery.of(context).orientation == Orientation.portrait?(MediaQuery.of(context).size.height * 0.7)*0.75:(MediaQuery.of(context).size.height * 0.3)*0.9,
+                    height: MediaQuery.of(context).orientation ==
+                            Orientation.portrait
+                        ? (MediaQuery.of(context).size.height * 0.7) * 0.82
+                        : (MediaQuery.of(context).size.height * 0.3) * 0.9,
                     child:
 
                         //  ListView(
@@ -116,7 +117,7 @@ class graphDialogPage extends State<GraphDialog> {
                         //     var classDataInstanceMaterDuplicateClone = e;
                         //     return
                         Padding(
-                            padding: const EdgeInsets.fromLTRB(0,3,0,5),
+                            padding: const EdgeInsets.fromLTRB(0, 3, 0, 5),
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width - 70,
                               child: ListView(
@@ -150,8 +151,7 @@ class graphDialogPage extends State<GraphDialog> {
                                             classDataInstanceMaterDuplicate:
                                                 currentViewDataInstance,
                                             callBack: (selected) {
-                                             
-                                                updateStatusToUI(selected);
+                                              updateStatusToUI(selected);
                                               // setState(() {
                                               //   selectedDataInstance =
                                               //       classDataInstanceMaterDuplicateClone;
@@ -200,20 +200,59 @@ class graphDialogPage extends State<GraphDialog> {
                                         height: 10,
                                       ),
                                       Container(
-                                        decoration: BoxDecoration(
-                                            // color: colorStore
-                                            //     .getColorByID(currentViewDataInstance.itemClassColorID),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Text(
-                                          currentViewDataInstance.dataInstances,
-                                          style: TextStyle(
-                                            color: darkMode
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      ),
+                                          decoration: BoxDecoration(
+                                              // color: colorStore
+                                              //     .getColorByID(currentViewDataInstance.itemClassColorID),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    radius: 16,
+                                                    child: CircleAvatar(
+                                                      radius: 15,
+                                                      backgroundImage: NetworkImage(
+                                                          currentViewDataInstance
+                                                              .userStore
+                                                              .photoURL),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    currentViewDataInstance
+                                                        .userStore.userName,
+                                                    maxLines: 2,
+                                                    softWrap: true,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      color: darkMode
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                currentViewDataInstance
+                                                    .dataInstances,
+                                                style: TextStyle(
+                                                  color: darkMode
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          )),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -341,24 +380,21 @@ class graphDialogPage extends State<GraphDialog> {
     return classDataInstanceMaterDuplicateClone;
   }
 
-
-
-  updateStatusToUI(int status){
-     var localCurrentViewDataInstance =
+  updateStatusToUI(int status) {
+    var localCurrentViewDataInstance =
         widget.hourlyDataInstance.elementAt(currentViewDataInstanceIndex);
-     ClassDataInstanceMaterDuplicate temp = 
-     ClassDataInstanceMaterDuplicate(itemMasterID:localCurrentViewDataInstance.itemMasterID, 
-     dataInstances: localCurrentViewDataInstance.dataInstances, 
-     instancesTime: localCurrentViewDataInstance.instancesTime, 
-     itemClassColorID: localCurrentViewDataInstance.itemClassColorID, 
-     dataInstanceID: localCurrentViewDataInstance.dataInstanceID,
-     itemName: localCurrentViewDataInstance.itemName,
-     description: localCurrentViewDataInstance.description,
-     instancesStatus: status, 
-     userStore: localCurrentViewDataInstance.userStore);
-     
-     widget.hourlyDataInstance.replaceRange(currentViewDataInstanceIndex,currentViewDataInstanceIndex+1,[temp]);
-     
-     
+    ClassDataInstanceMaterDuplicate temp = ClassDataInstanceMaterDuplicate(
+        itemMasterID: localCurrentViewDataInstance.itemMasterID,
+        dataInstances: localCurrentViewDataInstance.dataInstances,
+        instancesTime: localCurrentViewDataInstance.instancesTime,
+        itemClassColorID: localCurrentViewDataInstance.itemClassColorID,
+        dataInstanceID: localCurrentViewDataInstance.dataInstanceID,
+        itemName: localCurrentViewDataInstance.itemName,
+        description: localCurrentViewDataInstance.description,
+        instancesStatus: status,
+        userStore: localCurrentViewDataInstance.userStore);
+
+    widget.hourlyDataInstance.replaceRange(
+        currentViewDataInstanceIndex, currentViewDataInstanceIndex + 1, [temp]);
   }
 }

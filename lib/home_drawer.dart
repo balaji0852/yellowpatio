@@ -171,7 +171,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProjectManagement()),
+                          builder: (context) => ProjectManagement(isProjectCreation: false,)),
                     );
                   },
                   child: Text(

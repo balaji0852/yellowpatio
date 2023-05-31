@@ -51,6 +51,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   int selectedViewCategoryID = 0;
   //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence
   int selectedIndex = 0;
+  //balaji : 28/5/2023 - local-view feature extended View
+  bool extendedView = false;
 
   static List<String> time = List.generate(24,
       (index) => index <= 11 ? (index + 1).toString() : (index + 1).toString());
@@ -65,6 +67,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
   List<List<test>>? quickViewData =
       List.generate(5, (index) => List.empty(growable: true));
   int reKey = 0;
+
+  ScrollController? sc;
 
   List<String> month = [
     "jan",
@@ -85,28 +89,34 @@ class PlannerGraphPage extends State<PlannerGraph> {
   void initState() {
     super.initState();
 
-    //temp
-    //TODO - for removal, check 155 line, was a temp walkaround.
     var config = Config();
-    setState(() {
-      viewType = Config.dateViewPreference;
-      print(viewType);
-    });
+    //Balaji : 5/30/2023 :remove setState since build is called after init
+    //setState(() {
+    viewType = Config.dateViewPreference;
+    //});
 
     reKey = widget.reKey;
 
-    //TODO removal - used to call for 3 view previously
     initializeDate(DateTime.now().millisecondsSinceEpoch);
-    //moving dateSetter to didChangeDependencies
   }
 
   setListviewWidget() {
-    //TODO -done : fixed animation, by change value to '90' *
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      widgetScrollCOntroller.animateTo(
-          90 * double.parse(DateTime.now().hour.toString()),
-          curve: Curves.linear,
-          duration: const Duration(milliseconds: 300));
+    print("setListviewWidget");
+    sc ??= widget.MainWidgetScrollView;
+
+    Future.delayed(Duration(milliseconds: extendedView ? 0 : 1), () {
+      if (extendedView) {
+        sc!.animateTo(90 * double.parse(DateTime.now().hour.toString()),
+            curve: Curves.linear, duration: const Duration(milliseconds: 1));
+      } else {
+        sc!.animateTo(0,
+            curve: Curves.linear, duration: const Duration(milliseconds: 1));
+
+        widgetScrollCOntroller.animateTo(
+            90 * double.parse(DateTime.now().hour.toString()),
+            curve: Curves.linear,
+            duration: const Duration(milliseconds: 1));
+      }
     });
   }
 
@@ -120,19 +130,22 @@ class PlannerGraphPage extends State<PlannerGraph> {
     //to graph_dialog, finding central state management...
 
     //balaji: adding this dispatch for global gd
-    state.dispatch(ChangeShowDialogState(openDialog));
-    
-    ScrollController sc = widget.MainWidgetScrollView;
-    sc.animateTo(0,
-        curve: Curves.linear, duration: const Duration(milliseconds: 300));
-    setState(() {
-      if (!openDialog) {
-        reKey++;
-      }
-      this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
-      this.openDialog = openDialog;
-      this.selectedIndex = selectedIndex;
-    });
+    if (extendedView) {
+      setState(() {
+        extendedView = false;
+      });
+    } else {
+      state.dispatch(ChangeShowDialogState(openDialog));
+      setState(() {
+        if (!openDialog) {
+          reKey++;
+        }
+        this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
+        this.openDialog = openDialog;
+        this.selectedIndex = selectedIndex;
+      });
+    }
+    setListviewWidget();
   }
 
   getQuickViewData(
@@ -227,7 +240,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
     super.didUpdateWidget(oldWidget);
 
     int _viewType = state.state.dateViewPreference;
-    if (_viewType != viewType || widget.reKey != oldWidget.reKey) {
+    if ((_viewType != viewType || widget.reKey != oldWidget.reKey)) {
       initializeDate(widget.reKey % 1000 == 0
           ? DateTime.now().millisecondsSinceEpoch
           : DateTime.parse(dates!.last).millisecondsSinceEpoch);
@@ -262,7 +275,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   }
 
   pageDownScroller(ScrollController mainWidgetScrollController) {
-    mainWidgetScrollController.animateTo(850,
+    mainWidgetScrollController.animateTo(extendedView ? 2750 : 850,
         curve: Curves.linear, duration: const Duration(milliseconds: 100));
   }
 
@@ -274,7 +287,9 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
     return SizedBox(
       height: MediaQuery.of(context).orientation == Orientation.portrait
-          ? MediaQuery.of(context).size.height * 0.75
+          ? extendedView
+              ? 2760
+              : MediaQuery.of(context).size.height * 0.75
           : MediaQuery.of(context).size.height * 0.6,
       child: Stack(
         children: [
@@ -283,8 +298,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
               Container(
                 height:
                     MediaQuery.of(context).orientation == Orientation.portrait
-                        ? (MediaQuery.of(context).size.height * 0.75)*0.80
-                        : (MediaQuery.of(context).size.height * 0.6)*0.45,
+                        ? extendedView
+                            ? 2642
+                            : (MediaQuery.of(context).size.height * 0.75) * 0.80
+                        : (MediaQuery.of(context).size.height * 0.6) * 0.45,
                 color: darkMode ? Colors.black : Colors.white,
                 child: ListView(
                   itemExtent: itemSize,
@@ -555,6 +572,20 @@ class PlannerGraphPage extends State<PlannerGraph> {
                   const Spacer(
                     flex: 3,
                   ),
+                  IconButton(
+                    icon: Icon(Icons.expand,
+                        size: 18,
+                        color: darkMode ? Colors.white : Colors.black),
+                    onPressed: () {
+                      setState(() {
+                        extendedView = !extendedView;
+                        setListviewWidget();
+                      });
+                    },
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  )
                 ],
               ),
             ],
@@ -589,11 +620,13 @@ class PlannerGraphPage extends State<PlannerGraph> {
               ),
             ),
           ),
-          if (openDialog)
+          if (openDialog || extendedView)
             GestureDetector(
               onTap: () => openDialogCallback(false, [], 0),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: extendedView
+                    ? 2642
+                    : MediaQuery.of(context).size.height * 0.8,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
                 child: Text(''),
