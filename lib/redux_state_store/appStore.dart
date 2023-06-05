@@ -1,6 +1,23 @@
 
 //@immutable-add to wiki
 import 'package:flutter/cupertino.dart';
+import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
+import 'package:yellowpatioapp/db/entity/user_store.dart';
+
+var demoInstanceLocal  = ClassDataInstanceMaterDuplicate(
+    itemMasterID: 999, 
+    dataInstances: "",
+    instancesTime: 999, 
+    itemClassColorID: 999, 
+    instancesStatus: 999, 
+    userStore: UserStore(
+      linkedEmail: '',
+      linkedPhone: '',
+      photoURL: '',
+      userName: '',
+      dateViewPreference: 999)
+      );
+
 
 //default value of a optional value should be const
 //
@@ -16,6 +33,8 @@ class AppStore {
   final int userStoreID;
   //Balaji: 16/05/2023 - adding this global gd flag
   final bool showDialog;
+  final ClassDataInstanceMaterDuplicate demoInstance;
+ 
 
   AppStore({
     this.isLoading = false,
@@ -25,10 +44,11 @@ class AppStore {
     this.darkMode  = true,
     this.showDialog = false,
     this.projectStoreID = 999,
-    this.userStoreID = 999
+    this.userStoreID = 999,
+    required this.demoInstance 
   });
 
-  factory AppStore.loading() => AppStore(isLoading: true);
+  factory AppStore.loading() => AppStore(isLoading: true,demoInstance: demoInstanceLocal);
 
 
   // List<String> reducer(List<String> previousState){

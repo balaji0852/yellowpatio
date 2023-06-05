@@ -1,5 +1,7 @@
 
 
+import '../../db/entity/class_data_instanceMaster.dart';
+
 class ChangeDateViewPreference{
   final int userDateViewPreference;
 
@@ -32,6 +34,14 @@ class ChangeUserStoreID{
   final int userStoreID;
 
   ChangeUserStoreID(this.userStoreID);
+}
+
+//Balaji : implementing TTC
+class DEMODataInstance{
+
+  final ClassDataInstanceMaterDuplicate demoDataInstance;
+
+  DEMODataInstance(this.demoDataInstance);
 }
 
 

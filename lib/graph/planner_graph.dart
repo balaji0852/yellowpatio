@@ -122,14 +122,13 @@ class PlannerGraphPage extends State<PlannerGraph> {
 
   //balaji : 1/16/2023 - adding the param selectedIndex, <- ft from confluence
   //balaji : 5/4/2023 - adding sc for GD animation
+  //balaji: adding this dispatch for global gd
   openDialogCallback(
       bool openDialog,
       List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild,
       int selectedIndex) {
-    //adding List to callback for now, this is to populate the List<HourlyDataInstance>
-    //to graph_dialog, finding central state management...
+    
 
-    //balaji: adding this dispatch for global gd
     if (extendedView) {
       setState(() {
         extendedView = false;
@@ -491,7 +490,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               (e) => Text(
                                 DateTime.parse(e).day.toString() +
                                     " " +
-                                    month.elementAt(DateTime.parse(e).month),
+                                    month.elementAt(DateTime.parse(e).month-1),
                                 style: TextStyle(
                                     fontSize: 10,
                                     color:

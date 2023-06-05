@@ -6,11 +6,13 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
 import 'package:yellowpatioapp/db/database.dart';
+import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
 import 'package:yellowpatioapp/db/entity/class_master.dart';
 import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
 import 'package:yellowpatioapp/db/entity/user_store.dart';
 import 'package:yellowpatioapp/graph/planner_graph.dart';
 import 'package:yellowpatioapp/migation/migrations.dart';
+import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
 import '../home.dart';
 import '../redux_state_store/appStore.dart';
@@ -59,10 +61,16 @@ class CommentSection extends State<CommentSectionPage> {
     darkMode = state.state.darkMode;
 
    
+    
 
-    return StoreConnector<AppStore, bool>(
-        converter: (store) => store.state.showDialog,
-        builder: (context, _showDialog) {
+    return StoreConnector<AppStore, AppStore>(
+        converter: (store) => store.state,
+        builder: (context, _state) {
+
+          // if(_state.demoInstance.itemMasterID==999 ){
+          //   commentEditController.text  = "";
+          // }
+
           return Scaffold(
             appBar: AppBar(
               backgroundColor: !darkMode ? Colors.white : Colors.black,
@@ -74,7 +82,7 @@ class CommentSection extends State<CommentSectionPage> {
               title: Text(
                 widget.classMaster!.itemName,
                 style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 24,
                     color: darkMode ? Colors.white : Colors.black),
               ),
             ),
@@ -82,7 +90,6 @@ class CommentSection extends State<CommentSectionPage> {
               fit: StackFit.expand,
               children: [
                 SingleChildScrollView(
-                  controller: mainWidgetScrollController,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -118,7 +125,7 @@ class CommentSection extends State<CommentSectionPage> {
                                             });
                                           },
                                           child: Text(
-                                            showDescription && !_showDialog
+                                            showDescription && !_state.showDialog
                                                 ? widget
                                                     .classMaster!.description
                                                 : widget
@@ -283,6 +290,23 @@ class CommentSection extends State<CommentSectionPage> {
     );
   }
 
+
+  handleTTCFlow(){
+    if(state.state.demoInstance.itemMasterID!=999){
+      ClassDataInstanceMaterDuplicate globalItemtoOverride = state.state.demoInstance;
+      ClassDataInstanceMaterDuplicate dummyItem = ClassDataInstanceMaterDuplicate(
+        dataInstanceID: globalItemtoOverride.dataInstanceID,
+        itemMasterID: globalItemtoOverride.itemMasterID, 
+        dataInstances:"[remainder]:"+commentEditController.text, 
+        instancesTime: globalItemtoOverride.instancesTime, 
+        itemClassColorID: globalItemtoOverride.itemClassColorID, 
+        instancesStatus: globalItemtoOverride.instancesStatus, 
+        userStore: globalItemtoOverride.userStore);
+
+      state.dispatch(DEMODataInstance(dummyItem));
+    }
+  }
+
   textFieldheighManager(String value) {
     setState(() {
       if (value.length >= 240) {
@@ -310,6 +334,7 @@ class CommentSection extends State<CommentSectionPage> {
       }
     });
     commentsLengthManager = value.length;
+    handleTTCFlow();
   }
 
   //1/28/2023 : Balaji- adding specific reKey(reKey = n*1000;) for sale - 20
@@ -321,10 +346,12 @@ class CommentSection extends State<CommentSectionPage> {
       // final dataInstanceMasterDao = database.dataInstanceMasterDao;
       var state = StoreProvider.of<AppStore>(context);
       userStoreID = state.state.userStoreID;
+      bool isTTC = state.state.demoInstance.itemMasterID!=999;
+      ClassDataInstanceMaterDuplicate DemoTTCDataInstance = state.state.demoInstance;
       DataInstancesMaster dataInstancesMaster = DataInstancesMaster(
-          itemMasterID: widget.classMaster!.itemMasterID!,
-          dataInstances: commentEditController.text,
-          instancesStatus: 2,
+          itemMasterID: isTTC?DemoTTCDataInstance.itemMasterID:widget.classMaster!.itemMasterID!,
+          dataInstances: isTTC?DemoTTCDataInstance.dataInstances:commentEditController.text,
+          instancesStatus: isTTC?DemoTTCDataInstance.instancesTime<DateTime.now().millisecondsSinceEpoch?3:2:2,
           userStore: UserStore(
               userStoreID: userStoreID,
               userName: "",
@@ -334,7 +361,7 @@ class CommentSection extends State<CommentSectionPage> {
               timeViewPreference: 1,
               dateViewPreference: 1,
               photoURL: ""),
-          instancesTime: DateTime.now().millisecondsSinceEpoch);
+          instancesTime: isTTC?DemoTTCDataInstance.instancesTime:DateTime.now().millisecondsSinceEpoch);
       //postDataInstanceMaster(dataInstancesMaster);
 
       //cloud migration
@@ -349,7 +376,7 @@ class CommentSection extends State<CommentSectionPage> {
             maxLinesManagement = 1;
             reKey = reKey * 1000;
           });
-
+          state.dispatch(DEMODataInstance(demoInstanceLocal));
           commentEditController.clear();
           _key.currentState!.calls();
         }
