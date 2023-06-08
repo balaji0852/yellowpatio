@@ -147,6 +147,9 @@ class graphDialogPage extends State<GraphDialog> {
                                                     : Colors.black,
                                                 fontWeight: FontWeight.bold),
                                           ),
+                                          if(null!=currentViewDataInstance &&   currentViewDataInstance
+                                                            .instancesStatu<3 && currentViewDataInstance
+                                                            .instancesStatu>=0)
                                           ShimDropDown(
                                             classDataInstanceMaterDuplicate:
                                                 currentViewDataInstance,

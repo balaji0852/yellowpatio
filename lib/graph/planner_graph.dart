@@ -101,7 +101,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
   }
 
   setListviewWidget() {
-    print("setListviewWidget");
     sc ??= widget.MainWidgetScrollView;
 
     Future.delayed(Duration(milliseconds: extendedView ? 0 : 1), () {
@@ -109,9 +108,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
         sc!.animateTo(90 * double.parse(DateTime.now().hour.toString()),
             curve: Curves.linear, duration: const Duration(milliseconds: 1));
       } else {
-        sc!.animateTo(0,
-            curve: Curves.linear, duration: const Duration(milliseconds: 1));
-
+        // sc!.animateTo(0,
+        //   curve: Curves.linear, duration: const Duration(milliseconds: 1));
         widgetScrollCOntroller.animateTo(
             90 * double.parse(DateTime.now().hour.toString()),
             curve: Curves.linear,
@@ -127,7 +125,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
       bool openDialog,
       List<ClassDataInstanceMaterDuplicate> hourlyDataInstanceFromChild,
       int selectedIndex) {
-    
+    sc ??= widget.MainWidgetScrollView;
 
     if (extendedView) {
       setState(() {
@@ -139,12 +137,14 @@ class PlannerGraphPage extends State<PlannerGraph> {
         if (!openDialog) {
           reKey++;
         }
+        sc!.animateTo(0,
+            curve: Curves.linear, duration: const Duration(milliseconds: 1));
         this.hourlyDataInstanceFromChild = hourlyDataInstanceFromChild;
         this.openDialog = openDialog;
         this.selectedIndex = selectedIndex;
       });
     }
-    setListviewWidget();
+    //setListviewWidget();
   }
 
   getQuickViewData(
@@ -490,7 +490,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
                               (e) => Text(
                                 DateTime.parse(e).day.toString() +
                                     " " +
-                                    month.elementAt(DateTime.parse(e).month-1),
+                                    month
+                                        .elementAt(DateTime.parse(e).month - 1),
                                 style: TextStyle(
                                     fontSize: 10,
                                     color:

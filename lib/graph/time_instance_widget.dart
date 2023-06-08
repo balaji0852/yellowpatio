@@ -262,7 +262,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                 child: GestureDetector(
                                   onTap: () {
                                     if (state.state.demoInstance.itemMasterID ==
-                                        999) {
+                                        999 && state.state.demoInstance.instancesStatus<3 &&
+                                        state.state.demoInstance.instancesStatus>-1) {
                                       widget.openCallback(
                                           true, element, element.indexOf(e));
                                     } else {
@@ -376,7 +377,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
         indexToRemove != -1) {
       if (todayInstance.elementAt(indexToRemove).isNotEmpty) {
         todayInstance.elementAt(indexToRemove).removeAt(0);
-        indexToRemove = -1;
+       // indexToRemove = -1;
       }
     }
     int initial = DateTime.parse(
@@ -439,7 +440,6 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
       state.dispatch(DEMODataInstance(demoInstance));
       modifyTodayInstance(index);
     } else {
-      indexToRemove = index - 1;
       destroyTTCFlow();
     }
   }
