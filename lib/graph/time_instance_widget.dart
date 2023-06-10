@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:async/async.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
@@ -262,8 +263,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                                 child: GestureDetector(
                                   onTap: () {
                                     if (state.state.demoInstance.itemMasterID ==
-                                        999 && state.state.demoInstance.instancesStatus<3 &&
-                                        state.state.demoInstance.instancesStatus>-1) {
+                                        999 && e.instancesStatus<4 && e.instancesStatus>-1
+                                      ) {
                                       widget.openCallback(
                                           true, element, element.indexOf(e));
                                     } else {
@@ -373,11 +374,11 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   void modifyTodayInstance(int index) {
     if (state.state.demoInstance.userStore.dateViewPreference !=
             widget.columnName &&
-        index == indexToRemove &&
+        index-1 == indexToRemove &&
         indexToRemove != -1) {
       if (todayInstance.elementAt(indexToRemove).isNotEmpty) {
         todayInstance.elementAt(indexToRemove).removeAt(0);
-       // indexToRemove = -1;
+        //indexToRemove = -1;
       }
     }
     int initial = DateTime.parse(
@@ -387,7 +388,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
     if (state.state.demoInstance.instancesTime != 999 &&
-        state.state.demoInstance.instancesStatus == index &&
+        state.state.demoInstance.userStore.themeID == index &&
         state.state.demoInstance.instancesTime <=
             (initial + (3600000 * index)) &&
         state.state.demoInstance.instancesTime >= (initial - (3600000))) {
@@ -427,13 +428,14 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
             dataInstances: "[remainder]:",
             instancesTime: initial,
             itemClassColorID: widget.classMaster.itemClassColorID,
-            instancesStatus: index,
+            instancesStatus: 999,
             userStore: UserStore(
                 userStoreID: state.state.userStoreID,
                 linkedEmail: '',
                 linkedPhone: '',
                 photoURL: '',
                 userName: '',
+                themeID: index,
                 dateViewPreference: widget.columnName));
 
     if (state.state.demoInstance.itemMasterID == 999) {

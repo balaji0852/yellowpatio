@@ -248,8 +248,8 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                           color: colorStore.getColorByID(
                                               e.classMaster.itemClassColorID),
                                           borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(25),
-                                              topRight: Radius.circular(25))),
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20))),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,

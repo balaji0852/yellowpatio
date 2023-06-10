@@ -108,8 +108,6 @@ class PlannerGraphPage extends State<PlannerGraph> {
         sc!.animateTo(90 * double.parse(DateTime.now().hour.toString()),
             curve: Curves.linear, duration: const Duration(milliseconds: 1));
       } else {
-        // sc!.animateTo(0,
-        //   curve: Curves.linear, duration: const Duration(milliseconds: 1));
         widgetScrollCOntroller.animateTo(
             90 * double.parse(DateTime.now().hour.toString()),
             curve: Curves.linear,
@@ -128,6 +126,10 @@ class PlannerGraphPage extends State<PlannerGraph> {
     sc ??= widget.MainWidgetScrollView;
 
     if (extendedView) {
+      sc ??= widget.MainWidgetScrollView;
+      sc!.animateTo(0,
+          curve: Curves.linear, duration: const Duration(milliseconds: 1));
+
       setState(() {
         extendedView = false;
       });
@@ -319,7 +321,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
                                         MainAxisAlignment.spaceAround,
                                     children: time
                                         .map((e) => SizedBox(
-                                              height: 109,
+                                              height: 110,
                                               child: Text(
                                                 e,
                                                 style: TextStyle(
@@ -579,6 +581,12 @@ class PlannerGraphPage extends State<PlannerGraph> {
                     onPressed: () {
                       setState(() {
                         extendedView = !extendedView;
+                        if (!extendedView) {
+                          sc ??= widget.MainWidgetScrollView;
+                          sc!.animateTo(0,
+                              curve: Curves.linear,
+                              duration: const Duration(milliseconds: 1));
+                        }
                         setListviewWidget();
                       });
                     },
@@ -682,7 +690,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
     setListviewWidget();
     //balaji : 12/4/2022 : adding below if/ for quickview implementation
     //if (!isIntl) {
-    quickViewDataCleanUp();
+    //9/6/2023:Balaji: add cleanup if theres consequence   
+    //quickViewDataCleanUp();
     //}
     addDateToList();
   }

@@ -77,7 +77,7 @@ class graphDialogPage extends State<GraphDialog> {
         converter: (store) => store.state.darkMode,
         builder: (context, darkMode) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black87),
@@ -107,7 +107,7 @@ class graphDialogPage extends State<GraphDialog> {
                     //height:(MediaQuery.of(context).size.height*0.7)*0.8,
                     height: MediaQuery.of(context).orientation ==
                             Orientation.portrait
-                        ? (MediaQuery.of(context).size.height * 0.7) * 0.82
+                        ? (MediaQuery.of(context).size.height * 0.7) * 0.8
                         : (MediaQuery.of(context).size.height * 0.3) * 0.9,
                     child:
 
@@ -147,9 +147,7 @@ class graphDialogPage extends State<GraphDialog> {
                                                     : Colors.black,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          if(null!=currentViewDataInstance &&   currentViewDataInstance
-                                                            .instancesStatu<3 && currentViewDataInstance
-                                                            .instancesStatu>=0)
+                            
                                           ShimDropDown(
                                             classDataInstanceMaterDuplicate:
                                                 currentViewDataInstance,
