@@ -282,6 +282,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                   itemBuilder:
                                                       (BuildContext context) =>
                                                           <PopupMenuEntry>[
+                                                    if(e.classMaster.categoryID!=1) //Balaji : 11/6/2023:self chat is non editable       
                                                     PopupMenuItem(
                                                       child: ListTile(
                                                         title: Text(

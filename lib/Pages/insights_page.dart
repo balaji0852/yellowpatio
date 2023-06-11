@@ -359,9 +359,12 @@ class Insights extends State<InsightsPage> {
     //cfmw should be dynamice, based on input
     ClassMaster classMasterItem = ClassMaster(
         itemName: classTitleController.text,
-        categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
-        subCategoryID:
-            categorystore.getSubCategoryList.indexOf(selectedSubCategory),
+        categoryID: 0,
+        subCategoryID: 0,
+     //Balaji : 11/6/2023 : commenting down below lines for self chat development
+     //   categoryID: categorystore.getCategoryList.indexOf(selectedCategory),
+     //   subCategoryID:
+           // categorystore.getSubCategoryList.indexOf(selectedSubCategory),
         itemClassColorID: colorsList
             .indexWhere((element) => element.colorName == selectedColor),
         itemPriority: 1,
