@@ -78,8 +78,24 @@ flutter:
     - assets/threeDayImage.png
     - assets/fiveDayImage.png
     - assets/women_working_on_task.jpg
+    - assets/women_working_on_tasks-dark.jpg
     - assets/man_working_sofa.jpg
     - assets/project5.png
+    - assets/project5-dark.jpg
+    - assets/sun.JPG
+    - assets/moon.JPG
+    - assets/pmServer_lite.JPG
+    - assets/pmServer_dark.JPG
+    - assets/projects_lite.JPG
+    - assets/projects_dark.JPG
+    - assets/week_dark.JPG
+    - assets/week_lite.JPG
+    - assets/3day_dark.JPG
+    - assets/3day_lite.JPG
+    - assets/2day_dark.JPG
+    - assets/2day_lite.JPG
+    - assets/day_dark.JPG
+    - assets/day_lite.JPG
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

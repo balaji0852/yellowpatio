@@ -575,8 +575,8 @@ class PlannerGraphPage extends State<PlannerGraph> {
                     flex: 3,
                   ),
                   IconButton(
-                    icon: Icon(Icons.expand,
-                        size: 18,
+                    icon: Icon(Icons.zoom_out_map,
+                        size: 15,
                         color: darkMode ? Colors.white : Colors.black),
                     onPressed: () {
                       setState(() {

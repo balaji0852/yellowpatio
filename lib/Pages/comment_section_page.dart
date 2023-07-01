@@ -145,7 +145,7 @@ class CommentSection extends State<CommentSectionPage> {
                                                                         .classMaster!
                                                                         .description
                                                                         .length),
-                                            maxLines: 5,
+                                            // maxLines: 5,
                                             softWrap: true,
                                             style: TextStyle(
                                                 fontSize: 13,
@@ -297,7 +297,8 @@ class CommentSection extends State<CommentSectionPage> {
       ClassDataInstanceMaterDuplicate dummyItem = ClassDataInstanceMaterDuplicate(
         dataInstanceID: globalItemtoOverride.dataInstanceID,
         itemMasterID: globalItemtoOverride.itemMasterID, 
-        dataInstances:"[remainder]:"+commentEditController.text, 
+        //Balaji: 02/07/2023 : removing remainder tag for past instances
+        dataInstances:globalItemtoOverride.instancesTime>=DateTime.now().millisecondsSinceEpoch?"[remainder]:":""+commentEditController.text, 
         instancesTime: globalItemtoOverride.instancesTime, 
         itemClassColorID: globalItemtoOverride.itemClassColorID, 
         instancesStatus: globalItemtoOverride.instancesStatus, 
@@ -381,6 +382,7 @@ class CommentSection extends State<CommentSectionPage> {
           _key.currentState!.calls();
         }
       }).onError((error, stackTrace) {
+        callingServer = false;
         print(error);
       });
     }

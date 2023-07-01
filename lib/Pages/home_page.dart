@@ -325,6 +325,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                                         },
                                                       ),
                                                     ),
+                                                      if(e.classMaster.categoryID!=1) //Balaji : 11/6/2023:self chat is non editable and delete     
                                                     PopupMenuItem(
                                                         child: ListTile(
                                                       title: Text('delete',
@@ -427,7 +428,7 @@ class HomePageActivity extends State<homePage> with WidgetsBindingObserver {
                                 height: 30,
                               ),
                               Image.asset(
-                                "assets/women_working_on_task.jpg",
+                                darkMode?"assets/women_working_on_tasks-dark.jpg":"assets/women_working_on_task.jpg",
                                 scale: 0.9,
                                 width: 300,
                                 height: 250,

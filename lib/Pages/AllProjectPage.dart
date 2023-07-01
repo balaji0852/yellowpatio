@@ -144,7 +144,7 @@ class AllProjectPageState extends State<AllProjectPage> {
                   alignment: Alignment.center,
                   child: Column(children: [
                     Image.asset(
-                      "assets/project5.png",
+                      darkMode?"assets/project5-dark.jpg":"assets/project5.png",
                       scale: 2,
                       width: 400,
                       height: 350,
@@ -153,7 +153,7 @@ class AllProjectPageState extends State<AllProjectPage> {
                       height: 5,
                     ),
                     Text(
-                      "we're fetching you're mission critical business...",
+                      "we're fetching you're mission critical business data...",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 20,

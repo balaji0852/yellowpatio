@@ -143,6 +143,9 @@ class HomePage extends State<Home> {
     });
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     reduxState = StoreProvider.of<AppStore>(context);
@@ -158,7 +161,8 @@ class HomePage extends State<Home> {
                 IconThemeData(color: _darkMode ? Colors.white : Colors.black),
             title: Text(appName,
                 style:
-                    TextStyle(color: _darkMode ? Colors.white : Colors.black)),
+                    TextStyle(color: _darkMode ? Colors.white : Colors.black,fontStyle: FontStyle.italic,
+                        fontSize: 13)),
             backgroundColor: _darkMode ? Colors.black : Colors.white,
             actions: <Widget>[
               MaterialButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:yellowpatioapp/cloud/serverPath.dart';
 import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
 
 import '../home.dart';
@@ -70,7 +71,7 @@ class ProjectManagementState extends State<ProjectManagement> {
                   crossPlatform: InAppWebViewOptions(supportZoom: false)),
               initialUrlRequest: URLRequest(
                   url: Uri.parse(
-                      "http://wark.fun/#/pm?themeid=${state.darkMode==true?1:0}&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}")),
+                      "http://${appServerPath()}/#/pm?themeid=${state.darkMode==true?1:0}&projectStoreID=${state.projectStoreID}&userStoreID=${state.userStoreID}")),
             ),
           );
         });

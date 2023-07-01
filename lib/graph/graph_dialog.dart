@@ -387,7 +387,8 @@ class graphDialogPage extends State<GraphDialog> {
     ClassDataInstanceMaterDuplicate temp = ClassDataInstanceMaterDuplicate(
         itemMasterID: localCurrentViewDataInstance.itemMasterID,
         dataInstances: localCurrentViewDataInstance.dataInstances,
-        instancesTime: localCurrentViewDataInstance.instancesTime,
+         //Balaji: 02/07/2023: done and working task will get current time update.
+      instancesTime:status + 1!=2? DateTime.now().millisecondsSinceEpoch: localCurrentViewDataInstance.instancesTime,
         itemClassColorID: localCurrentViewDataInstance.itemClassColorID,
         dataInstanceID: localCurrentViewDataInstance.dataInstanceID,
         itemName: localCurrentViewDataInstance.itemName,

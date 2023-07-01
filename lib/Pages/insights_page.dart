@@ -286,7 +286,7 @@ class Insights extends State<InsightsPage> {
                               width: 1)),
                       child: TextField(
                           controller: descriptionController,
-                          maxLength: 255,
+                          maxLength: 10000,
                           maxLines: 7,
                           onChanged: (value) {},
                           decoration: InputDecoration(

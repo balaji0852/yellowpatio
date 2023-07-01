@@ -420,12 +420,12 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                     .substring(0, 10) +
                 " 00:00:00.000")
         .millisecondsSinceEpoch;
-    initial += (3600000 * index);
+    initial += (3600000 * index); 
     ClassDataInstanceMaterDuplicate demoInstance =
         ClassDataInstanceMaterDuplicate(
             dataInstanceID: Random().nextInt(3000),
             itemMasterID: widget.classMaster.itemMasterID!,
-            dataInstances: "[remainder]:",
+            dataInstances: initial>=DateTime.now().millisecondsSinceEpoch?"[remainder]:":"",
             instancesTime: initial,
             itemClassColorID: widget.classMaster.itemClassColorID,
             instancesStatus: 999,

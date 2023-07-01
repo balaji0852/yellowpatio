@@ -72,7 +72,8 @@ class ShimDropDownWidget extends State<ShimDropDown> {
       itemMasterID: widget.classDataInstanceMaterDuplicate.itemMasterID,
       dataInstances: widget.classDataInstanceMaterDuplicate.dataInstances,
       instancesStatus: viewCategory.indexOf(selectedCategory!) + 1,
-      instancesTime: widget.classDataInstanceMaterDuplicate.instancesTime,
+      //Balaji: 02/07/2023: done and working task will get current time update.
+      instancesTime:viewCategory.indexOf(selectedCategory) + 1!=2? DateTime.now().millisecondsSinceEpoch:widget.classDataInstanceMaterDuplicate.instancesTime,
     );
 
     await DataInstanceMasterCloud()

@@ -46,7 +46,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
   @override
   void didUpdateWidget(covariant HomeDrawer oldWidget) {
     super.didUpdateWidget(oldWidget);
-                        userSetting();
+    userSetting();
 
     //changing DB, through post ui change.
   }
@@ -83,7 +83,8 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 Text("planB",
                     style: TextStyle(
                         color: darkMode ? Colors.white : Colors.black,
-                        fontSize: 20)),
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12)),
               ],
             ),
             const SizedBox(
@@ -105,26 +106,30 @@ class HomeDraweWidget extends State<HomeDrawer> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                datePreferenceWidget(1, 'One day'),
+                datePreferenceWidget(1, 'day', "day_dark.JPG", "day_lite.JPG"),
                 const SizedBox(
                   height: 3,
                 ),
-                datePreferenceWidget(2, 'Two day'),
+                datePreferenceWidget(
+                    2, '2 day', "2day_dark.JPG", "2day_lite.JPG"),
                 const SizedBox(
                   height: 4,
                 ),
-                datePreferenceWidget(3, 'Three day'),
+                datePreferenceWidget(
+                    3, '3 day', "3day_dark.JPG", "3day_lite.JPG"),
                 const SizedBox(
                   height: 5,
                 ),
-                datePreferenceWidget(5, 'Five day'),
+                datePreferenceWidget(
+                    5, 'work week', "week_dark.JPG", "week_lite.JPG"),
                 const SizedBox(
                   height: 6,
                 ),
                 MaterialButton(
+                  elevation: 0,
                   key: UniqueKey(),
                   height: 50,
-                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  color: darkMode ? Colors.black : Colors.white,
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -133,10 +138,26 @@ class HomeDraweWidget extends State<HomeDrawer> {
                           builder: (context) => const ProjectPage()),
                     );
                   },
-                  child: Text(
-                    "Projects",
-                    style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Image.asset(
+                          darkMode
+                              ? "assets/projects_dark.JPG"
+                              : "assets/projects_lite.JPG",
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                      Text(
+                        "projects",
+                        style: TextStyle(
+                            color: darkMode ? Colors.white : Colors.black,
+                            fontSize: 14),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -162,41 +183,75 @@ class HomeDraweWidget extends State<HomeDrawer> {
                 //   ),
                 // ),
                 MaterialButton(
+                  elevation: 0,
                   key: UniqueKey(),
                   height: 50,
-                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  color: darkMode ? Colors.black : Colors.white,
                   onPressed: () {
                     Navigator.pop(context);
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProjectManagement(isProjectCreation: false,)),
+                          builder: (context) => ProjectManagement(
+                                isProjectCreation: false,
+                              )),
                     );
                   },
-                  child: Text(
-                    "Projects Management-server",
-                    style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Image.asset(
+                          darkMode
+                              ? "assets/pmServer_dark.JPG"
+                              : "assets/pmServer_lite.JPG",
+                          width: 25,
+                          height: 25,
+                        ),
+                      ),
+                      Text(
+                        "project management",
+                        style: TextStyle(
+                            color: darkMode ? Colors.white : Colors.black,
+                            fontSize: 14),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 MaterialButton(
+                  elevation: 0,
                   key: UniqueKey(),
                   height: 50,
-                  color: darkMode ? Colors.grey[850] : Colors.white,
+                  color: darkMode ? Colors.black : Colors.white,
                   onPressed: () {
                     setState(() {
                       state.dispatch(ChangeDarkMode(!darkMode));
                       darkMode = !darkMode;
                     });
                   },
-                  child: Text(
-                    darkMode?"lite Mode":"Dark Mode",
-                    style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        child: Image.asset(
+                          darkMode ? "assets/sun.JPG" : "assets/moon.JPG",
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                      Text(
+                        darkMode ? "lite Mode" : "Dark Mode",
+                        style: TextStyle(
+                            color: darkMode ? Colors.white : Colors.black,
+                            fontSize: 14),
+                      )
+                    ],
                   ),
                 )
               ],
@@ -228,22 +283,46 @@ class HomeDraweWidget extends State<HomeDrawer> {
     });
   }
 
-  Widget datePreferenceWidget(int viewType, String text) {
+  Widget datePreferenceWidget(
+      int viewType, String text, String darkIcon, String liteIcon) {
     return StoreConnector<AppStore, VoidCallback>(converter: (store) {
       return () => store.dispatch(ChangeDateViewPreference(viewType));
     }, builder: (context, callback) {
       return MaterialButton(
+        elevation: 0,
         key: UniqueKey(),
         height: 50,
-        focusColor: darkMode ? Colors.grey[850] : Colors.white,
-        color: state.state.dateViewPreference == viewType
-            ? Colors.blue
-            : darkMode
-                ? Colors.grey[850]
-                : Colors.white,
-        onPressed:callback ,
-        child: Text(text,
-            style: TextStyle(color: darkMode ? Colors.white : Colors.black)),
+        focusColor: darkMode ? Colors.black : Colors.white,
+        color:
+            // state.state.dateViewPreference == viewType
+            //     ? Colors.blue
+            //     :
+            darkMode ? Colors.black : Colors.white,
+        onPressed: callback,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 60,
+              child: Center(
+                child: SizedBox(
+                  width: 44,
+                  child: Image.asset(
+                    "assets/" + (darkMode ? darkIcon : liteIcon),
+                    width: 32,
+                    height: 32,
+                    scale: 1,
+                  ),
+                ),
+              ),
+            ),
+            Text(
+              state.state.dateViewPreference == viewType ?  text+"      " + "  <--":text,
+              style: TextStyle(
+                  color: darkMode ? Colors.white : Colors.black, fontSize: 14),
+            )
+          ],
+        ),
       );
     });
   }
@@ -252,23 +331,23 @@ class HomeDraweWidget extends State<HomeDrawer> {
     var state = StoreProvider.of<AppStore>(context);
 
     //write logic to check presence of user;
-      //cloud migration
-      // var userManagement = UserManagement();
-      // int _userStoreID = await userManagement.userRegisterationShim(context);
-      // while (_userStoreID==-1){
-      //   _userStoreID = await userManagement.userRegisterationShim(context);
-      // }
-      UserStore userStore = UserStore(
-          linkedEmail: FirebaseAuth.instance.currentUser!.email!,
-          userName: FirebaseAuth.instance.currentUser!.displayName!,
-          linkedPhone: FirebaseAuth.instance.currentUser!.phoneNumber == null
-              ? "empty"
-              : FirebaseAuth.instance.currentUser!.phoneNumber!,
-          photoURL: FirebaseAuth.instance.currentUser!.photoURL!,
-          themeID: state.state.darkMode?1:0,
-          timeViewPreference: -1,
-          dateViewPreference: state.state.dateViewPreference);
+    //cloud migration
+    // var userManagement = UserManagement();
+    // int _userStoreID = await userManagement.userRegisterationShim(context);
+    // while (_userStoreID==-1){
+    //   _userStoreID = await userManagement.userRegisterationShim(context);
+    // }
+    UserStore userStore = UserStore(
+        linkedEmail: FirebaseAuth.instance.currentUser!.email!,
+        userName: FirebaseAuth.instance.currentUser!.displayName!,
+        linkedPhone: FirebaseAuth.instance.currentUser!.phoneNumber == null
+            ? "empty"
+            : FirebaseAuth.instance.currentUser!.phoneNumber!,
+        photoURL: FirebaseAuth.instance.currentUser!.photoURL!,
+        themeID: state.state.darkMode ? 1 : 0,
+        timeViewPreference: -1,
+        dateViewPreference: state.state.dateViewPreference);
 
-      userStore = await UserStoreCloud().putUserStore(userStore);
-    }
+    userStore = await UserStoreCloud().putUserStore(userStore);
+  }
 }
