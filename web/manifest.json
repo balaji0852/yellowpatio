@@ -1,6 +1,6 @@
 {
-    "name": "yellowpatioapp",
-    "short_name": "yellowpatioapp",
+    "name": "planb",
+    "short_name": "planb",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "yellowpatioapp",
+            "name": "planb",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "yellowpatioapp (profile mode)",
+            "name": "planb (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "yellowpatioapp (release mode)",
+            "name": "planb (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

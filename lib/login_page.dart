@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:yellowpatioapp/Pages/projectPage.dart';
-import 'package:yellowpatioapp/SupportSystem/user_management.dart';
-import 'package:yellowpatioapp/cloud/UserStoreCloud.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
-import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
-import 'package:yellowpatioapp/redux_state_store/appStore.dart';
-import 'package:yellowpatioapp/redux_state_store/reducer/userStoreReducer.dart';
+import 'package:planb/Pages/projectPage.dart';
+import 'package:planb/SupportSystem/user_management.dart';
+import 'package:planb/cloud/UserStoreCloud.dart';
+import 'package:planb/db/entity/user_store.dart';
+import 'package:planb/redux_state_store/action/actions.dart';
+import 'package:planb/redux_state_store/appStore.dart';
+import 'package:planb/redux_state_store/reducer/userStoreReducer.dart';
 import 'home.dart';
 
 //balaji : 1/17/2021 , bug 5 - modifying putUserStore usage, validating userStoreID - 0
@@ -96,13 +96,22 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            const Text(
-              'planB',
-              style: TextStyle(
-                  fontSize: 25,
-                  color: Colors.yellow,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold),
+            Column(
+              children: [
+                
+                Image.asset("assets/planb-icon.JPG",
+                height: 100,
+                width: 100,
+                ),
+                const Text(
+                  'planB',
+                  style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                      fontStyle: FontStyle.italic,
+                      ),
+                ),
+              ],
             ),
             ElevatedButton(
                 onPressed: signInWithGoogle, child: const Text("sign-in")),
@@ -172,8 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (userStore.userStoreID != 0) {
         var state = StoreProvider.of<AppStore>(context);
         state.dispatch(ChangeUserStoreID(userStore.userStoreID!));
-        state.dispatch(ChangeDateViewPreference(userStore.dateViewPreference!)); 
-        state.dispatch(ChangeDarkMode(userStore.themeID==1?true:false));
+        state.dispatch(ChangeDateViewPreference(userStore.dateViewPreference!));
+        state.dispatch(ChangeDarkMode(userStore.themeID == 1 ? true : false));
         Navigator.pop(context);
         Navigator.push(
           context,

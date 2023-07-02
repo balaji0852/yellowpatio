@@ -1,8 +1,8 @@
 import 'package:floor/floor.dart';
 import 'dart:convert';
 
-import 'package:yellowpatioapp/db/entity/project_store.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:planb/db/entity/project_store.dart';
+import 'package:planb/db/entity/user_store.dart';
 
 @Entity(tableName: "ClassMaster", foreignKeys: [
   ForeignKey(

@@ -1,8 +1,8 @@
 
 //@immutable-add to wiki
 import 'package:flutter/cupertino.dart';
-import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:planb/db/entity/class_data_instanceMaster.dart';
+import 'package:planb/db/entity/user_store.dart';
 
 var demoInstanceLocal  = ClassDataInstanceMaterDuplicate(
     itemMasterID: 999, 

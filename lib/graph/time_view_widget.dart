@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:yellowpatioapp/Pages/color_store.dart';
-import 'package:yellowpatioapp/db/entity/class_master.dart';
-import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
-import 'package:yellowpatioapp/db/repository/data_instance_master_dao.dart';
+import 'package:planb/Pages/color_store.dart';
+import 'package:planb/db/entity/class_master.dart';
+import 'package:planb/db/entity/data_instances_master.dart';
+import 'package:planb/db/repository/data_instance_master_dao.dart';
 
 class TimeView extends StatefulWidget {
   final ColorStore colorStore;

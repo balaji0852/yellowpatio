@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
-import 'package:yellowpatioapp/db/repository/unused/user_store_dao.dart';
-import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:planb/db/entity/user_store.dart';
+import 'package:planb/db/repository/unused/user_store_dao.dart';
+import 'package:planb/redux_state_store/action/actions.dart';
 
 import '../db/database.dart';
 import '../redux_state_store/appStore.dart';

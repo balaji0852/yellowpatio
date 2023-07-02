@@ -1,4 +1,4 @@
-package com.example.yellowpatioapp;
+package com.example.planb;
 
 // import io.flutter.app.FlutterActivity;
 import io.flutter.embedding.android.FlutterActivity;

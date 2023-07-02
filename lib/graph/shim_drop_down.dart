@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:yellowpatioapp/cloud/dataInstanceMasterCloud.dart';
-import 'package:yellowpatioapp/graph/dropwdown.dart';
+import 'package:planb/cloud/dataInstanceMasterCloud.dart';
+import 'package:planb/graph/dropwdown.dart';
 
 import '../db/database.dart';
 import '../db/entity/class_data_instanceMaster.dart';

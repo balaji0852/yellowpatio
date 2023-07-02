@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.yellowpatioapp" android:targetSandboxVersion="1">
+    package="com.example.planb" android:targetSandboxVersion="1">
    <application
         android:label="planB"
          android:usesCleartextTraffic="true"
          android:networkSecurityConfig="@xml/network_security_config"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/planb_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -44,11 +44,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             
-            <intent-filter>
+            <!-- Balaji : 02/07/2021: play store beta release. -->
+            <!-- <intent-filter>
                 <data android:mimeType="text/plain"/>
                 <action android:name="android.intent.action.SEND"/> 
                 <category android:name="android.intent.category.DEFAULT"/> 
-            </intent-filter>
+            </intent-filter> -->
 
         </activity>
         <!-- Don't delete the meta-data below.

@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:yellowpatioapp/Pages/projectPage.dart';
-import 'package:yellowpatioapp/Pages/project_setting.dart';
-import 'package:yellowpatioapp/Pages_SR/projectManagement_page.dart';
-import 'package:yellowpatioapp/db/entity/project_setting.dart';
-import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
-import 'package:yellowpatioapp/redux_state_store/appStore.dart';
-import 'package:yellowpatioapp/redux_state_store/reducer/date_preference_reducer.dart';
+import 'package:planb/Pages/projectPage.dart';
+import 'package:planb/Pages/project_setting.dart';
+import 'package:planb/Pages_SR/projectManagement_page.dart';
+import 'package:planb/db/entity/project_setting.dart';
+import 'package:planb/redux_state_store/action/actions.dart';
+import 'package:planb/redux_state_store/appStore.dart';
+import 'package:planb/redux_state_store/reducer/date_preference_reducer.dart';
 
 import 'cloud/UserStoreCloud.dart';
 import 'config.dart';
@@ -80,11 +80,11 @@ class HomeDraweWidget extends State<HomeDrawer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("planB",
-                    style: TextStyle(
-                        color: darkMode ? Colors.white : Colors.black,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 12)),
+                Image.asset(
+                  darkMode?"assets/planb-icon-dark.JPG":"assets/planb-icon.JPG",
+                  height: 60,
+                  width: 60,
+                ),
               ],
             ),
             const SizedBox(
@@ -317,7 +317,9 @@ class HomeDraweWidget extends State<HomeDrawer> {
               ),
             ),
             Text(
-              state.state.dateViewPreference == viewType ?  text+"      " + "  <--":text,
+              state.state.dateViewPreference == viewType
+                  ? text + "      " + "  <--"
+                  : text,
               style: TextStyle(
                   color: darkMode ? Colors.white : Colors.black, fontSize: 14),
             )

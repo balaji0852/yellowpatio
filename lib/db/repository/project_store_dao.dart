@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/project_store.dart';
+import 'package:planb/db/entity/project_store.dart';
 
 @dao
 abstract class ProjectStoreDao {

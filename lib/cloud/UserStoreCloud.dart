@@ -1,6 +1,6 @@
 
 import 'package:http/http.dart' as http;
-import 'package:yellowpatioapp/cloud/serverPath.dart';
+import 'package:planb/cloud/serverPath.dart';
 import 'dart:convert' as convert;
 
 import '../db/entity/user_store.dart';

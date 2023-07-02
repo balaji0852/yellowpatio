@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/unused/category_master.dart';
+import 'package:planb/db/entity/unused/category_master.dart';
 
 @dao
 abstract class CategoryMasterDao {

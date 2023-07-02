@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:planb/db/entity/class_master.dart';
 
 @dao
 abstract class ClassMasterDao {

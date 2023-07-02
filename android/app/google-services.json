@@ -7,6 +7,66 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:743250708140:android:40518eaae74f7c334d8109",
+        "android_client_info": {
+          "package_name": "com.example.planb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743250708140-0e31qqb0mgnlh68o40fkamm2or7ihu47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.planb",
+            "certificate_hash": "6b7da47e3188af146ad69f92ab455167c75670aa"
+          }
+        },
+        {
+          "client_id": "743250708140-fuvii458qiim9iv2tpmcn7f48f5t0pnc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.planb",
+            "certificate_hash": "dd9e8020fb2c552d51274f778480f2eb322d9c83"
+          }
+        },
+        {
+          "client_id": "743250708140-ob84kai6ho4c7eiu1p0ssh17k53v4flc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.planb",
+            "certificate_hash": "e8257156351aa0b6395ef835493c7532b956b467"
+          }
+        },
+        {
+          "client_id": "743250708140-a7aeeaavi7eg7tij5qqgsr8cn7ig15dk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCchmtFgPJEUlfiPyfnq2xXxaewv5iGtbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743250708140-a7aeeaavi7eg7tij5qqgsr8cn7ig15dk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "743250708140-jd2rr5bl385n1fb8cpjpegphnqh4pp07.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.speechsol"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:743250708140:android:ff177c3e65ba85a74d8109",
         "android_client_info": {
           "package_name": "com.example.speechsol"

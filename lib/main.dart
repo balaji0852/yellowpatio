@@ -5,13 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:yellowpatioapp/Pages/comment_section_page.dart';
-import 'package:yellowpatioapp/SupportSystem/user_management.dart';
-import 'package:yellowpatioapp/db/entity/class_master.dart';
-import 'package:yellowpatioapp/home.dart';
-import 'package:yellowpatioapp/login_page.dart';
-import 'package:yellowpatioapp/redux_state_store/appStore.dart';
-import 'package:yellowpatioapp/redux_state_store/reducer/app_state_reducer.dart';
+import 'package:planb/Pages/comment_section_page.dart';
+import 'package:planb/SupportSystem/user_management.dart';
+import 'package:planb/db/entity/class_master.dart';
+import 'package:planb/home.dart';
+import 'package:planb/login_page.dart';
+import 'package:planb/redux_state_store/appStore.dart';
+import 'package:planb/redux_state_store/reducer/app_state_reducer.dart';
 
 import 'Pages/projectPage.dart';
 import 'db/database.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             bodyText1: TextStyle(color: Colors.black, fontSize: 16),
           ),
         ),
-        home: RootWidget(),
+        home: MyHomePage(),
       ),
     );
   }

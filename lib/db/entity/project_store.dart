@@ -1,8 +1,8 @@
 
 import 'dart:convert';
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/ServicePlanStore.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:planb/db/entity/ServicePlanStore.dart';
+import 'package:planb/db/entity/user_store.dart';
 
 @Entity(
   foreignKeys: [

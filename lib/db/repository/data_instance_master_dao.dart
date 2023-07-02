@@ -1,7 +1,7 @@
 
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/class_data_instanceMaster.dart';
-import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:planb/db/entity/class_data_instanceMaster.dart';
+import 'package:planb/db/entity/data_instances_master.dart';
 
 
 //bnote->":" in query anotation needs to be close the variable

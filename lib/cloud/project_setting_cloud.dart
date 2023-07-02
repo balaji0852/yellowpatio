@@ -1,9 +1,9 @@
-import 'package:yellowpatioapp/Pages/project_setting.dart';
-import 'package:yellowpatioapp/cloud/serverPath.dart';
+import 'package:planb/Pages/project_setting.dart';
+import 'package:planb/cloud/serverPath.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:yellowpatioapp/db/entity/project_setting.dart';
+import 'package:planb/db/entity/project_setting.dart';
 
 
 class projectSettingCloud{

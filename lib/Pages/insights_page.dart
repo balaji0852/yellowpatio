@@ -9,13 +9,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:yellowpatioapp/Pages/category_store.dart';
-import 'package:yellowpatioapp/Pages/color_store.dart';
-import 'package:yellowpatioapp/cloud/classMasterCloud.dart';
-import 'package:yellowpatioapp/db/database.dart';
-import 'package:yellowpatioapp/db/entity/class_master.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
-import 'package:yellowpatioapp/home.dart';
+import 'package:planb/Pages/category_store.dart';
+import 'package:planb/Pages/color_store.dart';
+import 'package:planb/cloud/classMasterCloud.dart';
+import 'package:planb/db/database.dart';
+import 'package:planb/db/entity/class_master.dart';
+import 'package:planb/db/entity/user_store.dart';
+import 'package:planb/home.dart';
 
 import '../redux_state_store/appStore.dart';
 

@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
-import 'package:yellowpatioapp/db/entity/class_master.dart';
+import 'package:planb/db/entity/class_master.dart';
 import 'dart:convert' as convert;
 import 'dart:convert';
-import 'package:yellowpatioapp/db/entity/data_instances_master.dart';
+import 'package:planb/db/entity/data_instances_master.dart';
 
 var headers = {'Content-Type': 'application/json'};
 

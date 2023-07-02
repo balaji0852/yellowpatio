@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:yellowpatioapp/Pages/project_setting.dart';
-import 'package:yellowpatioapp/cloud/project_setting_cloud.dart';
-import 'package:yellowpatioapp/db/entity/project_setting.dart';
-import 'package:yellowpatioapp/home.dart';
-import 'package:yellowpatioapp/redux_state_store/appStore.dart';
+import 'package:planb/Pages/project_setting.dart';
+import 'package:planb/cloud/project_setting_cloud.dart';
+import 'package:planb/db/entity/project_setting.dart';
+import 'package:planb/home.dart';
+import 'package:planb/redux_state_store/appStore.dart';
 
 class ProjectSettingW extends StatefulWidget {
   const ProjectSettingW({Key? key}) : super(key: key);

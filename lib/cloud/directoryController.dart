@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 
 
-import 'package:yellowpatioapp/cloud/serverPath.dart';
-import 'package:yellowpatioapp/db/entity/pinnedClass.dart';
+import 'package:planb/cloud/serverPath.dart';
+import 'package:planb/db/entity/pinnedClass.dart';
 
 class directoryController{
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:yellowpatioapp/cloud/serverPath.dart';
-import 'package:yellowpatioapp/redux_state_store/action/actions.dart';
+import 'package:planb/cloud/serverPath.dart';
+import 'package:planb/redux_state_store/action/actions.dart';
 
 import '../home.dart';
 import '../redux_state_store/appStore.dart';

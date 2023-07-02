@@ -1,5 +1,5 @@
 import 'package:floor/floor.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:planb/db/entity/user_store.dart';
 //B-HAVING OPTIONAL VALUES IN CONSTRUCTOR , Customer(this.name, [this.age, this.location]);,using square bracket
 //b-redirecting constructor in dart- Customer.empty() : this("", 0, ""); and initializing it is using var customer1 = Customer.empty();, we need : for this operation
 //

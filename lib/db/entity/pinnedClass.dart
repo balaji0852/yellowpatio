@@ -3,8 +3,8 @@
 
 import 'dart:convert';
 
-import 'package:yellowpatioapp/db/entity/class_master.dart';
-import 'package:yellowpatioapp/db/entity/user_store.dart';
+import 'package:planb/db/entity/class_master.dart';
+import 'package:planb/db/entity/user_store.dart';
 
 class pinnedClass{
   final int pinID;
