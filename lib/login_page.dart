@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:planb/Pages/projectPage.dart';
 import 'package:planb/SupportSystem/user_management.dart';
 import 'package:planb/cloud/UserStoreCloud.dart';
+import 'package:planb/cloud/cloudConnectAgent.dart';
+import 'package:planb/cloud/serverPath.dart';
 import 'package:planb/db/entity/user_store.dart';
 import 'package:planb/redux_state_store/action/actions.dart';
 import 'package:planb/redux_state_store/appStore.dart';
@@ -158,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> checkUser() async {
     //write logic to check presence of user;
-    if (await _googleSignIn.isSignedIn()) {
+    if (await _googleSignIn.isSignedIn() && await serverAddress.initialiseServerAddress()!=-1) {
       //cloud migration
       // var userManagement = UserManagement();
       // int _userStoreID = await userManagement.userRegisterationShim(context);

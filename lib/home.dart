@@ -114,6 +114,7 @@ class HomePage extends State<Home> {
     var state = StoreProvider.of<AppStore>(context);
     state.dispatch(ChangeUserStoreID(0));
     await _googleSignIn.signOut();
+    //await FirebaseAuth.instance.signOut();
     Navigator.pop(context);
     Navigator.push(
       context,

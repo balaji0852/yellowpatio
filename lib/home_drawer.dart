@@ -6,6 +6,7 @@ import 'package:planb/Pages/projectPage.dart';
 import 'package:planb/Pages/project_setting.dart';
 import 'package:planb/Pages_SR/projectManagement_page.dart';
 import 'package:planb/db/entity/project_setting.dart';
+import 'package:planb/db/entity/project_store.dart';
 import 'package:planb/redux_state_store/action/actions.dart';
 import 'package:planb/redux_state_store/appStore.dart';
 import 'package:planb/redux_state_store/reducer/date_preference_reducer.dart';
@@ -194,7 +195,7 @@ class HomeDraweWidget extends State<HomeDrawer> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProjectManagement(
-                                isProjectCreation: false,
+                                isProjectCreation: false
                               )),
                     );
                   },

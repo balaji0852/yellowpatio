@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:planb/Pages/comment_section_page.dart';
 import 'package:planb/SupportSystem/user_management.dart';
+import 'package:planb/cloud/cloudConnectAgent.dart';
+import 'package:planb/cloud/serverPath.dart';
 import 'package:planb/db/entity/class_master.dart';
 import 'package:planb/home.dart';
 import 'package:planb/login_page.dart';
@@ -23,6 +25,7 @@ Future main() async {
   await Firebase.initializeApp(
   //options: DefaultFirebaseOptions.currentPlatform,
   );
+  await serverAddress.initialiseServerAddress();
   runApp(MyApp());
 }
 

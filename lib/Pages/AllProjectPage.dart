@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fgbg/flutter_fgbg.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:planb/Pages_SR/projectManagement_page.dart';
 import 'package:planb/SupportSystem/syncher.dart';
 import 'package:planb/cloud/projectStoreCloud.dart';
 import 'package:planb/db/entity/project_store.dart';
@@ -65,7 +66,6 @@ class AllProjectPageState extends State<AllProjectPage> {
     services = ReSyncher(interval: 15);
     getProjects();
     services.serverConnector(() => getProjects(), mounted);
-
   }
 
   @override
@@ -94,7 +94,7 @@ class AllProjectPageState extends State<AllProjectPage> {
     if (FGBGType.background == event) {
       print("***************project page-background*************");
       services.isUIMounted = false;
-    }else if(FGBGType.foreground == event){
+    } else if (FGBGType.foreground == event) {
       print("***************project page-foreground*************");
     }
   }
@@ -144,7 +144,9 @@ class AllProjectPageState extends State<AllProjectPage> {
                   alignment: Alignment.center,
                   child: Column(children: [
                     Image.asset(
-                      darkMode?"assets/project5-dark.jpg":"assets/project5.png",
+                      darkMode
+                          ? "assets/project5-dark.jpg"
+                          : "assets/project5.png",
                       scale: 2,
                       width: 400,
                       height: 350,
@@ -191,7 +193,15 @@ class AllProjectPageState extends State<AllProjectPage> {
                       ),
                       onTap: () {
                         print("jj");
-                        navigateProject(e.projectStoreID!);
+                        //Balaji:02/07/2023 : part of billing feature adding this...
+                        if (e.deactivateProject!) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ProjectManagement(isProjectCreation: false,deactivateProject: true,)),
+                          );
+                        } else {
+                          navigateProject(e.projectStoreID!);
+                        }
                       },
                     ))
                 .toList(),
