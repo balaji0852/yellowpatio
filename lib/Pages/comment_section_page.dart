@@ -298,12 +298,11 @@ class CommentSection extends State<CommentSectionPage> {
         dataInstanceID: globalItemtoOverride.dataInstanceID,
         itemMasterID: globalItemtoOverride.itemMasterID, 
         //Balaji: 02/07/2023 : removing remainder tag for past instances
-        dataInstances:globalItemtoOverride.instancesTime>=DateTime.now().millisecondsSinceEpoch?"[remainder]:":""+commentEditController.text, 
+        dataInstances:globalItemtoOverride.instancesTime>=DateTime.now().millisecondsSinceEpoch?"[remainder]:"+commentEditController.text:commentEditController.text, 
         instancesTime: globalItemtoOverride.instancesTime, 
         itemClassColorID: globalItemtoOverride.itemClassColorID, 
         instancesStatus: globalItemtoOverride.instancesStatus, 
         userStore: globalItemtoOverride.userStore);
-
       state.dispatch(DEMODataInstance(dummyItem));
     }
   }
