@@ -156,7 +156,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
               child: Column(
                   children: todayInstance.map((element) {
                 int index = 0;
-                modifyTodayInstance(todayInstance.indexOf(element) + 1);
+                modifyTodayInstance(todayInstance.indexOf(element) );
                 // print(element.length > 5);
                 // print(element.map((e) => e));
                 //element = element.length>=5?element.sublist(0,3):element;
@@ -175,7 +175,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
                       if (element.isEmpty && widget.graphType == 1)
                         GestureDetector(
                           onTap: () {
-                            createTTCFlow(todayInstance.indexOf(element) + 1);
+                            createTTCFlow(todayInstance.indexOf(element));
                           },
                           child: SizedBox(
                             height: 109,
@@ -374,7 +374,7 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
   void modifyTodayInstance(int index) {
     if (state.state.demoInstance.userStore.dateViewPreference !=
             widget.columnName &&
-        index-1 == indexToRemove &&
+        index == indexToRemove &&
         indexToRemove != -1) {
       if (todayInstance.elementAt(indexToRemove).isNotEmpty) {
         todayInstance.elementAt(indexToRemove).removeAt(0);
@@ -393,19 +393,19 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
             (initial + (3600000 * index)) &&
         state.state.demoInstance.instancesTime >= (initial - (3600000))) {
       List<ClassDataInstanceMaterDuplicate> localTodayInstance = [];
-      if (todayInstance[index - 1].isNotEmpty &&
-          todayInstance[index - 1].elementAt(0).dataInstanceID ==
+      if (todayInstance[index ].isNotEmpty &&
+          todayInstance[index ].elementAt(0).dataInstanceID ==
               state.state.demoInstance.dataInstanceID) {
         todayInstance
-            .elementAt(index - 1)
+            .elementAt(index )
             .replaceRange(0, 1, [state.state.demoInstance]);
       } else {
         // todayInstance.elementAt(index-1).removeAt(0);
         localTodayInstance.add(state.state.demoInstance);
       }
-      localTodayInstance.addAll(todayInstance.elementAt(index - 1));
-      todayInstance[index - 1] = localTodayInstance;
-      indexToRemove = index - 1;
+      localTodayInstance.addAll(todayInstance.elementAt(index));
+      todayInstance[index ] = localTodayInstance;
+      indexToRemove = index ;
     }
   }
 
@@ -555,9 +555,8 @@ class TimeInstancePage extends State<TimeInstanceWidget> {
           for (var element in commentCopy!) {
             var timeInstance =
                 DateTime.fromMillisecondsSinceEpoch(element.instancesTime);
-
             todayInstance
-                .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour - 1)
+                .elementAt(timeInstance.hour == 00 ? 0 : timeInstance.hour )
                 .add(element);
           }
         } else {

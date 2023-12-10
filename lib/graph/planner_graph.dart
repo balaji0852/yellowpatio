@@ -55,7 +55,7 @@ class PlannerGraphPage extends State<PlannerGraph> {
   bool extendedView = false;
 
   static List<String> time = List.generate(24,
-      (index) => index <= 11 ? (index + 1).toString() : (index + 1).toString());
+      (index) => index.toString());
   late List<String>? dates = [];
   final itemSize = 2642.0;
   bool openDialog = false;
